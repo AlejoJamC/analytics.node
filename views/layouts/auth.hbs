@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="es" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="es" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="es">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+{{> landing/head}}
+<!-- END HEAD -->
+
+<body class=" login">
+<!-- BEGIN LOGO -->
+<div class="logo">
+    <a href="/">
+        <img src="{{ URL::asset('assets/pages/img/logo-big.png') }}" alt="" /> </a>
+</div>
+<!-- END LOGO -->
+<!-- BEGIN LOGIN -->
+<div class="content">
+    @yield('content')
+</div>
+<div class="copyright"> 2016 © Analytics. </div>
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+{{> landing/head}}
+<!-- END THEME LAYOUT SCRIPTS -->
+</body>
+
+</html>
