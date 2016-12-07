@@ -4,6 +4,8 @@
 # Analytics
 public/assets/
 
+# dotEnv file
+*.env
 
 # Logs
 logs
