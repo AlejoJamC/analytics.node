@@ -34,3 +34,17 @@ var express         = require('express'),
     port            = process.env.APP_PORT;
 
 logger.info('Environment: ' + environment);
+
+// Express app instance.
+var app = express();
+
+// Load configuration package and environment to the new express app.
+// Port.
+app.set('port', port);
+
+// Configure view template engine.
+// Using `.hbs` for extensions and find partials in `views/partials`.
+app.engine('hbs', hbs.express4({
+    partialsDir: __dirname + '/views/partials',
+    layoutsDir: __dirname + '/views/layouts'
+}));
