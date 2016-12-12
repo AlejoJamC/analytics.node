@@ -48,6 +48,8 @@ app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials',
     layoutsDir: __dirname + '/views/layouts'
 }));
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views');
 
 // Favicon path.
 app.use(favicon(__dirname + '/public/favicon.ico'));
