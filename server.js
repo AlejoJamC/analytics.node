@@ -95,7 +95,7 @@ app.locals.currentYear = moment().year();
 app.locals.currentEnvironment = environment;
 
 // Setup all routes on express router
-//routes.setupRouter(app);
+routes.SetupRouter(app);
 
 // Error handler available environment
 var env = process.env.NODE_ENV || environment;
