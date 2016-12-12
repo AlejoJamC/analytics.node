@@ -48,3 +48,55 @@ app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials',
     layoutsDir: __dirname + '/views/layouts'
 }));
+
+// Favicon path.
+app.use(favicon(__dirname + '/public/favicon.ico'));
+
+// Logger.
+// TODO: Arreglar el error entre wiston y morgan
+//app.use(morgan('combined', { 'stream': logger.stream }));
+app.use(morgan('dev'));
+
+// Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it.
+app.use(methodOverride());
+
+// Set Header 'X-Prowered-By'
+logger.info('Analytics Website powered by @AlejoJamC');
+app.use(function (req, res, next) {
+    res.set('X-Powered-By', 'Alejandro Mantilla < @AlejoJamC >');
+    next();
+});
+
+// Body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+
+// Import static files.
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Session.
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: '3f1l 4 73g 0t d33n yll43r u s1ht d43r n4c u f1'
+}));
+
+// Local variables.
+// Current year.
+app.locals.currentYear = moment().year();
+app.locals.currentEnvironment = environment;
+
+// Setup all routes on express router
+//routes.setupRouter(app);
+
+// Error handler available environment
+var env = process.env.NODE_ENV || environment;
+if ('development' === env){
+    app.use(errorhandler());
+}
+
+app.listen(app.get('port'), function(){
+    logger.info('Analytics website is running on http://localhost:' + port + '/');
+});
