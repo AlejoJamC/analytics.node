@@ -5,23 +5,23 @@
 <html lang="es">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
-{{> landing/head}}
+{{> auth/head}}
 <!-- END HEAD -->
 
 <body class=" login">
 <!-- BEGIN LOGO -->
 <div class="logo">
     <a href="/">
-        <img src="{{ URL::asset('assets/pages/img/logo-big.png') }}" alt="" /> </a>
+        <img src="{{level}}favicon.ico" alt="" /> </a>
 </div>
 <!-- END LOGO -->
 <!-- BEGIN LOGIN -->
 <div class="content">
-    @yield('content')
+    {{ body }}
 </div>
-<div class="copyright"> 2016 © Analytics. </div>
+<div class="copyright"> {{ currentYear }} © Analytics. </div>
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
-{{> landing/head}}
+{{> auth/scripts}}
 <!-- END THEME LAYOUT SCRIPTS -->
 </body>
 
