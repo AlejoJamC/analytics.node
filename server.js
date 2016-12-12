@@ -29,11 +29,15 @@ var express         = require('express'),
 
     logger          = require('./config/logger').logger,
     routes          = require('./routes/web'),
+    oracle          = require('./config/oracledb'),
 
     environment     = process.env.APP_ENV,
     port            = process.env.APP_PORT;
 
 logger.info('Environment: ' + environment);
+
+// Testing Oracle database connection.
+oracle.TestOracledb();
 
 // Express app instance.
 var app = express();
