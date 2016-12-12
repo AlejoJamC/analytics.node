@@ -10,7 +10,7 @@
  * Environment variables.
  */
 
-require('dotenv}').config();
+require('dotenv').config();
 
 /**
  * Module dependencies.
@@ -23,10 +23,14 @@ var express         = require('express'),
     hbs             = require('express-hbs'),
     methodOverride  = require('method-override'),
     moment          = require('moment'),
+    morgan          = require('morgan'),
+    path            = require('path'),
     session         = require('express-session'),
 
+    logger          = require('./config/logger').logger,
     routes          = require('./routes/web'),
 
     environment     = process.env.APP_ENV,
     port            = process.env.APP_PORT;
 
+logger.info('Environment: ' + environment);
