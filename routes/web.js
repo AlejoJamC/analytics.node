@@ -17,8 +17,10 @@
 function SetupRouter(app) {
     // Initialize all routes
     var indexRoutes = require('./login');
+    var dashRoutes  = require('./dashboard');
 
     app.use('/', indexRoutes);
+    app.use('/', dashRoutes);
 
 }
 
