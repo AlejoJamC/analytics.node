@@ -5,12 +5,12 @@
 <html lang="es">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
-@include('partials.dash.head')
+{{> dash/head}}
 <!-- END HEAD -->
 
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid">
 <!-- BEGIN HEADER -->
-@include('partials.dash.header')
+{{> dash/header}}
 <!-- END HEADER -->
 <!-- BEGIN HEADER & CONTENT DIVIDER -->
 <div class="clearfix"> </div>
@@ -18,13 +18,13 @@
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-    @include('partials.dash.sidebar')
+    {{> dash/sidebar}}
     <!-- END SIDEBAR -->
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
         <div class="page-content">
-            @yield('content')
+            {{{body}}}
         </div>
         <!-- END CONTENT BODY -->
     </div>
@@ -32,8 +32,8 @@
 </div>
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
-@include('partials.dash.footer')
-@include('partials.dash.scripts')
+{{> dash/footer}}
+{{> dash/scripts}}
 <!-- END FOOTER -->
 </body>
 
