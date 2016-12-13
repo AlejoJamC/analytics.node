@@ -11,9 +11,10 @@ var indexRouter = express.Router();
 
 /* GET Login page. */
 indexRouter.get('/', function (req, res) {
-    res.render('', {
-        title: 'Analytics Website | Login',
-        level: ''
+    res.render('auth/index', {
+        title   : 'Analytics Website | Login',
+        level   : '',
+        layout  : 'auth'
     });
 });
 
