@@ -9,7 +9,17 @@
 var express     = require('express');
 var dashRoutes = express.Router();
 
-/* GET Dashboard page. */
+/* GET Index page | Dashboard. */
+dashRoutes.get('/dashboard', function (req, res) {
+    res.render('dash/index', {
+        title   : 'Analytics Website | Index',
+        level   : '',
+        layout  : 'dash'
+    });
+});
+
+
+/* GET Images handler page | Dashboard. */
 dashRoutes.get('/dashboard/images', function (req, res) {
     res.render('dash/image', {
         title   : 'Analytics Website | Images',
