@@ -11,8 +11,10 @@ var indexRouter = express.Router();
 var logger      = require('../config/logger').logger;
 var oracledb    = require('oracledb');
 
-/* GET Login page. */
+/* GET Index page. */
 indexRouter.get('/', function (req, res) {
+    res.redirect('/login');
+});
     res.render('auth/index', {
         title   : 'Analytics Website | Login',
         level   : '',
