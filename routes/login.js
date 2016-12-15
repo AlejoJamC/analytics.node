@@ -15,10 +15,24 @@ var oracledb    = require('oracledb');
 indexRouter.get('/', function (req, res) {
     res.redirect('/login');
 });
+
+
+/* GET Login page. */
+indexRouter.get('/login', function (req, res) {
+    var error = '';
+
+    // Basic error validator
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+
     res.render('auth/index', {
         title   : 'Analytics Website | Login',
         level   : '',
-        layout  : 'auth'
+        layout  : 'auth',
+        error   : error
+    });
+});
     });
 });
 
