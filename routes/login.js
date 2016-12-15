@@ -8,6 +8,8 @@
 
 var express     = require('express');
 var indexRouter = express.Router();
+var logger      = require('../config/logger').logger;
+var oracledb    = require('oracledb');
 
 /* GET Login page. */
 indexRouter.get('/', function (req, res) {
