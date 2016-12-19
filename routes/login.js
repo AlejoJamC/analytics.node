@@ -94,8 +94,52 @@ indexRouter.post('/login', function (req, res) {
 
                 // Login success
                 // Create the session
-                logger.info(result.metaData);
-                logger.info(result.rows);
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                res.redirect('/login?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    res.redirect('/login?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                res.redirect('/login?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    res.redirect('/login?error=13');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    res.redirect('/login?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        res.redirect('/login?error=14');
+                    }
+                }
+
+                //logger.info(result.rows[0]);
+                //logger.info(result.rows[0][0]);
+                //logger.info(result.rows[0][1]);
+                req.session.userId = result.rows[0][0];
+                req.session.userFullName = result.rows[0][1];
+
                 connection.close(
                     function(err) {
                         if (err) {
