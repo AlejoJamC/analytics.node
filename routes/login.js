@@ -59,21 +59,19 @@ indexRouter.post('/login', function (req, res) {
         var user        = req.body.username;
         var password    = req.body.password;
 
-        connection.execute(
-            // The statement to execute
-            "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
+        var sql = "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
             " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
             " FROM ANALYTICS.\"Usuarios\" " +
-            " WHERE \"Usuarios\".\"usuario\" =':user' AND \"Usuarios\".\"password\" =':password'",
-            { user : user , password : password },
+            " WHERE \"Usuarios\".\"usuario\" ='"+ user +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
 
             // The Callback function handles the SQL execution results
             function (err, result) {
-                logger.info("SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
-                    " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
-                    " FROM ANALYTICS.\"Usuarios\" " +
-                    " WHERE \"Usuarios\".\"usuario\" ='" + user +
-                    "' AND \"Usuarios\".\"password\" ='" + password + "'");
+                logger.info(sql);
                 if (err) {
                     logger.error(err.message);
                     connection.close(
@@ -83,6 +81,7 @@ indexRouter.post('/login', function (req, res) {
                                 logger.error(err.message);
                                 res.redirect('/login?error=1');
                             }
+                            logger.info('Connection to Oracle closed successfully!');
                     });
                     // Error doing select statement
                     res.redirect('/login?error=12');
@@ -99,6 +98,7 @@ indexRouter.post('/login', function (req, res) {
                             logger.error(err.message);
                             res.redirect('/login?error=1');
                         }
+                        logger.info('Connection to Oracle closed successfully!');
                 });
                 res.redirect('/dashboard');
             }
