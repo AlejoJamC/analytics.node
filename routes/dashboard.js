@@ -11,6 +11,12 @@ var dashRoutes = express.Router();
 
 /* GET Index page | Dashboard. */
 dashRoutes.get('/dashboard', function (req, res) {
+    // Basic error validator
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        res.redirect('/login');
+    }
+
     res.render('dash/index', {
         title   : 'Analytics Website | Index',
         level   : '',
