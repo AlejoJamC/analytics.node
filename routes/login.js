@@ -16,7 +16,6 @@ indexRouter.get('/', function (req, res) {
     res.redirect('/login');
 });
 
-
 /* GET Login page. */
 indexRouter.get('/login', function (req, res) {
     var error = '';
@@ -151,12 +150,18 @@ indexRouter.post('/login', function (req, res) {
                 });
                 res.redirect('/dashboard');
             }
-
         );
-
     });
+});
 
-
+/* GET Logout page. */
+indexRouter.get('/logout', function (req, res) {
+    req.session.destroy(function (err) {
+        if(err){
+            logger.info(err);
+        }
+        res.redirect('/login');
+    });
 });
 
 module.exports = indexRouter;
