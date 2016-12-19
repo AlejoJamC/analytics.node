@@ -22,8 +22,13 @@ indexRouter.get('/login', function (req, res) {
     var error = '';
 
     // Basic error validator
+    // Error
     if(typeof req.query.error !== 'undefined'){
         error = req.query.error;
+    }
+    // Session
+    if(!(typeof req.session.userId === 'undefined' || typeof req.session.userId === '')){
+        res.redirect('/dashboard');
     }
 
     res.render('auth/index', {
