@@ -75,7 +75,6 @@ indexRouter.post('/login', function (req, res) {
 
             // The Callback function handles the SQL execution results
             function (err, result) {
-                logger.info(sql);
                 if (err) {
                     logger.error(err.message);
                     connection.close(
