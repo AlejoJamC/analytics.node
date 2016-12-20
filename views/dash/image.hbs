@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="portlet-body">
-                <form action="/dashboard/users/capture/image" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                <form action="/dashboard/images/capture" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
                     <input type="hidden" id="personid" name="personid" value="1">
                     <div class="mt-element-card mt-element-overlay">
                         <div class="row">
@@ -70,7 +70,7 @@
                             <div class="text-center col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <a href="javascript:void(TakePicture());" class="btn btn-info">
                                     <i class="fa fa-camera"></i> Capturar Fotografia</a>
-                                <a href="javascript:;" class="btn green">
+                                <a href="#" class="btn green" onclick="$(this).closest('form').submit()">
                                     <i class="fa fa-check"></i> Guardar</a>
                                 <a href="javascript:;" class="btn btn-outline grey-salsa">Cancelar</a>
                             </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form action="/dashboard/users/input/image" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                <form action="/dashboard/images/input" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
                     <input type="hidden" id="personid" name="personid" value="1">
                     <div class="form-body">
                         <div class="form-group last">
@@ -120,7 +120,7 @@
                     <div class="form-actions">
                         <div class="row">
                             <div class="col-md-offset-3 col-md-9">
-                                <a href="javascript:;" class="btn green">
+                                <a href="#" class="btn green" onclick="$(this).closest('form').submit()">
                                     <i class="fa fa-check"></i> Guardar</a>
                                 <a href="javascript:;" class="btn btn-outline grey-salsa">Cancelar</a>
                             </div>
