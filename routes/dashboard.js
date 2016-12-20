@@ -7,7 +7,26 @@
  */
 
 var express     = require('express');
+var crypto      = require('crypto');
 var dashRoutes = express.Router();
+var logger      = require('../config/logger').logger;
+var multer      = require('multer');
+var oracledb    = require('oracledb');
+var path        = require('path');
+
+// Upload and rename files
+var storage = multer.diskStorage({
+    destination: 'uploads/',
+    filename: function (req, file, cb) {
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err);
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
+    }
+});
+var upload = multer({ storage: storage });
+
 
 /* GET Index page | Dashboard. */
 dashRoutes.get('/dashboard', function (req, res) {
