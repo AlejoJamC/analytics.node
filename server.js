@@ -28,7 +28,8 @@ var express         = require('express'),
     session         = require('express-session'),
 
     logger          = require('./config/logger').logger,
-    routes          = require('./routes/web'),
+    webRoutes       = require('./routes/web'),
+    apiRoutes       = require('./routes/api'),
     oracle          = require('./config/oracledb'),
 
     environment     = process.env.APP_ENV,
@@ -95,7 +96,8 @@ app.locals.currentYear = moment().year();
 app.locals.currentEnvironment = environment;
 
 // Setup all routes on express router
-routes.SetupRouter(app);
+webRoutes.SetupWebRouter(app);
+apiRoutes.SetupApiRouter(app);
 
 // Error handler available environment
 var env = process.env.NODE_ENV || environment;
