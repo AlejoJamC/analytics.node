@@ -7,22 +7,17 @@
  */
 
 /**
- * SetupWebRouter
+ * SetupApiRouter
  *
  * @description  Configure all routes on express router
  *
  * @param {express}      app      The application server
  */
 
-function SetupWebRouter(app) {
+function SetupApiRouter(app) {
     // Initialize all routes
-    var indexRoutes = require('./login');
-    var dashRoutes  = require('./dashboard');
-
-    app.use('/', indexRoutes);
-    app.use('/', dashRoutes);
 
 }
 
 // Export setup function
-module.exports.SetupWebRouter = SetupWebRouter;
+module.exports.SetupApiRouter = SetupApiRouter;
