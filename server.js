@@ -18,6 +18,7 @@ require('dotenv').config();
 
 var express         = require('express'),
     bodyParser      = require('body-parser'),
+    coockieParser   = require('cookie-parser'),
     errorhandler    = require('errorhandler'),
     favicon         = require('serve-favicon'),
     hbs             = require('express-hbs'),
@@ -25,6 +26,7 @@ var express         = require('express'),
     moment          = require('moment'),
     morgan          = require('morgan'),
     path            = require('path'),
+    passport        = require('passport'),
     session         = require('express-session'),
 
     logger          = require('./config/logger').logger,
@@ -83,12 +85,19 @@ app.use(bodyParser.urlencoded({
 // Import static files.
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Coockies
+app.use(coockieParser());
+
 // Session.
 app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: '3f1l 4 73g 0t d33n yll43r u s1ht d43r n4c u f1'
 }));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Local variables.
 // Current year.
