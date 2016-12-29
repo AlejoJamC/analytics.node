@@ -7,6 +7,13 @@
  */
 
 /**
+ * Module dependencies
+ */
+
+var logger = require('../config/Logger').Logger;
+var moment = require('moment');
+
+/**
  * SetupWebRouter
  *
  * @description  Configure all routes on express router
@@ -15,11 +22,24 @@
  */
 
 function SetupWebRouter(app) {
-    // Initialize all routes
-    var indexRoutes = require('./login');
+    // logger for all request will first hits this middleware
+    router.use(function (req, res, next) {
+        var now = moment(new Date());
+
+        var date = now.format('DD-MM-YYYY HH:mm');
+        logger.info('%s %s %s', req.method, req.url, date);
+        next();
+    });
+
+    app.use('');
+
+    /**
+     *  Declare all routes
+     */
+    var loginRoutes = require('./login');
     var dashRoutes  = require('./dashboard');
 
-    app.use('/', indexRoutes);
+    app.use('/', loginRoutes);
     app.use('/', dashRoutes);
 
 }

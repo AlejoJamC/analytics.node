@@ -7,6 +7,13 @@
  */
 
 /**
+ * Module dependencies
+ */
+
+var logger = require('../config/Logger').Logger;
+var moment = require('moment');
+
+/**
  * SetupApiRouter
  *
  * @description  Configure all routes on express router
@@ -16,7 +23,9 @@
 
 function SetupApiRouter(app) {
     // Initialize all routes
+    var fingerprintRoutes = require('./fingerprint');
 
+    app.use('/', fingerprintRoutes);
 }
 
 // Export setup function
