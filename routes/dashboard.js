@@ -7,8 +7,10 @@
  */
 
 var express     = require('express');
+var base64      = require('../config/base64');
 var crypto      = require('crypto');
-var dashRoutes = express.Router();
+var dashRoutes  = express.Router();
+var fs          = require('fs');
 var logger      = require('../config/logger').logger;
 var multer      = require('multer');
 var oracledb    = require('oracledb');
@@ -54,12 +56,21 @@ dashRoutes.get('/dashboard/images', function (req, res) {
 });
 
 /* GET Images handler page | Dashboard. */
-dashRoutes.post('/dashboard/images/capture', function (req, res) {
+dashRoutes.post('/dashboard/images/capture',  function (req, res) {
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
         // error=12 No person Id using image capture.
         res.redirect('/dashboard/images?error=12');
     }
+
+    logger.info(req.body);
+
+    var encoded_image = req.body.finalimage;
+    var binary_data = base64.decode(encoded_image);
+    // Create the file inside uploads folder
+    var fileresult = fs.writeFile('uploads/fototomada.jpg', binary_data, function (err) {
+        logger.info('archivo creado');
+    })
 
 });
 

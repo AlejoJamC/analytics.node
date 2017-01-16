@@ -57,6 +57,7 @@
             <div class="portlet-body">
                 <form action="/dashboard/images/capture" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
                     <input type="hidden" id="personid" name="personid" value="1">
+                    <input id="finalimage" type="hidden" name="finalimage" value=""/>
                     <div class="mt-element-card mt-element-overlay">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -140,10 +141,23 @@
     <script language="JavaScript">
         Webcam.attach( '#webcamera' );
 
+        function urltoFile(url, filename, mimeType){
+            return (fetch(url)
+                            .then(function(res){return res.arrayBuffer();})
+                            .then(function(buf){return new File([buf], filename, {type:mimeType});})
+            );
+        }
+
         function TakePicture() {
             $("img[id=captureimage]").remove();
             Webcam.snap( function(data_uri) {
                 document.getElementById('camresult').innerHTML = '<img src="'+data_uri+'"/>';
+
+                urltoFile(data_uri, 'captured.jpg', 'image/jpg')
+                        .then(function(file){
+                            console.log(file);
+                            document.getElementById('finalimage').value = file;
+                        });
             } );
         }
     </script>
