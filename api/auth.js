@@ -17,10 +17,6 @@ var oracledb        = require('oracledb');
 
 passport.use(new BasicStrategy(
     function(username, password, callback) {
-        // logs validation values
-        logger.info(username);
-        logger.info(password);
-
         oracledb.getConnection({
             user            : process.env.ORACLE_USERNAME,
             password        : process.env.ORACLE_PASSWORD,
@@ -34,13 +30,11 @@ passport.use(new BasicStrategy(
             }
 
             // Login credentidas
-            var user        = username;
-            var password    = password;
 
             var sql = "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
                 " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
                 " FROM ANALYTICS.\"Usuarios\" " +
-                " WHERE \"Usuarios\".\"usuario\" ='"+ user +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
+                " WHERE \"Usuarios\".\"usuario\" ='"+ username +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
 
             connection.execute(
                 // The statement to execute
