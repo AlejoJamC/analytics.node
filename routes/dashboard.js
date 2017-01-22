@@ -90,7 +90,7 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
     var sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Foto\" = '" +
         req.file.path + "' WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
 
-    logger.info(sql);
+    //logger.info(sql);
 
     // Save image route
     oracledb.autoCommit = true;
@@ -140,9 +140,6 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
                 res.redirect('/dashboard/images?flag=success');
             }
         );
-
-        // Image route
-        //var imgroute =
     });
 
 });
