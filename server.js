@@ -31,7 +31,6 @@ var express         = require('express'),
 
     logger          = require('./config/logger').logger,
     webRoutes       = require('./routes/web'),
-    apiRoutes       = require('./routes/api'),
     oracle          = require('./config/oracledb'),
 
     environment     = process.env.APP_ENV,
@@ -96,8 +95,8 @@ app.use(session({
 }));
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 // Local variables.
 // Current year.

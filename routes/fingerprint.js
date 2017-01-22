@@ -11,8 +11,9 @@ var fingerprintRoutes = express.Router();
 var logger = require('../config/logger').logger;
 var oracledb = require('oracledb');
 
-/* POST Login page. */
-fingerprintRoutes.post('/api/fingerprints', function (req, res) {
+/* POST Fingerprint endpoint. */
+/* /api/v0/fingerprints  */
+fingerprintRoutes.post('/api/' + process.env.API_VERSION + '/fingerprints', function (req, res) {
     if(typeof req.body.fingerprint === 'undefined' || req.body.fingerprint === ''
     || typeof req.body.personId === 'undefined' || req.body.personId === ''){
         res.status(422).send('Error validando datos');

@@ -12,6 +12,7 @@
 
 var logger = require('../config/Logger').Logger;
 var moment = require('moment');
+var express = require('express');
 
 /**
  * SetupWebRouter
@@ -23,6 +24,7 @@ var moment = require('moment');
 
 function SetupWebRouter(app) {
     // logger for all request will first hits this middleware
+    var router = express.Router();
     router.use(function (req, res, next) {
         var now = moment(new Date());
 
@@ -31,7 +33,7 @@ function SetupWebRouter(app) {
         next();
     });
 
-    app.use('');
+    app.use(router);
 
     /**
      *  Declare all routes
