@@ -105,7 +105,6 @@ app.locals.currentEnvironment = environment;
 
 // Setup all routes on express router
 webRoutes.SetupWebRouter(app);
-apiRoutes.SetupApiRouter(app);
 
 // Error handler available environment
 var env = process.env.NODE_ENV || environment;

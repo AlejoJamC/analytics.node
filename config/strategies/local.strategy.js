@@ -4,10 +4,10 @@ var oracledb        = require('oracledb');
 
 module.exports = function () {
     passport.use(new LocalStrategy({
-        usernameField : '',
-        passwordField : ''
+        usernameField : 'username',
+        passwordField : 'password'
     },
-        function (username, password, done) {
+        function (username, password, callback) {
             oracledb.getConnection({
                 user            : process.env.ORACLE_USERNAME,
                 password        : process.env.ORACLE_PASSWORD,
@@ -17,17 +17,15 @@ module.exports = function () {
                 if (err){
                     logger.error(err.message);
                     // error=0 trying to connect with database
-                    return done(err);
+                    return callback(err);
                 }
 
                 // Login credentidas
-                var user        = req.body.username;
-                var password    = req.body.password;
 
                 var sql = "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
                     " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
                     " FROM ANALYTICS.\"Usuarios\" " +
-                    " WHERE \"Usuarios\".\"usuario\" ='"+ user +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
+                    " WHERE \"Usuarios\".\"usuario\" ='"+ username +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
 
                 connection.execute(
                     // The statement to execute
@@ -43,12 +41,12 @@ module.exports = function () {
                                     if (err) {
                                         // error=1 trying to disconnect of database
                                         logger.error(err.message);
-                                        return done(err.message);
+                                        return callback(err.message);
                                     }
                                     logger.info('Connection to Oracle closed successfully!');
                                 });
                             // Error doing select statement
-                            return done(err);
+                            return callback(err);
                         }
 
                         // Login success
@@ -64,7 +62,7 @@ module.exports = function () {
                                     }
                                     logger.info('Connection to Oracle closed successfully!');
                                 });
-                            return done('Empty values returned. [1]');
+                            return callback('Empty values returned. [1]');
                         } else if(typeof result.rows[0] === 'undefined') {
                             logger.info('Validation error, empty values returned.');
                             connection.close(
@@ -72,7 +70,7 @@ module.exports = function () {
                                     if (err) {
                                         // error=1 trying to disconnect of database
                                         logger.error(err.message);
-                                        return done(err.message);
+                                        return callback(err.message);
                                     }
                                     logger.info('Connection to Oracle closed successfully!');
                                 });
@@ -85,11 +83,11 @@ module.exports = function () {
                                         if (err) {
                                             // error=1 trying to disconnect of database
                                             logger.error(err.message);
-                                            return done(err.message);
+                                            return callback(err.message);
                                         }
                                         logger.info('Connection to Oracle closed successfully!');
                                     });
-                                return done('Empty values returned. [3]');
+                                return callback('Empty values returned. [3]');
                             }
                         }
 
@@ -103,11 +101,11 @@ module.exports = function () {
                                 if (err) {
                                     // error=1 trying to disconnect of database
                                     logger.error(err.message);
-                                    return done(err.message);
+                                    return callback(err.message);
                                 }
                                 logger.info('Connection to Oracle closed successfully!');
                             });
-                        return done(null, user);
+                        return callback(null, user);
                     }
                 );
             });
