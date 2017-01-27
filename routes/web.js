@@ -10,9 +10,10 @@
  * Module dependencies
  */
 
-var logger = require('../config/Logger').Logger;
+var logger = require('../config/Logger').logger;
 var moment = require('moment');
 var express = require('express');
+var router = express.Router();
 
 /**
  * SetupWebRouter
@@ -24,7 +25,6 @@ var express = require('express');
 
 function SetupWebRouter(app) {
     // logger for all request will first hits this middleware
-    var router = express.Router();
     router.use(function (req, res, next) {
         var now = moment(new Date());
 

@@ -15,6 +15,7 @@ var logger      = require('../config/logger').logger;
 var multer      = require('multer');
 var oracledb    = require('oracledb');
 var path        = require('path');
+var uuid        = require('node-uuid');
 
 // Upload and rename files
 var storage = multer.diskStorage({
@@ -35,7 +36,7 @@ dashRoutes.get('/dashboard', function (req, res) {
     // Basic error validator
     // Session
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        res.redirect('/login');
+        return res.redirect('/login');
     }
 
     res.render('dash/index', {
@@ -55,31 +56,97 @@ dashRoutes.get('/dashboard/images', function (req, res) {
     });
 });
 
-/* GET Images handler page | Dashboard. */
+/* POST Images handler page | Dashboard. */
 dashRoutes.post('/dashboard/images/capture',  function (req, res) {
+
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
         // error=12 No person Id using image capture.
-        res.redirect('/dashboard/images?error=12');
+        return res.redirect('/dashboard/images?error=12');
     }
 
-    logger.info(req.body);
+    //logger.info(req.body);
 
-    var encoded_image = req.body.finalimage;
-    var binary_data = base64.decode(encoded_image);
+    //var encoded_image = req.body.finalimage;
+    var binary_data = req.body.finalimage;
+
+    // Random uuid to asign the new image
+    var randomImageName = uuid.v4();
+    var imagepath = 'uploads/' + randomImageName +'.jpg';
     // Create the file inside uploads folder
-    var fileresult = fs.writeFile('uploads/fototomada.jpg', binary_data, function (err) {
-        logger.info('archivo creado');
-    })
+    var fileresult = fs.writeFile(imagepath, binary_data, {encoding: 'base64'}, function (err) {
+        if(err){
+            logger.info(err);
+            logger.info('Error creating capture image');
+            return res.redirect('/login?error=15');
+        }
 
+        // Save the image path in the database
+        var personId = req.body.personid;
+
+        var sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Foto\" = '" +
+            imagepath + "' WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+
+        //logger.info(sql);
+
+        // Save image route
+        oracledb.autoCommit = true;
+        oracledb.getConnection({
+            user            : process.env.ORACLE_USERNAME,
+            password        : process.env.ORACLE_PASSWORD,
+            connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+            + '/' + process.env.ORACLE_SID
+        }, function (err, connection) {
+            if (err){
+                logger.error(err.message);
+                // error=0 trying to connect with database
+                return res.redirect('/dashboard/images?error=0');
+            }
+
+            connection.execute(
+                sql,
+                // The Callback function handles the SQL execution results
+                function (err, result) {
+                    if (err) {
+                        logger.error(err.message);
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect('/dashboard/images?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        // Error doing select statement
+                        return res.redirect('/dashboard/images?error=12');
+                    }
+
+                    logger.info(result);
+
+                    // UPDATE image capture success
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect('/dashboard/images?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    res.redirect('/dashboard/images?flag=success');
+                }
+            );
+        });
+    });
 });
 
-/* GET Images handler page | Dashboard. */
+/* POST Images handler page | Dashboard. */
 dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), function (req, res) {
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
         // error=12 No person Id using image capture.
-        res.redirect('/login?error=12');
+        return res.redirect('/login?error=12');
     }
 
     //logger.info(req.file);
@@ -103,7 +170,7 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
         if (err){
             logger.error(err.message);
             // error=0 trying to connect with database
-            res.redirect('/dashboard/images?error=0');
+            return res.redirect('/dashboard/images?error=0');
         }
 
         connection.execute(
@@ -117,12 +184,12 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.redirect('/dashboard/images?error=1');
+                                return res.redirect('/dashboard/images?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
                     // Error doing select statement
-                    res.redirect('/dashboard/images?error=12');
+                    return res.redirect('/dashboard/images?error=12');
                 }
 
                 logger.info(result);
@@ -133,7 +200,7 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
                         if (err) {
                             // error=1 trying to disconnect of database
                             logger.error(err.message);
-                            res.redirect('/dashboard/images?error=1');
+                            return res.redirect('/dashboard/images?error=1');
                         }
                         logger.info('Connection to Oracle closed successfully!');
                     });
@@ -141,7 +208,6 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
             }
         );
     });
-
 });
 
 
