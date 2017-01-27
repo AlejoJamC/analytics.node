@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="portlet-body">
-                <form action="/dashboard/images/capture" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                <form action="/dashboard/images/capture" method="post" role="form" class="form-horizontal">
                     <input type="hidden" id="personid" name="personid" value="1">
                     <input id="finalimage" type="hidden" name="finalimage" value=""/>
                     <div class="mt-element-card mt-element-overlay">
@@ -153,11 +153,8 @@
             Webcam.snap( function(data_uri) {
                 document.getElementById('camresult').innerHTML = '<img src="'+data_uri+'"/>';
 
-                urltoFile(data_uri, 'captured.jpg', 'image/jpg')
-                        .then(function(file){
-                            console.log(file);
-                            document.getElementById('finalimage').value = file;
-                        });
+                var raw_image_data = data_uri.replace(/^data\:image\/jpeg\;base64\,/, '');
+                document.getElementById('finalimage').value = raw_image_data;
             } );
         }
     </script>
