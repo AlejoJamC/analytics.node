@@ -10,6 +10,7 @@ var express     = require('express');
 var indexRouter = express.Router();
 var logger      = require('../config/logger').logger;
 var oracledb    = require('oracledb');
+// TODO: Agregar passport
 
 /* GET Index page. */
 indexRouter.get('/', function (req, res) {
@@ -27,7 +28,7 @@ indexRouter.get('/login', function (req, res) {
     }
     // Session
     if(!(typeof req.session.userId === 'undefined' || typeof req.session.userId === '')){
-        res.redirect('/dashboard');
+        return res.redirect('/dashboard');
     }
 
     res.render('auth/index', {
@@ -44,7 +45,7 @@ indexRouter.post('/login', function (req, res) {
         && typeof req.body.password === 'undefined' && req.body.password === ''){
         logger.info('Login credentials: Empty values.');
         // error=11 Login credentials: Empty values.
-        res.redirect('/login?error=11');
+        return res.redirect('/login?error=11');
     }
 
     oracledb.getConnection({
@@ -56,7 +57,7 @@ indexRouter.post('/login', function (req, res) {
         if (err){
             logger.error(err.message);
             // error=0 trying to connect with database
-            res.redirect('/login?error=0');
+            return res.redirect('/login?error=0');
         }
 
         // Login credentidas
@@ -82,12 +83,12 @@ indexRouter.post('/login', function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.redirect('/login?error=1');
+                                return res.redirect('/login?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                     });
                     // Error doing select statement
-                    res.redirect('/login?error=12');
+                    return res.redirect('/login?error=12');
                 }
 
                 // Login success
@@ -99,11 +100,11 @@ indexRouter.post('/login', function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.redirect('/login?error=1');
+                                return res.redirect('/login?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    res.redirect('/login?error=13');
+                    return res.redirect('/login?error=13');
                 } else if(typeof result.rows[0] === 'undefined') {
                     logger.info('Validation error, empty values returned.');
                     connection.close(
@@ -111,11 +112,11 @@ indexRouter.post('/login', function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.redirect('/login?error=1');
+                                return res.redirect('/login?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    res.redirect('/login?error=13');
+                    return res.redirect('/login?error=13');
                 } else {
                     if(result.rows[0] == ''){
                         logger.info('Error trying to validate user credentials');
@@ -124,17 +125,17 @@ indexRouter.post('/login', function (req, res) {
                                 if (err) {
                                     // error=1 trying to disconnect of database
                                     logger.error(err.message);
-                                    res.redirect('/login?error=1');
+                                    return res.redirect('/login?error=1');
                                 }
                                 logger.info('Connection to Oracle closed successfully!');
                             });
-                        res.redirect('/login?error=14');
+                        return res.redirect('/login?error=14');
                     }
                 }
 
                 //logger.info(result.rows[0]);
-                //logger.info(result.rows[0][0]);
-                //logger.info(result.rows[0][1]);
+                logger.info(result.rows[0][0]);
+                logger.info(result.rows[0][1]);
                 req.session.userId = result.rows[0][0];
                 req.session.userFullName = result.rows[0][1];
 
@@ -143,7 +144,7 @@ indexRouter.post('/login', function (req, res) {
                         if (err) {
                             // error=1 trying to disconnect of database
                             logger.error(err.message);
-                            res.redirect('/login?error=1');
+                            return res.redirect('/login?error=1');
                         }
                         logger.info('Connection to Oracle closed successfully!');
                 });
