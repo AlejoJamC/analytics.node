@@ -3,6 +3,9 @@
 
 # Analytics
 public/assets/
+*.jpg
+*.png
+*.jpeg
 
 # dotEnv file
 *.env
