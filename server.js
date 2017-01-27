@@ -63,15 +63,15 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 // Logger.
 // TODO: Arreglar el error entre wiston y morgan
 //app.use(morgan('combined', { 'stream': logger.stream }));
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 
 // Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it.
 app.use(methodOverride());
 
 // Set Header 'X-Prowered-By'
-logger.info('Analytics Website powered by @AlejoJamC');
+logger.info('Analytics Website powered by @AnalyticsWebSite');
 app.use(function (req, res, next) {
-    res.set('X-Powered-By', 'Alejandro Mantilla < @AlejoJamC >');
+    res.set('X-Powered-By', 'Analytics Website < @AnalyticsWebSite >');
     next();
 });
 
@@ -95,6 +95,8 @@ app.use(session({
 }));
 
 // Passport middleware
+// TODO: separa los metodos passport a su propio archivo de configuracion
+//require('./config/passport')(app);
 //app.use(passport.initialize());
 //app.use(passport.session());
 
