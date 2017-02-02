@@ -14,7 +14,24 @@ var oracledb    = require('oracledb');
 
 /* GET Index page. */
 indexRouter.get('/', function (req, res) {
-    res.redirect('/login');
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/search', {
+        title   : 'Buscar | Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
 });
 
 /* GET Login page. */
@@ -28,11 +45,11 @@ indexRouter.get('/login', function (req, res) {
     }
     // Session
     if(!(typeof req.session.userId === 'undefined' || typeof req.session.userId === '')){
-        return res.redirect('/dashboard');
+        return res.redirect('/');
     }
 
     res.render('auth/index', {
-        title   : 'Analytics Website | Login',
+        title   : 'Login | Identico',
         level   : '',
         layout  : 'auth',
         error   : error
@@ -134,10 +151,12 @@ indexRouter.post('/login', function (req, res) {
                 }
 
                 //logger.info(result.rows[0]);
-                logger.info(result.rows[0][0]);
-                logger.info(result.rows[0][1]);
+                //logger.info(result.rows[0][0]);
+                //logger.info(result.rows[0][1]);
                 req.session.userId = result.rows[0][0];
                 req.session.userFullName = result.rows[0][1];
+                // TODO: Verificar el tipo de usuario
+                //req.session.userRol = result.rows[0][2];
 
                 connection.close(
                     function(err) {
@@ -148,7 +167,7 @@ indexRouter.post('/login', function (req, res) {
                         }
                         logger.info('Connection to Oracle closed successfully!');
                 });
-                res.redirect('/dashboard');
+                res.redirect('/');
             }
         );
     });
