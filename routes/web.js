@@ -40,9 +40,13 @@ function SetupWebRouter(app) {
      */
     var loginRoutes = require('./login');
     var dashRoutes  = require('./dashboard');
+    var affiliateRoutes  = require('./affiliate');
+    var referredRoutes  = require('./referred');
 
     app.use('/', loginRoutes);
     app.use('/', dashRoutes);
+    app.use('/', affiliateRoutes);
+    app.use('/', referredRoutes);
 
 }
 
