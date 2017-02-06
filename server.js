@@ -69,9 +69,9 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(methodOverride());
 
 // Set Header 'X-Prowered-By'
-logger.info('Analytics Website powered by @AnalyticsWebSite');
+logger.info('Identico Website powered by @IdenticoWebSite');
 app.use(function (req, res, next) {
-    res.set('X-Powered-By', 'Analytics Website < @AnalyticsWebSite >');
+    res.set('X-Powered-By', 'Identico Website < @IdenticoWebSite >');
     next();
 });
 
