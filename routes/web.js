@@ -41,16 +41,15 @@ function SetupWebRouter(app) {
     var loginRoutes = require('./login');
     var dashRoutes  = require('./dashboard');
     var affiliateRoutes  = require('./affiliate');
+    var fingerprintRoutes = require('./fingerprint');
     var referredRoutes  = require('./referred');
     var rolesRoutes  = require('./roles');
-    var newaffiliatesRoutes  = require('./addaffiliates');
 
     app.use('/', loginRoutes);
     app.use('/', dashRoutes);
     app.use('/', affiliateRoutes);
     app.use('/', referredRoutes);
     app.use('/', rolesRoutes);
-    app.use('/', newaffiliatesRoutes);
 
 }
 

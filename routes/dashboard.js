@@ -46,7 +46,6 @@ dashRoutes.get('/dashboard', function (req, res) {
     });
 });
 
-
 /* GET Images handler page | Dashboard. */
 dashRoutes.get('/dashboard/images', function (req, res) {
     res.render('dash/image', {

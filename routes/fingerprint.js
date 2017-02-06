@@ -9,21 +9,29 @@
 var express = require('express');
 var fingerprintRoutes = express.Router();
 var logger = require('../config/logger').logger;
+var base64      = require('../config/base64');
 var oracledb = require('oracledb');
 
-/* POST Fingerprint endpoint. */
-/* /api/v0/fingerprints  */
-fingerprintRoutes.post('/api/' + process.env.API_VERSION + '/fingerprints', function (req, res) {
-    if(typeof req.body.fingerprint === 'undefined' || req.body.fingerprint === ''
-    || typeof req.body.personId === 'undefined' || req.body.personId === ''){
-        res.status(422).send('Error validando datos');
+/* GET Fingerprint save page. */
+fingerprintRoutes.get('/fingerprint', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
     }
-
-
-    var fingerprint =  req.body.fingerprint;
-
-
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/fingerprint', {
+        title   : 'Detalle de Afiliado | Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
 });
-
 
 module.exports = fingerprintRoutes;
