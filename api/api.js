@@ -53,24 +53,24 @@ app.use(morgan('dev'));
 // Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it.
 app.use(methodOverride());
 
-// Set Header 'X-Prowered-By'
-logger.info('Analytics API powered by @AlejoJamC');
-app.use(function (req, res, next) {
-    res.set('X-Powered-By', 'Alejandro Mantilla < @AlejoJamC >');
-    next();
-});
-
 // Body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+// Set Header 'X-Prowered-By'
+logger.info('Indetico API powered by @Identico');
+app.use(function (req, res, next) {
+    res.set('X-Powered-By', 'Identico Website < @Identico >');
+    next();
+});
+
 // Session.
 app.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: '3f1l 4 73g 0t d33n yll43r u s1ht d43r n4c u f1'
+    secret: '1w1OyWZUbWKDIb2ItA7xadEe2bGOYNeHcS8tMzllEXyaBGh6Xw'
 }));
 
 // Passport middleware
