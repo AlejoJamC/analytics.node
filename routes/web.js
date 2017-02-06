@@ -48,6 +48,7 @@ function SetupWebRouter(app) {
     app.use('/', loginRoutes);
     app.use('/', dashRoutes);
     app.use('/', affiliateRoutes);
+    app.use('/', fingerprintRoutes);
     app.use('/', referredRoutes);
     app.use('/', rolesRoutes);
 

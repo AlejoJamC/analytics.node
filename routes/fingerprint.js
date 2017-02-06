@@ -13,7 +13,7 @@ var base64      = require('../config/base64');
 var oracledb = require('oracledb');
 
 /* GET Fingerprint save page. */
-fingerprintRoutes.get('/fingerprint', function (req, res) {
+fingerprintRoutes.get('/fingerprints', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
