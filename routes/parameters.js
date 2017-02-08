@@ -16,7 +16,139 @@ var oracledb    = require('oracledb');
 
 
 /* GET Index page. */
-parametersRoutes.get('/parameters', function (req, res) {
+parametersRoutes.get('/parametros', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/departamentos', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/documentos', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/municipios', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/paises', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/parametersDetails', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/zonas', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
