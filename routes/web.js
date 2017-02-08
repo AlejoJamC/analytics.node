@@ -44,6 +44,7 @@ function SetupWebRouter(app) {
     var fingerprintRoutes = require('./fingerprint');
     var referredRoutes  = require('./referred');
     var rolesRoutes  = require('./roles');
+    var parametersRoutes  = require('./parameters');
 
     app.use('/', loginRoutes);
     app.use('/', dashRoutes);
@@ -51,6 +52,7 @@ function SetupWebRouter(app) {
     app.use('/', fingerprintRoutes);
     app.use('/', referredRoutes);
     app.use('/', rolesRoutes);
+    app.use('/', parametersRoutes);
 
 }
 
