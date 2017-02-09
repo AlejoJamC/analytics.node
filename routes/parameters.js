@@ -16,7 +16,7 @@ var oracledb    = require('oracledb');
 
 
 /* GET Index page. */
-parametersRoutes.get('/parametros', function (req, res) {
+parametersRoutes.get('/parametros/afiliados', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -29,9 +29,9 @@ parametersRoutes.get('/parametros', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableAfiliados', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
@@ -60,6 +60,50 @@ parametersRoutes.get('/parametros/autorizaciones', function (req, res) {
 });
 
 /* GET Index page. */
+parametersRoutes.get('/parametros/personas', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tablePersonas', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableAbreviaturas', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Index page. */
 parametersRoutes.get('/parametros/departamentos', function (req, res) {
     var error = '';
     // Basic error validator
@@ -73,13 +117,14 @@ parametersRoutes.get('/parametros/departamentos', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableDepartamentos', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
 });
+
 
 /* GET Index page. */
 parametersRoutes.get('/parametros/documentos', function (req, res) {
@@ -95,9 +140,30 @@ parametersRoutes.get('/parametros/documentos', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableDocumentos', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+/* GET Index page. */
+parametersRoutes.get('/parametros/etnias', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableEtnias', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
@@ -117,9 +183,9 @@ parametersRoutes.get('/parametros/municipios', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableMunicipios', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
@@ -139,9 +205,9 @@ parametersRoutes.get('/parametros/paises', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tablePaises', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
@@ -161,9 +227,30 @@ parametersRoutes.get('/parametros/zonas', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableZonas', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+/* GET Index page. */
+parametersRoutes.get('/parametros/usuarios', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableUsuarios', {
+        title   : 'Detalle de Parametos| Identico',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
