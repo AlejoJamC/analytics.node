@@ -38,7 +38,7 @@ parametersRoutes.get('/parametros', function (req, res) {
 });
 
 /* GET Index page. */
-parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
+parametersRoutes.get('/parametros/autorizaciones', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -51,9 +51,9 @@ parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
     }
     // User Rol
     // If ............
-    res.render('dash/parametersDetails', {
+    res.render('dash/tableAutorizaciones', {
         title   : 'Detalle de Parametos| Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
         error   : error
     });
