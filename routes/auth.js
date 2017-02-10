@@ -35,10 +35,10 @@ passport.use(new BasicStrategy(
             var user        = req.body.username;
             var password    = req.body.password;
 
-            var sql = "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
-                " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
-                " FROM ANALYTICS.\"Usuarios\" " +
-                " WHERE \"Usuarios\".\"usuario\" ='"+ user +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
+            var sql = "SELECT HUELLA.\"USUARIOS\".\"idUsuario\", HUELLA.\"USUARIOS\".\"nombre\", " +
+                " HUELLA.\"USUARIOS\".\"usuario\", HUELLA.\"USUARIOS\".\"password\" " +
+                " FROM HUELLA.\"USUARIOS\" " +
+                " WHERE \"USUARIOS\".\"usuario\" ='"+ user +"' AND \"USUARIOS\".\"password\" ='" +  password + "'";
 
             connection.execute(
                 // The statement to execute

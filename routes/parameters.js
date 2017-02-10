@@ -93,14 +93,116 @@ parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
     res.render('dash/tableAbreviaturas', {
         title   : 'Detalle de Parametos| Identico',
         level   : '../',
         layout  : 'dash',
         error   : error
     });
+});
+
+/* GET Index page. */
+parametersRoutes.get('/parametros/abreviaturas/ajax', function (req, res) {
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return callback(err);
+        }
+
+        var sql = "SELECT \"PABREVIATURAS\".\"IDABREVIATURA\", " +
+            "\"PABREVIATURAS\".\"ABREVIATURA\"" +
+            "FROM " +
+            "\"PABREVIATURAS\" " +
+            "ORDER BY " +
+            "\"PABREVIATURAS\".\"ABREVIATURA\" ASC";
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return callback(err.message);
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return callback(err);
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return callback(err.message);
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return callback('Empty values returned. [1]');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return callback(err.message);
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return callback('Empty values returned. [2]');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return callback(err.message);
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return callback('Empty values returned. [3]');
+                    }
+                }
+
+                var data = result;
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return callback(err.message);
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(data);
+            }
+        );
+    });
+
+
 });
 
 /* GET Index page. */
@@ -147,6 +249,7 @@ parametersRoutes.get('/parametros/documentos', function (req, res) {
         error   : error
     });
 });
+
 /* GET Index page. */
 parametersRoutes.get('/parametros/etnias', function (req, res) {
     var error = '';
@@ -234,6 +337,7 @@ parametersRoutes.get('/parametros/zonas', function (req, res) {
         error   : error
     });
 });
+
 /* GET Index page. */
 parametersRoutes.get('/parametros/usuarios', function (req, res) {
     var error = '';
