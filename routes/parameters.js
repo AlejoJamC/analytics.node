@@ -227,7 +227,6 @@ parametersRoutes.get('/parametros/departamentos', function (req, res) {
     });
 });
 
-
 /* GET Index page. */
 parametersRoutes.get('/parametros/documentos', function (req, res) {
     var error = '';
