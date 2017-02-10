@@ -22,10 +22,10 @@ module.exports = function () {
 
                 // Login credentidas
 
-                var sql = "SELECT ANALYTICS.\"Usuarios\".\"idUsuario\", ANALYTICS.\"Usuarios\".\"nombre\", " +
-                    " ANALYTICS.\"Usuarios\".\"usuario\", ANALYTICS.\"Usuarios\".\"password\" " +
-                    " FROM ANALYTICS.\"Usuarios\" " +
-                    " WHERE \"Usuarios\".\"usuario\" ='"+ username +"' AND \"Usuarios\".\"password\" ='" +  password + "'";
+                var sql = "SELECT HUELLA.\"USUARIOS\".\"idUsuario\", HUELLA.\"USUARIOS\".\"nombre\", " +
+                    " HUELLA.\"USUARIOS\".\"usuario\", HUELLA.\"USUARIOS\".\"password\" " +
+                    " FROM HUELLA.\"USUARIOS\" " +
+                    " WHERE \"USUARIOS\".\"usuario\" ='"+ username +"' AND \"USUARIOS\".\"password\" ='" +  password + "'";
 
                 connection.execute(
                     // The statement to execute
