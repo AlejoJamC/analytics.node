@@ -54,6 +54,27 @@ referredRouter.get('/referred', function (req, res) {
     });
 });
 
+referredRouter.get('/referred/edit', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/referredDetailsEdit', {
+        title   : 'Editar Referido | Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 /* GET Images input / capture page. */
 referredRouter.get('/referred/images', function (req, res) {
     var error = '';

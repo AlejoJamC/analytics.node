@@ -17,10 +17,7 @@ $( document ).ready(function() {
                         '<td>' + data.rows[i][2] + '</td>' +
                         '<td>' + data.rows[i][3] + '</td>' +
                         '<td>' + data.rows[i][4] + '</td>' +
-                        '<td>' + data.rows[i][5] + '</td>' +
-                        '<td>' + data.rows[i][6] + '</td>' +
-                        '<td>' + data.rows[i][7] + '</td>' +
-                        '<td>' + data.rows[i][8] + '</td>' +
+
                         '<td>' +
                         '<div style="text-align:center" >' +
                         '<a href="/parametros/afiliados/editar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
