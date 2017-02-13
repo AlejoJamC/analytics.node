@@ -1,9 +1,9 @@
 // Llamados al endpoint de carga de datos iniciales+
-$( document ).ready(function() {
+function CargarDatos() {
     var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
-        url: "/parametros/etnias/ajax"
+        url: "/parametros/paises/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,11 +16,11 @@ $( document ).ready(function() {
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/etnias/editar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/parametros/paises/editar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/etnias/eliminar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/parametros/paises/eliminar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
-                        '<a href="/parametros/etnias/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                        '<a href="/parametros/paises/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                         '<i class="fa fa-share"></i> Ver </a>' +
                         '</div>' +
                         '</td>' +
@@ -34,7 +34,5 @@ $( document ).ready(function() {
                 TableDatatablesManaged.init();
             }
         });
-});
-
-
+}
 
