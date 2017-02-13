@@ -21,11 +21,11 @@ function CargarDatos() {
                         '<td>' + data.rows[i][6] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/personas/editar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/parametros/personas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/personas/eliminar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/parametros/personas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
-                        '<a href="/parametros/personas/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                        '<a href="/parametros/personas/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                         '<i class="fa fa-share"></i> Ver </a>' +
                         '</div>' +
                         '</td>' +

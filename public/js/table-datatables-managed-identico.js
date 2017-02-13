@@ -47,22 +47,8 @@ var TableDatatablesManaged = function () {
             // set the initial value
             "pageLength": 5,            
             "pagingType": "bootstrap_full_number",
-            "columnDefs": [
-                {  // set default column settings
-                    'orderable': false,
-                    'targets': [0]
-                }, 
-                {
-                    "searchable": false,
-                    "targets": [0]
-                },
-                {
-                    "className": "dt-right", 
-                    //"targets": [2]
-                }
-            ],
             "order": [
-                [1, "asc"]
+                [0, "asc"]
             ] // set first column as a default sort by asc
         });
 
