@@ -141,8 +141,6 @@ parametersRoutes.get('/parametros/afiliados/ajax', function (req, res) {
             }
         );
     });
-
-
 });
 
 /* GET autorizaciones page. */

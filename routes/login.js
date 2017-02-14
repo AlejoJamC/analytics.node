@@ -12,28 +12,6 @@ var logger      = require('../config/logger').logger;
 var oracledb    = require('oracledb');
 // TODO: Agregar passport
 
-/* GET Index page. */
-indexRouter.get('/', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/search', {
-        title   : 'Buscar | Identico',
-        level   : '',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
 /* GET Login page. */
 indexRouter.get('/login', function (req, res) {
     var error = '';

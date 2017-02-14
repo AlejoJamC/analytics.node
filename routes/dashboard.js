@@ -31,6 +31,132 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 
+/* GET Index page. */
+dashRoutes.get('/', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/search', {
+        title   : 'Buscar | Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+dashRoutes.get('/search/ajax', function (req, res) {
+    var personDoc = req.query.cedula;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "SELECT HUELLA.NPERSONAS.IDPERSONA, HUELLA.NPERSONAS.PRIMERAPELLIDO," +
+            "HUELLA.NPERSONAS.SEGUNDOAPELLIDO, HUELLA.NPERSONAS.PRIMERNOMBRE, HUELLA.NPERSONAS.SEGUNDONOMBRE," +
+            "HUELLA.NPERSONAS.IDDOCUMENTO, HUELLA.NPERSONAS.NODOCUMENTO,  HUELLA.NPERSONAS.FECHA_NACIMIENTO," +
+            "HUELLA.NPERSONAS.TELEFONOFIJO, HUELLA.NPERSONAS.TELEFONOMOVIL, HUELLA.NPERSONAS.HUELLA1, " +
+            "HUELLA.NPERSONAS.HUELLA2,    HUELLA.NPERSONAS.FOTO " +
+            " FROM  HUELLA.NPERSONAS" +
+            " WHERE HUELLA.NPERSONAS.NODOCUMENTO = " + personDoc;
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [2]'});
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.send({ data : 'Empty values returned. [3]'});
+                    }
+                }
+
+                var data = result;
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(data);
+            }
+        );
+    });
+});
+
+
 /* GET Index page | Dashboard. */
 dashRoutes.get('/dashboard', function (req, res) {
     // Basic error validator
