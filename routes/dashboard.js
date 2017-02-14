@@ -110,7 +110,7 @@ dashRoutes.get('/search/ajax', function (req, res) {
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    return res.send({ data : 'Empty values returned. [1]'});
+                    return res.send({ data : 'Empty values returned.', code : 1});
                 } else if(typeof result.rows[0] === 'undefined') {
                     logger.info('Validation error, empty values returned.');
                     connection.close(
@@ -122,7 +122,7 @@ dashRoutes.get('/search/ajax', function (req, res) {
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    return res.send({ data : 'Empty values returned. [2]'});
+                    return res.send({ data : 'Empty values returned.', code : 2});
                 } else {
                     if(result.rows[0] == ''){
                         logger.info('Error trying to validate user credentials');
@@ -135,7 +135,7 @@ dashRoutes.get('/search/ajax', function (req, res) {
                                 }
                                 logger.info('Connection to Oracle closed successfully!');
                             });
-                        return res.send({ data : 'Empty values returned. [3]'});
+                        return res.send({ data : 'Empty values returned.', code : 3});
                     }
                 }
 
