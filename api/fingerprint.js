@@ -18,8 +18,8 @@ module.exports.getFingerprint = function (req, res) {
 
     var personId = req.query.personId;
 
-    var sql = "SELECT ANALYTICS.\"NPersonas\".\"idPersona\" AS personId, utl_raw.cast_to_varchar2(ANALYTICS.\"NPersonas\".\"Huella1\") AS huella1, utl_raw.cast_to_varchar2(ANALYTICS.\"NPersonas\".\"Huella2\") AS huella2 " +
-    " FROM ANALYTICS.\"NPersonas\"  WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+    var sql = "SELECT HUELLA.\"NPERSONAS\".\"IDPERSONA\" AS personId, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"Huella1\") AS huella1, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"Huella2\") AS huella2 " +
+    " FROM HUELLA.\"NPERSONAS\"  WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
 
     logger.info(sql);
 
@@ -47,12 +47,12 @@ module.exports.getFingerprint = function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.send(err.message);
+                                return res.send(err.message);
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
                     // Error doing select statement
-                    res.send(err.message);
+                    return res.send(err.message);
                 }
 
                 logger.info(result);
@@ -69,7 +69,7 @@ module.exports.getFingerprint = function (req, res) {
                         if (err) {
                             // error=1 trying to disconnect of database
                             logger.error(err.message);
-                            res.send(err.message);
+                            return res.send(err.message);
                         }
                         logger.info('Connection to Oracle closed successfully!');
                     });
@@ -88,22 +88,24 @@ module.exports.postFingeprint = function (req, res) {
         return res.send('Empty values: personId and both fingerprints values required.');
     }
 
-    // Save the fingerprint by user
-    // Required fields
     var personId            = req.body.personId;
-    var fingerprint         = req.body.fingerprint;
+    var fingerprint         = Buffer(req.body.fingerprint, 'base64');
     var fingerprintNumber   = req.body.fingerprintNumber;
+
+    logger.info(typeof  fingerprint);
+
+    return;
 
     var sql = "";
 
     if (fingerprintNumber == 1){
-        sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Huella1\" = utl_raw.cast_to_raw('" +
-            fingerprint + "') " +
-            " WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
+            fingerprint + "',4000,'z') " +
+            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
     }else{
-        sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Huella2\" = utl_raw.cast_to_raw('" +
-            fingerprint + "') " +
-            " WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
+            fingerprint + "',4000,'z') " +
+            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
     }
 
     logger.info(sql);
@@ -132,12 +134,12 @@ module.exports.postFingeprint = function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                res.send(err.message);
+                                return res.send(err.message);
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
                     // Error doing select statement
-                    res.send(err.message);
+                    return res.send(err.message);
                 }
 
                 logger.info(result);
@@ -148,11 +150,11 @@ module.exports.postFingeprint = function (req, res) {
                         if (err) {
                             // error=1 trying to disconnect of database
                             logger.error(err.message);
-                            res.send(err.message);
+                            return res.send(err.message);
                         }
                         logger.info('Connection to Oracle closed successfully!');
                     });
-                res.status(200).json({ message:"Fingerprints updated succesfully" });
+                return res.status(200).json({ message:"Fingerprints updated succesfully" });
             }
         );
     });
