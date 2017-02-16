@@ -15,13 +15,13 @@ function CargarDatos() {
                         '<td>' + data.rows[i][0] + '</td>' +
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
+
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/abreviaturas/editar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/parametros/abreviaturas/edit'+ /*data.rows[i][0].toLowerCase() + */'" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
                         '<a href="/parametros/abreviaturas/eliminar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
-                        '<a href="/parametros/abreviaturas/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
-                        '<i class="fa fa-share"></i> Ver </a>' +
+                        '<div style="text-align:center" >' +
                         '</div>' +
                         '</td>' +
                         '</tr>';

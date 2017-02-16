@@ -16,6 +16,14 @@
     <link href="{{level}}assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="{{level}}assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
     <link href="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
+
+    <link href="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
+
 {{/contentFor}}
 
 <div class="profile">
@@ -158,7 +166,12 @@
                                                                     <div class="col-md-9">
                                                                         <select class="form-control">
                                                                             <option value="">CC</option>
-                                                                            <option value="">TI</option>
+                                                                            <option value="">CD</option>
+                                                                            <option value="">CE</option>
+                                                                            <option value="">CN</option>
+                                                                            <option value="">PA</option>
+
+
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -194,7 +207,8 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Fecha Nacimiento:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="09/05/1990"> </div>
+                                                                        <input class="form-control form-control-inline input-medium date-picker" placeholder="06/25/1190" />
+                                                                       </div>
 
                                                                 </div>
                                                             </div>
@@ -207,10 +221,8 @@
                                                                     <label class="control-label col-md-3">Zona</label>
                                                                     <div class="col-md-9">
                                                                         <select class="form-control" data-placeholder="Choose a Category" tabindex="1">
-                                                                            <option value="Category 1">NA</option>
-                                                                            <option value="Category 2">Category 2</option>
-                                                                            <option value="Category 3">Category 5</option>
-                                                                            <option value="Category 4">Category 4</option>
+                                                                            <option value="Category 1">Rural</option>
+                                                                            <option value="Category 2">Urbana</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -221,10 +233,11 @@
                                                                     <label class="control-label col-md-3">Etnia</label>
                                                                     <div class="col-md-9">
                                                                         <select class="form-control" data-placeholder="Choose a Category" tabindex="1">
-                                                                            <option value="Category 1">NA</option>
-                                                                            <option value="Category 2">Category 2</option>
-                                                                            <option value="Category 3">Category 5</option>
-                                                                            <option value="Category 4">Category 4</option>
+                                                                            <option value="Category 1">	Indígena</option>
+                                                                            <option value="Category 2"> Rrom (Gitano)</option>
+                                                                            <option value="Category 3">	Raizal (San Andrés y Providencia)</option>
+                                                                            <option value="Category 4">	Palenquero (San Basilio de Palenque)</option>
+                                                                            <option value="Category 4">	Negro(a), Afrocolombiano(a)</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -235,26 +248,41 @@
                                                         <!--/row-->
                                                         <div class="row">
                                                             <div class="col-md-6">
+
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Dirección</label>
                                                                     <div class="col-md-9">
 
                                                                         <input type="text" class="form-control" placeholder="Cra 27 # 49-45"> </div>
                                                                 </div>
-                                                            </div>
 
-                                                        </div>
-                                                        <div class="row">
+                                                            </div>
+                                                            <!--/span-->
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Municipio</label>
                                                                     <div class="col-md-9">
                                                                         <select class="form-control">
                                                                             <option>Bucaramanga</option>
+                                                                            <option>Giron</option>
+                                                                            <option>Floridablanca</option>
 
                                                                         </select>
                                                                     </div>
                                                                 </div>
+                                                            </div>
+                                                            <!--/span-->
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3">Detalle Dir</label>
+                                                                        <div class="col-md-9">
+
+                                                                            <input type="text" class="form-control" placeholder="Cra 27 # 49-45 Laureles"> </div>
+                                                                    </div>
+
                                                             </div>
                                                             <!--/span-->
                                                             <div class="col-md-6">
@@ -270,34 +298,12 @@
                                                             </div>
                                                             <!--/span-->
                                                         </div>
-                                                        <!--/row-->
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3">Post Code</label>
-                                                                    <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="457890"> </div>
-                                                                </div>
-                                                            </div>
-                                                            <!--/span-->
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label class="control-label col-md-3">Pais</label>
-                                                                    <div class="col-md-9">
-                                                                        <select class="form-control">
-                                                                            <option>Colombia</option>
 
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!--/span-->
-                                                        </div>
                                                         <!--/row-->
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label class="control-label col-md-3">Telefono Fijo:</label>
+                                                                    <label class="control-label col-md-3">Tel. Fijo:</label>
                                                                     <div class="col-md-9">
                                                                         <input type="text" class="form-control" placeholder="6897848"> </div>
                                                                 </div>
@@ -305,7 +311,7 @@
                                                             <!--/span-->
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label class="control-label col-md-3">Telefono Celular:</label>
+                                                                    <label class="control-label col-md-3">Tel. Movil:</label>
                                                                     <div class="col-md-9">
                                                                         <input type="text" class="form-control" placeholder="3254895878"> </div>
                                                                 </div>
@@ -383,10 +389,19 @@
     <script src="{{level}}assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
 
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/bootstrap-editable/inputs-ext/address/address.js" type="text/javascript"></script>
+
+    <script src="../assets/global/plugins/moment.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+    <script src="../assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
 
 
 
