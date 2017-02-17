@@ -43,26 +43,77 @@ function ConsultarCedula() {
                 return;
             }
 
+            var tipoPersona = data.rows[0][5];
             var nombreUsuario = data.rows[0][3] + " " + data.rows[0][1];
+            var personId = data.rows[0][0];
 
-            swal({
-                    title:"Verificacion Exitosa",
-                    text: "Usuario: " + nombreUsuario,
-                    type:"success",
-                    confirmButtonClass: "btn-success",
-                    confirmButtonText: "Afiliado",
-                    closeOnConfirm: true,
-                    showCancelButton: true,
-                    cancelButtonClass: "btn-warning",
-                    cancelButtonText: "Referido"
-                },
-                function(isConfirm){
-                    if (isConfirm) {
-                        window.location.href = "/affiliates";
-                    }else{
-                        window.location.href = "/referred";
-                    }
-                });
+            switch (tipoPersona){
+                case 0:
+                    swal({
+                        title:"Advertencia NO AFILIADO NI REFERIDO.",
+                        text: "Numero de cedula encontrado, Usuario: " + nombreUsuario,
+                        type:"warning",
+                        confirmButtonClass: "btn-warning",
+                        confirmButtonText: "Reintentar",
+                        closeOnConfirm: true
+                    });
+                    break;
+                case 1:
+                    swal({
+                            title:"Verificacion Exitosa, Tipo: AFILIADO",
+                            text: "Usuario: " + nombreUsuario,
+                            type:"success",
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Afiliado",
+                            closeOnConfirm: true
+                        },
+                        function(isConfirm){
+                            if (isConfirm) {
+                                window.location.href = "/affiliates/" + personId;
+                            }
+                        });
+                    break;
+                case 2:
+                    swal({
+                            title:"Verificacion Exitosa, Tipo: REFERIDO",
+                            text: "Usuario: " + nombreUsuario,
+                            type:"success",
+                            closeOnConfirm: true,
+                            showCancelButton: true,
+                            cancelButtonClass: "btn-warning",
+                            cancelButtonText: "Referido"
+                        },
+                        function(isConfirm){
+                            if (isConfirm) {
+                                window.location.href = "/referred/" + personId;
+                            }else{
+                                window.location.href = "/referred/" + personId;
+                            }
+                        });
+                    break;
+                case 3:
+                    swal({
+                            title:"Verificacion Exitosa, Tipo: AFILIADO Y REFERIDO",
+                            text: "Usuario: " + nombreUsuario,
+                            type:"success",
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Afiliado",
+                            closeOnConfirm: true,
+                            showCancelButton: true,
+                            cancelButtonClass: "btn-warning",
+                            cancelButtonText: "Referido"
+                        },
+                        function(isConfirm){
+                            if (isConfirm) {
+                                window.location.href = "/affiliates/" + personId;
+                            }else{
+                                window.location.href = "/referred/" + personId;
+                            }
+                        });
+                    break;
+            }
+
+
         });
 }
 
