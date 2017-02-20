@@ -8,7 +8,7 @@ public/assets/
 *.jpeg
 
 # dotEnv file
-*.env
+#*.env
 
 # Logs
 logs

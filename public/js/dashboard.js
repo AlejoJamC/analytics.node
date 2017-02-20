@@ -22,6 +22,8 @@ function ConsultarCedula() {
         url: "/search/ajax?cedula=" + cedula
     })
         .done(function (data) {
+            console.log(data);
+            console.log(data.rows);
             if(typeof data.code !== 'undefined' || data.code === '' || data.code === 2){
                 swal({
                     title:"Numero de cedula no encontrado.",
