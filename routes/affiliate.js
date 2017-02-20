@@ -16,6 +16,7 @@ var fs          = require('fs');
 var multer      = require('multer');
 var path        = require('path');
 var uuid        = require('node-uuid');
+var moment      = require('moment');
 
 // Upload and rename files
 var storage = multer.diskStorage({
@@ -30,7 +31,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-/* GET Index page. */
+/* GET Affiliates Index page. */
 affiliateRouter.get('/affiliates', function (req, res) {
     var error = '';
     // Basic error validator
@@ -49,6 +50,148 @@ affiliateRouter.get('/affiliates', function (req, res) {
         level   : '',
         layout  : 'dash',
         error   : error
+    });
+});
+
+/* GET Affiliates by Id page. */
+affiliateRouter.get('/affiliates/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+
+    var idAfiliado = req.params.id;
+    var currentURL = '/affiliates/' + idAfiliado;
+    var afiliadoResult = {};
+
+    // Consulto el los datos del afiliado
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(currentURL + '?error=0');
+        }
+
+        var sql = "SELECT \"NPERSONAS\".* " +
+        "FROM \"NPERSONAS\" " +
+        "WHERE \"NPERSONAS\".\"IDPERSONA\"=" + idAfiliado;
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(currentURL + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(currentURL + '?error=12');
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(currentURL + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(currentURL + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(currentURL + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(currentURL + '?error=13');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(currentURL + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(currentURL + '?error=14');
+                    }
+                }
+
+                afiliadoResult.IDPERSONA = result.rows[0][0];
+                afiliadoResult.PRIMERAPELLIDO = result.rows[0][1];
+                afiliadoResult.SEGUNDOAPELLIDO = result.rows[0][2];
+                afiliadoResult.PRIMERNOMBRE = result.rows[0][3];
+                afiliadoResult.SEGUNDONOMBRE = result.rows[0][4];
+                afiliadoResult.IDDOCUMENTO = result.rows[0][5];
+                afiliadoResult.NODOCUMENTO = result.rows[0][6];
+                afiliadoResult.FECHA_NACIMIENTO = moment(result.rows[0][7]).format('DD/MM/YYYY');
+                afiliadoResult.TELEFONOFIJO = result.rows[0][8];
+                afiliadoResult.TELEFONOMOVIL = result.rows[0][9];
+                afiliadoResult.HUELLA1 = result.rows[0][10];
+                afiliadoResult.HUELLA2 = result.rows[0][11];
+                afiliadoResult.FOTO = result.rows[0][12];
+
+                //logger.info(JSON.stringify(afiliadoResult));
+                //logger.info(afiliadoResult);
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(currentURL + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                //res.redirect('/');
+                // User Rol
+                // If ............
+                res.render('dash/affiliateDetails', {
+                    title   : 'Detalle de Afiliado | Identico',
+                    level   : '../',
+                    layout  : 'dash',
+                    error   : error,
+                    idAfiliado : idAfiliado,
+                    idUserSession : req.session.userId,
+                    afiliado : afiliadoResult
+                });
+            }
+        );
     });
 });
 
