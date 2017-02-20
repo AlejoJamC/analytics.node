@@ -54,7 +54,10 @@ affiliateRouter.get('/affiliates', function (req, res) {
 });
 
 /* GET Affiliates by Id page. */
-affiliateRouter.get('/affiliates/:id', function (req, res) {
+affiliateRouter.get('/affiliates/:id', function (req, res, next) {
+    if(req.params.id === 'referred'){
+        next();
+    }
     var error = '';
     // Basic error validator
     // Error
@@ -190,6 +193,130 @@ affiliateRouter.get('/affiliates/:id', function (req, res) {
                     idUserSession : req.session.userId,
                     afiliado : afiliadoResult
                 });
+            }
+        );
+    });
+});
+
+/* GET Referred by Id Affiliate page. */
+affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+
+    var idAfiliado = req.params.id;
+    var afiliadoResult = {};
+
+    // Consulto el los datos del afiliado
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.json({error: 'Error=0 trying to connect with database'});
+        }
+
+        var sql = "SELECT a.IDPERSONA, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO, " +
+            "p.PRIMERNOMBRE, p.SEGUNDONOMBRE, p.IDDOCUMENTO, p.NODOCUMENTO, " +
+            "p.FECHA_NACIMIENTO, GENERO, IDZONA, IDETNIA, IDMUNICIPIO, IDDEPARTAMENTO, DIRECCION, DIRCOMPLEMENTARIA, CORREO," +
+            "p.TELEFONOFIJO, p.TELEFONOMOVIL, p.huella1, p.huella2, p.foto, t.IDREFERIDO, " +
+            " r.PRIMERAPELLIDO, r.SEGUNDOAPELLIDO, r.PRIMERNOMBRE, r.SEGUNDONOMBRE, r.IDDOCUMENTO, r.NODOCUMENTO, " +
+            "r.FECHA_NACIMIENTO, r.TELEFONOFIJO, r.TELEFONOMOVIL, r.huella1, r.huella2, r.foto " +
+            "FROM NAFILIADOS a,NPERSONAS p, NAUTORIZACIONES t, NPERSONAS r " +
+            "WHERE p.IDPERSONA = a.IDPERSONA " +
+            "AND t.IDAFILIADO = a.IDPERSONA       " +
+            "AND r.idpersona = t.IDREFERIDO  " +
+            "AND a.IDPERSONA=" + idAfiliado;
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.json({error: 'Error=1 trying to disconnect of database'});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.json({error: 'Error doing select statement'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.json({error: 'Error=1 trying to disconnect of database'});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.json({error: 'Error doing select statement'});
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.json({error: 'Error=1 trying to disconnect of database'});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.json({error: 'Error doing select statement'});
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.json({error: 'Error=1 trying to disconnect of database'});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.json({error: 'Error doing select statement'});
+                    }
+                }
+
+                afiliadoResult = result.rows;
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.json({error: 'Error=1 trying to disconnect of database'});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.json({response : afiliadoResult});
             }
         );
     });
