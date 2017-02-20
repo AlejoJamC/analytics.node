@@ -31,10 +31,12 @@ passport.use(new BasicStrategy(
 
             // Login credentidas
 
-            var sql = "SELECT HUELLA.\"USUARIOS\".\"idUsuario\", HUELLA.\"USUARIOS\".\"nombre\", " +
-                " HUELLA.\"USUARIOS\".\"usuario\", HUELLA.\"USUARIOS\".\"password\" " +
-                " FROM HUELLA.\"USUARIOS\" " +
-                " WHERE \"USUARIOS\".\"usuario\" ='"+ username +"' AND \"USUARIOS\".\"password\" ='" +  password + "'";
+            var sql = "SELECT \"PUSUARIOS\".* " +
+                " FROM \"PUSUARIOS\" " +
+                " WHERE " +
+                " \"PUSUARIOS\".\"USUARIO_USER\" ='" + user + "' " +
+                " AND " +
+                " \"PUSUARIOS\".\"USUARIO_PASS\"='" + password + "'";
 
             connection.execute(
                 // The statement to execute
