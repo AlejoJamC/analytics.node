@@ -403,8 +403,6 @@ parametersRoutes.get('/parametros/personas/ajax', function (req, res) {
 });
 
 /* GET abreviaturas page. */
-
-
 parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
     var error = '';
     // Basic error validator
@@ -461,8 +459,6 @@ parametersRoutes.get('/parametros/abreviaturas/save', function (req, res) {
         error   : error
     });
 });
-
-
 
 /* GET Index ajax method. */
 parametersRoutes.get('/parametros/abreviaturas/ajax', function (req, res) {

@@ -145,8 +145,8 @@ affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
         // Save the image path in the database
         var personId = req.body.personid;
 
-        var sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Foto\" = '" +
-            imagepath + "' WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+        var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
+            imagepath + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
 
         //logger.info(sql);
 
@@ -215,8 +215,8 @@ affiliateRouter.post('/affiliates/images/input', upload.single('inputpicture'), 
 
     var personId = req.body.personid;
 
-    var sql = "UPDATE ANALYTICS.\"NPersonas\" SET ANALYTICS.\"NPersonas\".\"Foto\" = '" +
-        req.file.path + "' WHERE ANALYTICS.\"NPersonas\".\"idPersona\" =" + personId;
+    var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
+        req.file.path + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
 
     //logger.info(sql);
 

@@ -18,7 +18,7 @@ module.exports.getFingerprint = function (req, res) {
 
     var personId = req.query.personId;
 
-    var sql = "SELECT HUELLA.\"NPERSONAS\".\"IDPERSONA\" AS personId, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"Huella1\") AS huella1, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"Huella2\") AS huella2 " +
+    var sql = "SELECT HUELLA.\"NPERSONAS\".\"IDPERSONA\" AS personId, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA1\") AS huella1, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA2\") AS huella2 " +
     " FROM HUELLA.\"NPERSONAS\"  WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
 
     logger.info(sql);
