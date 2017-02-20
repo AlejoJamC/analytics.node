@@ -1875,7 +1875,7 @@ parametersRoutes.get('/parametros/zonas/ajax', function (req, res) {
             return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
         }
 
-        var sql = "SELECT \"PZONAS\".\"IDZONA\", " +
+      var sql = "SELECT \"PZONAS\".\"IDZONA\", " +
             "\"PZONAS\".\"ZONA\"  " +
             "FROM " +
             "\"PZONAS\" " +
@@ -1987,5 +1987,168 @@ parametersRoutes.get('/parametros/usuarios', function (req, res) {
         error   : error
     });
 });
+
+
+
+parametersRoutes.get('/parametros/roles', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableRoles', {
+        title   : 'Detalle de Roles| Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+parametersRoutes.get('/parametros/roles/edit', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableRolesEdit', {
+        title   : 'Editar Parametros| Identico',
+        level   : '../../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+
+parametersRoutes.get('/parametros/roles/ajax', function (req, res) {
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        /*   var sql = "SELECT \"PZONAS\".\"IDZONA\", " +
+         "\"PZONAS\".\"ZONA\"  " +
+         "FROM " +
+         "\"PZONAS\" " +
+         "ORDER BY " +
+         "\"PZONAS\".\"ZONA\" ASC";*/
+
+        var sql = "SELECT \"PROLES\".\"ROL_CODE\", " +
+            "\"PROLES\".\"ROL_DESC\"  " +
+            "FROM " +
+            "\"PROLES\" " +
+            "ORDER BY " +
+            "\"PROLES\".\"ROL_CODE\" ASC";
+
+
+
+
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [2]'});
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.send({ data : 'Empty values returned. [3]'});
+                    }
+                }
+
+                var data = result;
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(data);
+            }
+        );
+    });
+
+
+});
+
+
+
 
 module.exports = parametersRoutes;
