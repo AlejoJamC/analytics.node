@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/zonas/edit'+ /*data.rows[i][0].toLowerCase() + */'" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/parametros/zonas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/zonas/eliminar/'+ data.rows[i][0].toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/parametros/zonas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
