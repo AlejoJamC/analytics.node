@@ -422,6 +422,28 @@ parametersRoutes.get('/parametros/abreviaturas', function (req, res) {
     });
 });
 
+parametersRoutes.get('/parametros/abreviaturas/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+
+
+
+    res.render('dash/tableAbreviaturasEdit', {
+        title   : 'Editar Parametos| Identico',
+        level   : '../../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 parametersRoutes.get('/parametros/abreviaturas/edit', function (req, res) {
     var error = '';
     // Basic error validator
@@ -581,6 +603,27 @@ parametersRoutes.get('/parametros/departamentos', function (req, res) {
     res.render('dash/tableDepartamentos', {
         title   : 'Detalle de Parametros| Identico',
         level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+parametersRoutes.get('/parametros/departamentos/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableDepartamentosEdit', {
+        title   : 'Editar Parametros| Identico',
+        level   : '../../',
         layout  : 'dash',
         error   : error
     });
@@ -756,6 +799,27 @@ parametersRoutes.get('/parametros/documentos', function (req, res) {
     });
 });
 
+parametersRoutes.get('/parametros/documentos/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableDocumentosEdit', {
+        title   : 'Editar  Parametos| Identico',
+        level   : '../../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 parametersRoutes.get('/parametros/documentos/edit', function (req, res) {
     var error = '';
     // Basic error validator
@@ -925,6 +989,27 @@ parametersRoutes.get('/parametros/etnias', function (req, res) {
     });
 });
 
+parametersRoutes.get('/parametros/etnias/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableEtniasEdit', {
+        title   : 'Editar Parametos| Identico',
+        level   : '../../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 parametersRoutes.get('/parametros/etnias/edit', function (req, res) {
     var error = '';
     // Basic error validator
@@ -1089,6 +1174,27 @@ parametersRoutes.get('/parametros/municipios', function (req, res) {
     res.render('dash/tableMunicipios', {
         title   : 'Detalle de Parametos| Identico',
         level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+parametersRoutes.get('/parametros/municipios/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableMunicipiosEdit', {
+        title   : 'Editar Parametros| Identico',
+        level   : '../../',
         layout  : 'dash',
         error   : error
     });
@@ -1264,6 +1370,27 @@ parametersRoutes.get('/parametros/paises', function (req, res) {
     });
 });
 
+parametersRoutes.get('/parametros/paises/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tablePaisesEdit', {
+        title   : 'Editar Parametos| Identico',
+        level   : '../../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 parametersRoutes.get('/parametros/paises/edit', function (req, res) {
     var error = '';
     // Basic error validator
@@ -1428,6 +1555,27 @@ parametersRoutes.get('/parametros/zonas', function (req, res) {
     res.render('dash/tableZonas', {
         title   : 'Detalle de Parametros| Identico',
         level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+parametersRoutes.get('/parametros/zonas/editar/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/tableZonasEdit', {
+        title   : 'Editar Parametros| Identico',
+        level   : '../../',
         layout  : 'dash',
         error   : error
     });
