@@ -426,21 +426,121 @@ parametersRoutes.get('/parametros/abreviaturas/editar/:id', function (req, res) 
     var error = '';
     // Basic error validator
     // Error
-    if(typeof req.query.error !== 'undefined'){
+    /*if(typeof req.query.error !== 'undefined'){
         error = req.query.error;
     }
     // Session
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
+    }*/
+
+    if(typeof req.params.id === 'undefined' || req.params.id === ''){
+        res.redirect('back');
     }
 
+    // Consulto los datos de la abreviatura
+    var idAbreviatura = req.params.id;
+    idAbreviatura = idAbreviatura.toUpperCase();
+    var urlRedirect = '/parametros/abreviaturas';
+    var sql = "SELECT  \"PABREVIATURAS\".\"IDABREVIATURA\",  " +
+        "\"PABREVIATURAS\".\"ABREVIATURA\" " +
+        "FROM   \"PABREVIATURAS\"   " +
+        "WHERE  \"PABREVIATURAS\".\"IDABREVIATURA\" ='" + idAbreviatura + "'";
 
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(urlRedirect + '?error=0');
+        }
 
-    res.render('dash/tableAbreviaturasEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(urlRedirect + '?error=12');
+                }
+
+                // get the answer
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=14');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(urlRedirect + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(urlRedirect + '?error=15');
+                    }
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(urlRedirect + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.render('dash/tableAbreviaturasEdit', {
+                    title   : 'Editar abreviatura por detalle | Identico',
+                    level   : '../../../',
+                    layout  : 'dash',
+                    error   : error,
+                    data    : result.rows
+                });
+            }
+        );
     });
 });
 
