@@ -398,8 +398,6 @@ parametersRoutes.get('/parametros/personas/ajax', function (req, res) {
             }
         );
     });
-
-
 });
 
 /* GET abreviaturas page. */
@@ -426,13 +424,13 @@ parametersRoutes.get('/parametros/abreviaturas/editar/:id', function (req, res) 
     var error = '';
     // Basic error validator
     // Error
-    /*if(typeof req.query.error !== 'undefined'){
+    if(typeof req.query.error !== 'undefined'){
         error = req.query.error;
     }
     // Session
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
-    }*/
+    }
 
     if(typeof req.params.id === 'undefined' || req.params.id === ''){
         res.redirect('back');
@@ -544,26 +542,7 @@ parametersRoutes.get('/parametros/abreviaturas/editar/:id', function (req, res) 
     });
 });
 
-parametersRoutes.get('/parametros/abreviaturas/edit', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    res.render('dash/tableAbreviaturasEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-parametersRoutes.get('/parametros/abreviaturas/save', function (req, res) {
+parametersRoutes.get('/parametros/abreviaturas/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -575,14 +554,173 @@ parametersRoutes.get('/parametros/abreviaturas/save', function (req, res) {
         return res.redirect('/login');
     }
     res.render('dash/tableAbreviaturasSave', {
-        title   : 'Guardar Parametro| Identico',
+        title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
         error   : error
     });
 });
 
-/* GET Index ajax method. */
+parametersRoutes.post('/parametros/abreviaturas/crear/ajax', function (req, res) {
+    if(typeof req.body.idabreviatura === 'undefined' || req.body.idabreviatura === '' ||
+        typeof req.body.abreviatura === 'undefined' || req.body.abreviatura === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "INSERT INTO " +
+            "HUELLA.PABREVIATURAS " +
+            "VALUES  " +
+            "('" + req.body.idabreviatura + "', '" + req.body.abreviatura + "')";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+
+});
+
+parametersRoutes.post('/parametros/abreviaturas/actualizar/ajax', function (req, res) {
+    if(typeof req.body.idabreviatura === 'undefined' || req.body.idabreviatura === '' ||
+        typeof req.body.abreviatura === 'undefined' || req.body.abreviatura === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "UPDATE HUELLA.PABREVIATURAS " +
+            "SET " +
+            "HUELLA.PABREVIATURAS.IDABREVIATURA = '" + req.body.idabreviatura + "', " +
+            "HUELLA.PABREVIATURAS.ABREVIATURA = '" + req.body.abreviatura + "' " +
+            "WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + req.body.idabreviatura + "'";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+});
+
 parametersRoutes.get('/parametros/abreviaturas/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
