@@ -50,7 +50,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Nombre Departamento:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="ANTIOQUIA">
+                                                            <input id="iddepar" type="text" class="form-control" placeholder="ANTIOQUIA" value="{{data.[0].[0]}}">
 
                                                         </div>
                                                     </div>
@@ -60,7 +60,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Departamento:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="01">
+                                                            <input id="depar" type="text" class="form-control" placeholder="01" value="{{data.[0].[1]}}">
 
                                                         </div>
                                                     </div>
@@ -70,7 +70,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Pais:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="169">
+                                                            <input id="idpais" type="text" class="form-control" placeholder="169" value="{{data.[0].[2]}}">
 
                                                         </div>
                                                     </div>
@@ -172,55 +172,17 @@
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
 
-
     <script>
         CargarDatos();
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Departamento Actualizado",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/departamentos/edit";
-                        }else{
-                            window.location.href = "/parametros/departamentos";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/departamentos/edit";
-                        }else{
-                            window.location.href = "/parametros/departamentos";
-                        }
-                    });
-        }
+
     </script>
+
 
 {{/contentFor}}
