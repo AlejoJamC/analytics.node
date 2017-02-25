@@ -46,11 +46,26 @@
                                         <div class="form-body">
 
                                             <div class="row">
+
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Id Etnia:</label>
+                                                        <div class="col-md-9">
+                                                            <input id="idetnia" type="text" class="form-control" placeholder="1" value="{{data.[0].[0]}}">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Etnia:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="Indigena">
+                                                            <input id="etnia" type="text" class="form-control" placeholder="Indigena" value="{{data.[0].[1]}}">
 
                                                         </div>
                                                     </div>
@@ -152,55 +167,16 @@
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
 
-
     <script>
         CargarDatos();
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Etnia Actualizada",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/etnias/edit";
-                        }else{
-                            window.location.href = "/parametros/etnias";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/etnias/edit";
-                        }else{
-                            window.location.href = "/parametros/etnias";
-                        }
-                    });
-        }
+
     </script>
 
 {{/contentFor}}

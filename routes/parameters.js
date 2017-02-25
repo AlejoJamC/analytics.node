@@ -829,9 +829,6 @@ parametersRoutes.get('/parametros/abreviaturas/ajax', function (req, res) {
 
 
 
-
-
-
 /* GET departamentos page. */
 parametersRoutes.get('/parametros/departamentos', function (req, res) {
     var error = '';
@@ -1268,7 +1265,6 @@ parametersRoutes.get('/parametros/departamentos/ajax', function (req, res) {
 
 
 /* GET Docuementos page. */
-
 parametersRoutes.get('/parametros/documentos', function (req, res) {
     var error = '';
     // Basic error validator
@@ -1699,9 +1695,7 @@ parametersRoutes.get('/parametros/documentos/ajax', function (req, res) {
 
 
 
-
-
-
+/* GET Etnias page. */
 parametersRoutes.get('/parametros/etnias', function (req, res) {
     var error = '';
     // Basic error validator
@@ -1734,17 +1728,120 @@ parametersRoutes.get('/parametros/etnias/editar/:id', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableEtniasEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
+
+    if(typeof req.params.id === 'undefined' || req.params.id === ''){
+        res.redirect('back');
+    }
+
+    // Consulto los datos del departamento
+    var idEtnia = req.params.id;
+    idEtnia = idEtnia.toUpperCase();
+    var urlRedirect = '/parametros/etnias';
+
+    var sql = "SELECT  \"PETNIAS\".\"IDETNIA\",  " +
+        "\"PETNIAS\".\"ETNIA\" " +
+        "FROM   \"PETNIAS\"   " +
+        "WHERE  \"PETNIAS\".\"IDETNIA\" ='" + idEtnia + "'";
+
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(urlRedirect + '?error=0');
+        }
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(urlRedirect + '?error=12');
+                }
+
+                // get the answer
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=14');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(urlRedirect + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(urlRedirect + '?error=15');
+                    }
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(urlRedirect + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.render('dash/tableEtniasEdit', {
+                    title   : 'Editar etnia por detalle | Identico',
+                    level   : '../../../',
+                    layout  : 'dash',
+                    error   : error,
+                    data    : result.rows
+                });
+            }
+        );
     });
 });
 
-parametersRoutes.get('/parametros/etnias/edit', function (req, res) {
+parametersRoutes.get('/parametros/etnias/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -1755,38 +1852,174 @@ parametersRoutes.get('/parametros/etnias/edit', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableEtniasEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-parametersRoutes.get('/parametros/etnias/save', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
     res.render('dash/tableEtniasSave', {
-        title   : 'Guardar Parametros| Identico',
+        title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
         error   : error
     });
 });
 
-/* GET etnias ajax method. */
+parametersRoutes.post('/parametros/etnias/crear/ajax', function (req, res) {
+    if(typeof req.body.idetnia === 'undefined' || req.body.idetnia === '' ||
+        typeof req.body.etnia === 'undefined' || req.body.etnia === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "INSERT INTO " +
+            "HUELLA.PETNIAS " +
+            "VALUES  " +
+            "('" + req.body.idetnia + "', '" + req.body.etnia + "')";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+
+});
+
+parametersRoutes.post('/parametros/etnias/actualizar/ajax', function (req, res) {
+    if(typeof req.body.idetnia === 'undefined' || req.body.idetnia === '' ||
+        typeof req.body.etnia === 'undefined' || req.body.etnia === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "UPDATE HUELLA.PETNIAS " +
+            "SET " +
+            "HUELLA.PETNIAS.IDETNIA = '" + req.body.idetnia + "', " +
+            "HUELLA.PETNIAS.ETNIA = '" + req.body.etnia + "' " +
+            "WHERE HUELLA.PETNIAS.IDETNIA = '" + req.body.idetnia + "'";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+});
+
 parametersRoutes.get('/parametros/etnias/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
@@ -1890,6 +2123,12 @@ parametersRoutes.get('/parametros/etnias/ajax', function (req, res) {
 
 
 });
+
+
+
+
+
+
 
 /* GET municipios page. */
 parametersRoutes.get('/parametros/municipios', function (req, res) {
