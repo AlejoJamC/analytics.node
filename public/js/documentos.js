@@ -1,6 +1,5 @@
 // Llamados al endpoint de carga de datos iniciales+
 function CargarDatos() {
-    var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
         url: "/parametros/documentos/ajax"
@@ -15,6 +14,7 @@ function CargarDatos() {
                         '<td>' + data.rows[i][0] + '</td>' +
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
+
                         '<div style="text-align:center" >' +
                         '<a href="/parametros/documentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
@@ -33,6 +33,124 @@ function CargarDatos() {
             }
         });
 }
+
+function NuevoModal() {
+    swal({
+            title:"Crear una nuevo docuemento",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Crear",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                CrearDatos();
+            }else{
+                window.location.href = "/parametros/documentos";
+            }
+        });
+}
+
+function GuardarModal() {
+    swal({
+            title:"Actualizar Documento...",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Actualizar",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                ActualizarDatos();
+            }else{
+                window.location.href = "/parametros/documentos";
+            }
+        });
+}
+
+function CancelarModal() {
+    swal({
+            title:"Sin Modificaciones",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "OK",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cerrar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                window.location.href = "/parametros/documentos";
+            }
+        });
+}
+
+function CrearDatos() {
+    var id = $.trim($("#iddocu").val());
+    var value = $.trim($("#docu").val());
+       $.ajax({
+        method: "POST",
+        url: "/parametros/documentos/crear/ajax",
+        data : {"iddocumento" : id, "documento" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Documento creado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error creando el documento", "error");
+        });
+}
+
+function ActualizarDatos() {
+    var id = $.trim($("#iddocu").val());
+    var value = $.trim($("#docu").val());
+
+    $.ajax({
+        method: "POST",
+        url: "/parametros/documentos/actualizar/ajax",
+        data : {"iddocumento" : id, "documento" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Docuemento actualizado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error actualizando el documento", "error");
+        });
+}
+
+
 
 
 

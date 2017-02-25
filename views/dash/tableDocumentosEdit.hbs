@@ -50,7 +50,8 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Documento:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="CC">
+                                                            <input id="iddocu" type="text" class="form-control" placeholder="CC" value="{{data.[0].[0]}}">
+
 
                                                         </div>
                                                     </div>
@@ -60,7 +61,8 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Detalle Documento:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="Cedula Ciudania">
+                                                            <input id="docu" type="text" class="form-control" placeholder="Cedula Ciudania" value="{{data.[0].[1]}}">
+
 
                                                         </div>
                                                     </div>
@@ -167,49 +169,11 @@
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Docuemento Actualizada",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/documentos/edit";
-                        }else{
-                            window.location.href = "/parametros/documentos";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/documentos/edit";
-                        }else{
-                            window.location.href = "/parametros/documentos";
-                        }
-                    });
-        }
+
     </script>
 
 {{/contentFor}}
