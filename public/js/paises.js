@@ -1,6 +1,5 @@
 // Llamados al endpoint de carga de datos iniciales+
 function CargarDatos() {
-    var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
         url: "/parametros/paises/ajax"
@@ -33,4 +32,121 @@ function CargarDatos() {
             }
         });
 }
+
+function NuevoModal() {
+    swal({
+            title:"Crear nuevo pais",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Crear",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                CrearDatos();
+            }else{
+                window.location.href = "/parametros/paises";
+            }
+        });
+}
+
+function GuardarModal() {
+    swal({
+            title:"Pais Actualizado",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Actualizar",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                ActualizarDatos();
+            }else{
+                window.location.href = "/parametros/paises";
+            }
+        });
+}
+
+function CancelarModal() {
+    swal({
+            title:"Sin Modificaciones",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "OK",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cerrar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                window.location.href = "/parametros/paises";
+            }
+        });
+}
+
+function CrearDatos() {
+    var id = $.trim($("#idpais").val());
+    var value = $.trim($("#pais").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/paises/crear/ajax",
+        data : {"idpais" : id, "pais" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Pais creado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error creando el pais", "error");
+        });
+}
+
+function ActualizarDatos() {
+    var id = $.trim($("#idpais").val());
+    var value = $.trim($("#pais").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/paises/actualizar/ajax",
+        data : {"idpais" : id, "pais" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Pais actualizado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error actualizando el pais", "error");
+        });
+}
+
+
 

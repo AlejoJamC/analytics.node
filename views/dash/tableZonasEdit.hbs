@@ -50,7 +50,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Zona:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="R">
+                                                            <input id="idzona" type="text" class="form-control" placeholder="R" value="{{data.[0].[0]}}">
 
                                                         </div>
                                                     </div>
@@ -60,7 +60,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Zona:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="Rural">
+                                                            <input id="zona" type="text" class="form-control" placeholder="Rural" value="{{data.[0].[1]}}">
 
                                                         </div>
                                                     </div>
@@ -167,49 +167,11 @@
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Zona Actualizada",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/zonas/edit";
-                        }else{
-                            window.location.href = "/parametros/zonas";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/zonas/edit";
-                        }else{
-                            window.location.href = "/parametros/zonas";
-                        }
-                    });
-        }
+
     </script>
 
 {{/contentFor}}

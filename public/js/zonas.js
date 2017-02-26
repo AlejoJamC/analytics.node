@@ -1,6 +1,5 @@
 // Llamados al endpoint de carga de datos iniciales+
 function CargarDatos() {
-    var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
         url: "/parametros/zonas/ajax"
@@ -33,6 +32,122 @@ function CargarDatos() {
             }
         });
 }
+
+function NuevoModal() {
+    swal({
+            title:"Crear una nueva Zona",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Crear",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                CrearDatos();
+            }else{
+                window.location.href = "/parametros/zonas";
+            }
+        });
+}
+
+function GuardarModal() {
+    swal({
+            title:"Zona Actualizada",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Actualizar",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                ActualizarDatos();
+            }else{
+                window.location.href = "/parametros/zonas";
+            }
+        });
+}
+
+function CancelarModal() {
+    swal({
+            title:"Sin Modificaciones",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "OK",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cerrar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                window.location.href = "/parametros/zonas";
+            }
+        });
+}
+
+function CrearDatos() {
+    var id = $.trim($("#idzona").val());
+    var value = $.trim($("#zona").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/zonas/crear/ajax",
+        data : {"idzona" : id, "zona" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Zona creada correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error creando la zona", "error");
+        });
+}
+
+function ActualizarDatos() {
+    var id = $.trim($("#idzona").val());
+    var value = $.trim($("#zona").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/zonas/actualizar/ajax",
+        data : {"idzona" : id, "zona" : value}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Zona actualizada correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error actualizando la zona", "error");
+        });
+}
+
 
 
 

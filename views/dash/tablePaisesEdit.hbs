@@ -50,7 +50,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Pais:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="169">
+                                                            <input id="idpais" type="text" class="form-control" placeholder="169" value="{{data.[0].[0]}}">
 
                                                         </div>
                                                     </div>
@@ -60,7 +60,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Pais:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="COLOMBIA">
+                                                            <input id="pais" type="text" class="form-control" placeholder="169" value="{{data.[0].[1]}}">
 
                                                         </div>
                                                     </div>
@@ -161,55 +161,16 @@
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
 
-
     <script>
         CargarDatos();
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Pais Actualizado",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/paises/edit";
-                        }else{
-                            window.location.href = "/parametros/paises";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/paises/edit";
-                        }else{
-                            window.location.href = "/parametros/paises";
-                        }
-                    });
-        }
+
     </script>
 
 {{/contentFor}}

@@ -1,6 +1,5 @@
 // Llamados al endpoint de carga de datos iniciales+
 function CargarDatos() {
-    var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
         url: "/parametros/municipios/ajax"
@@ -15,6 +14,7 @@ function CargarDatos() {
                         '<td>' + data.rows[i][0] + '</td>' +
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' + data.rows[i][2] + '</td>' +
+
 
                         '<td>' +
                         '<div style="text-align:center" >' +
@@ -35,4 +35,122 @@ function CargarDatos() {
             }
         });
 }
+
+function NuevoModal() {
+    swal({
+            title:"Crear un nuevo Municipio",
+            message: "",
+            type:"success",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Crear",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                CrearDatos();
+            }else{
+                window.location.href = "/parametros/municipios";
+            }
+        });
+}
+
+function GuardarModal() {
+    swal({
+            title:"Actualizar Municipio...",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "Actualizar",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cancelar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                ActualizarDatos();
+            }else{
+                window.location.href = "/parametros/municipios";
+            }
+        });
+}
+
+function CancelarModal() {
+    swal({
+            title:"Sin Modificaciones",
+            message: "",
+            type:"warning",
+            confirmButtonClass: "btn-success",
+            confirmButtonText: "OK",
+            closeOnConfirm: true,
+            showCancelButton: true,
+            cancelButtonClass: "btn-warning",
+            cancelButtonText: "Cerrar"
+        },
+        function(isConfirm){
+            if (isConfirm) {
+                window.location.href = "/parametros/municipios";
+            }
+        });
+}
+
+function CrearDatos() {
+    var id = $.trim($("#idmuni").val());
+    var value = $.trim($("#iddepart").val());
+    var vmunicipio = $.trim($("#muni").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/municipios/crear/ajax",
+        data : {"idmunicipio" : id, "iddepartamento" : value, "municipio" :vmunicipio}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Municipio creado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error creando el municipio", "error");
+        });
+}
+
+function ActualizarDatos() {
+    var id = $.trim($("#idmuni").val());
+    var value = $.trim($("#iddepart").val());
+    var vmunicipio = $.trim($("#muni").val());
+    $.ajax({
+        method: "POST",
+        url: "/parametros/municipios/actualizar/ajax",
+        data : {"idmunicipio" : id, "iddepartamento" : value, "municipio" :vmunicipio}
+    })
+        .done(function (data) {
+            swal({
+                    title:"Municipio actualizado correctemente!",
+                    type:"success",
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        location.reload();
+                    }
+                });
+        })
+        .fail(function (err) {
+            swal("Error actualizando el municipio", "error");
+        });
+}
+
 

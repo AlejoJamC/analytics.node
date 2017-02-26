@@ -2125,11 +2125,6 @@ parametersRoutes.get('/parametros/etnias/ajax', function (req, res) {
 });
 
 
-
-
-
-
-
 /* GET municipios page. */
 parametersRoutes.get('/parametros/municipios', function (req, res) {
     var error = '';
@@ -2163,17 +2158,121 @@ parametersRoutes.get('/parametros/municipios/editar/:id', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableMunicipiosEdit', {
-        title   : 'Editar Parametros| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
+
+    if(typeof req.params.id === 'undefined' || req.params.id === ''){
+        res.redirect('back');
+    }
+
+    // Consulto los datos del municipio
+    var idMunicipio = req.params.id;
+    idMunicipio = idMunicipio.toUpperCase();
+    var urlRedirect = '/parametros/municipios';
+
+    var sql = "SELECT  \"PMUNICIPIOS\".\"IDMUNICIPIO\",  " +
+        "\"PMUNICIPIOS\".\"IDDEPARTAMENTO\", " +
+        "\"PMUNICIPIOS\".\"MUNICIPIO\" " +
+        "FROM   \"PMUNICIPIOS\"   " +
+        "WHERE  \"PMUNICIPIOS\".\"IDMUNICIPIO\" ='" + idMunicipio + "'";
+
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(urlRedirect + '?error=0');
+        }
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(urlRedirect + '?error=12');
+                }
+
+                // get the answer
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=14');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(urlRedirect + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(urlRedirect + '?error=15');
+                    }
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(urlRedirect + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.render('dash/tableMunicipiosEdit', {
+                    title   : 'Editar Municipio por detalle | Identico',
+                    level   : '../../../',
+                    layout  : 'dash',
+                    error   : error,
+                    data    : result.rows
+                });
+            }
+        );
     });
 });
 
-parametersRoutes.get('/parametros/municipios/edit', function (req, res) {
+parametersRoutes.get('/parametros/municipios/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -2184,38 +2283,180 @@ parametersRoutes.get('/parametros/municipios/edit', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableMunicipiosEdit', {
-        title   : 'Editar Parametros| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-parametersRoutes.get('/parametros/municipios/save', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
     res.render('dash/tableMunicipiosSave', {
-        title   : 'Guardar Parametros| Identico',
+        title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
         error   : error
     });
 });
 
-/* GET municipios ajax method. */
+parametersRoutes.post('/parametros/municipios/crear/ajax', function (req, res) {
+    if(typeof req.body.idmunicipio === 'undefined' || req.body.idmunicipio === '' ||
+        typeof req.body.iddepartamento === 'undefined' || req.body.iddepartamento === '' ||
+        typeof req.body.municipio === 'undefined' || req.body.municipio === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "INSERT INTO " +
+            "HUELLA.PMUNICIPIOS " +
+            "VALUES  " +
+            "('" + req.body.idmunicipio + "', '" + req.body.iddepartamento + "', '" + req.body.municipio + "')";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+
+});
+
+parametersRoutes.post('/parametros/municipios/actualizar/ajax', function (req, res) {
+    if(typeof req.body.idmunicipio === 'undefined' || req.body.idmunicipio === '' ||
+        typeof req.body.iddepartamento === 'undefined' || req.body.iddepartamento === '' ||
+        typeof req.body.municipio === 'undefined' || req.body.municipio === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "UPDATE HUELLA.PMUNICIPIOS " +
+            "SET " +
+            "HUELLA.PMUNICIPIOS.IDMUNICIPIO = '" + req.body.idmunicipio + "', " +
+            "HUELLA.PMUNICIPIOS.IDDEPARTAMENTO = '" + req.body.iddepartamento + "', " +
+            "HUELLA.PMUNICIPIOS.MUNICIPIO = '" + req.body.municipio + "' " +
+
+            "WHERE HUELLA.PMUNICIPIOS.IDMUNICIPIO = '" + req.body.idmunicipio + "'";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+});
+
 parametersRoutes.get('/parametros/municipios/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
@@ -2321,6 +2562,8 @@ parametersRoutes.get('/parametros/municipios/ajax', function (req, res) {
 
 });
 
+
+
 /* GET paises page. */
 parametersRoutes.get('/parametros/paises', function (req, res) {
     var error = '';
@@ -2354,17 +2597,120 @@ parametersRoutes.get('/parametros/paises/editar/:id', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tablePaisesEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
+
+    if(typeof req.params.id === 'undefined' || req.params.id === ''){
+        res.redirect('back');
+    }
+
+    // Consulto los datos del municipio
+    var idPais = req.params.id;
+    idPais = idPais.toUpperCase();
+    var urlRedirect = '/parametros/paises';
+
+    var sql = "SELECT  \"PPAISES\".\"IDPAIS\",  " +
+        "\"PPAISES\".\"PAIS\" " +
+        "FROM   \"PPAISES\"   " +
+        "WHERE  \"PPAISES\".\"IDPAIS\" ='" + idPais + "'";
+
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(urlRedirect + '?error=0');
+        }
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(urlRedirect + '?error=12');
+                }
+
+                // get the answer
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=14');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(urlRedirect + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(urlRedirect + '?error=15');
+                    }
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(urlRedirect + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.render('dash/tablePaisesEdit', {
+                    title   : 'Editar Pais por detalle | Identico',
+                    level   : '../../../',
+                    layout  : 'dash',
+                    error   : error,
+                    data    : result.rows
+                });
+            }
+        );
     });
 });
 
-parametersRoutes.get('/parametros/paises/edit', function (req, res) {
+parametersRoutes.get('/parametros/paises/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -2375,38 +2721,177 @@ parametersRoutes.get('/parametros/paises/edit', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tablePaisesEdit', {
-        title   : 'Editar Parametos| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-parametersRoutes.get('/parametros/paises/save', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
     res.render('dash/tablePaisesSave', {
-        title   : 'Guardar Parametros| Identico',
+        title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
         error   : error
     });
 });
 
-/* GET paises ajax method. */
+parametersRoutes.post('/parametros/paises/crear/ajax', function (req, res) {
+    if(typeof req.body.idpais === 'undefined' || req.body.idpais === '' ||
+        typeof req.body.pais === 'undefined' || req.body.pais === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "INSERT INTO " +
+            "HUELLA.PPAISES " +
+            "VALUES  " +
+            "('" + req.body.idpais + "', '" + req.body.pais + "')";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+
+});
+
+parametersRoutes.post('/parametros/paises/actualizar/ajax', function (req, res) {
+    if(typeof req.body.idpais === 'undefined' || req.body.idpais === '' ||
+        typeof req.body.pais === 'undefined' || req.body.pais === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "UPDATE HUELLA.PPAISES " +
+            "SET " +
+            "HUELLA.PPAISES.IDPAIS = '" + req.body.idpais + "', " +
+            "HUELLA.PPAISES.PAIS = '" + req.body.pais + "' " +
+
+            "WHERE HUELLA.PPAISES.IDPAIS = '" + req.body.idpais + "'";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+});
+
 parametersRoutes.get('/parametros/paises/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
@@ -2511,6 +2996,10 @@ parametersRoutes.get('/parametros/paises/ajax', function (req, res) {
 
 });
 
+
+
+
+
 /* GET zonas page. */
 parametersRoutes.get('/parametros/zonas', function (req, res) {
     var error = '';
@@ -2544,17 +3033,120 @@ parametersRoutes.get('/parametros/zonas/editar/:id', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableZonasEdit', {
-        title   : 'Editar Parametros| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
+
+    if(typeof req.params.id === 'undefined' || req.params.id === ''){
+        res.redirect('back');
+    }
+
+    // Consulto los datos del municipio
+    var idZona = req.params.id;
+    idZona = idZona.toUpperCase();
+    var urlRedirect = '/parametros/zonas';
+
+    var sql = "SELECT  \"PZONAS\".\"IDZONA\",  " +
+        "\"PZONAS\".\"ZONA\" " +
+        "FROM   \"PZONAS\"   " +
+        "WHERE  \"PZONAS\".\"IDZONA\" ='" + idZona + "'";
+
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect(urlRedirect + '?error=0');
+        }
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect(urlRedirect + '?error=12');
+                }
+
+                // get the answer
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=13');
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect(urlRedirect + '?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.redirect(urlRedirect + '?error=14');
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect(urlRedirect + '?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.redirect(urlRedirect + '?error=15');
+                    }
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect(urlRedirect + '?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+
+                res.render('dash/tableZonasEdit', {
+                    title   : 'Editar zona por detalle | Identico',
+                    level   : '../../../',
+                    layout  : 'dash',
+                    error   : error,
+                    data    : result.rows
+                });
+            }
+        );
     });
 });
 
-parametersRoutes.get('/parametros/zonas/edit', function (req, res) {
+parametersRoutes.get('/parametros/zonas/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -2565,38 +3157,177 @@ parametersRoutes.get('/parametros/zonas/edit', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    // User Rol
-    // If ............
-    res.render('dash/tableZonasEdit', {
-        title   : 'Editar Parametros| Identico',
-        level   : '../../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-parametersRoutes.get('/parametros/zonas/save', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
     res.render('dash/tableZonasSave', {
-        title   : 'Guardar Parametros| Identico',
+        title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
         error   : error
     });
 });
 
-/* GET zonas ajax method. */
+parametersRoutes.post('/parametros/zonas/crear/ajax', function (req, res) {
+    if(typeof req.body.idzona === 'undefined' || req.body.idzona === '' ||
+        typeof req.body.zona === 'undefined' || req.body.zona === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "INSERT INTO " +
+            "HUELLA.PZONAS " +
+            "VALUES  " +
+            "('" + req.body.idzona + "', '" + req.body.zona + "')";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+
+});
+
+parametersRoutes.post('/parametros/zonas/actualizar/ajax', function (req, res) {
+    if(typeof req.body.idzona === 'undefined' || req.body.idzona === '' ||
+        typeof req.body.zona === 'undefined' || req.body.zona === ''){
+        return res.send({ data : 'Empty values returned. [1]'});
+
+    }
+
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "UPDATE HUELLA.PZONAS " +
+            "SET " +
+            "HUELLA.PZONAS.IDZONA = '" + req.body.idzona + "', " +
+            "HUELLA.PZONAS.ZONA = '" + req.body.zona + "' " +
+
+            "WHERE HUELLA.PZONAS.IDZONA = '" + req.body.idzona + "'";
+
+        //logger.info(sql);
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Login success
+                // Create the session
+                if(typeof result.rowsAffected === 'undefined' && typeof result.rowsAffected === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ data : 'Empty values returned. [1]'});
+                }
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.send(result);
+            }
+        );
+    });
+});
+
 parametersRoutes.get('/parametros/zonas/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
@@ -2701,7 +3432,13 @@ parametersRoutes.get('/parametros/zonas/ajax', function (req, res) {
 
 });
 
+
+
+
+
+
 /* GET usuarios page. */
+
 parametersRoutes.get('/parametros/usuarios', function (req, res) {
     var error = '';
     // Basic error validator
@@ -2722,6 +3459,9 @@ parametersRoutes.get('/parametros/usuarios', function (req, res) {
         error   : error
     });
 });
+
+
+
 
 
 

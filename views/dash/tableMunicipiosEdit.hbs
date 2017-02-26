@@ -50,7 +50,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Municipio:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="001">
+                                                            <input id="idmuni" type="text" class="form-control" placeholder="00555" value="{{data.[0].[0]}}">
 
                                                         </div>
                                                     </div>
@@ -60,7 +60,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">ID Departamento:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="41">
+                                                            <input id="iddepart" type="text" class="form-control" placeholder="588888" value="{{data.[0].[1]}}">
 
                                                         </div>
                                                     </div>
@@ -70,7 +70,7 @@
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">Municipio:</label>
                                                         <div class="col-md-9">
-                                                            <input type="text" class="form-control" placeholder="NEIVA">
+                                                            <input id="muni" type="text" class="form-control" placeholder="NEIVA" value="{{data.[0].[2]}}">
 
                                                         </div>
                                                     </div>
@@ -172,55 +172,16 @@
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
 
-
     <script>
         CargarDatos();
     </script>
 
     <script>
-        function GuardarModal() {
-            swal({
-                        title:"Municipio Actualizado",
-                        message: "",
-                        type:"success",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/municipios/edit";
-                        }else{
-                            window.location.href = "/parametros/municipios";
-                        }
-                    });
-        }
+
     </script>
 
     <script>
-        function CancelarModal() {
-            swal({
-                        title:"Sin Modificaciones",
-                        message: "",
-                        type:"warning",
-                        cancelButtonClass: "btn-success",
-                        confirmButtonText: "Cancelar",
-                        closeOnConfirm: true,
-                        showCancelButton: true,
-                        confirmButtonClass: "btn-warning",
-                        cancelButtonText: "OK"
-                    },
-                    function(isConfirm){
-                        if (isConfirm) {
-                            window.location.href = "/parametros/municipios/edit";
-                        }else{
-                            window.location.href = "/parametros/municipios";
-                        }
-                    });
-        }
+
     </script>
 
 {{/contentFor}}
