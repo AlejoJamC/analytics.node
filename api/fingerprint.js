@@ -9,6 +9,8 @@
 var logger = require('../config/logger').logger;
 var oracledb = require('oracledb');
 var fs = require('fs');
+var util = require('util');
+var formidable = require('formidable');
 
 // ENDPOINT: /api/v1/fingerprints METHOD: GET
 module.exports.getFingerprint = function (req, res) {
@@ -84,62 +86,78 @@ module.exports.getFingerprint = function (req, res) {
 
 // ENDPOINT: /api/v1/fingerprints METHOD: POST
 module.exports.postFingeprint = function (req, res) {
-    if( typeof req.body.personId === 'undefined' || req.body.personId === ''
-        || typeof req.body.fingerprint === 'undefined' || req.body.fingerprint === ''
-        || typeof req.body.fingerprintNumber === 'undefined' || req.body.fingerprintNumber === ''){
-        logger.error('Empty values: personId and both fingerprints values required.');
-        return res.send('Empty values: personId and both fingerprints values required.');
-    }
-    var personId            = req.body.personId;
-    var fingerprint         = req.body.fingerprint;
-    var fingerprintNumber   = req.body.fingerprintNumber;
+    // if( typeof req.body.personId === 'undefined' || req.body.personId === ''
+    //     || typeof req.body.fingerprint === 'undefined' || req.body.fingerprint === ''
+    //     || typeof req.body.fingerprintNumber === 'undefined' || req.body.fingerprintNumber === ''){
+    //     logger.error('Empty values: personId and both fingerprints values required.');
+    //     return res.send('Empty values: personId and both fingerprints values required.');
+    // }
 
-    var buf = new Buffer(fingerprint);
+    var form = new formidable.IncomingForm();
 
-    logger.info(typeof  fingerprint);
-    logger.info(req.file);
-    logger.info(req.body);
+    form.parse(req, function (err, fields, files) {
+        var buf = fs.readFileSync(files.fingerprint.path);
+        //fs.writeFileSync('uploads/huella.fpt', buf);
 
-    var sql = "";
+        var personId            = fields.personId;
+        var fingerprintNumber   = fields.fingerprintNumber;
 
-    if (fingerprintNumber == 1){
-        /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
-            fingerprint + "',4000,'z') " +
-            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
+        var sql = "";
 
-        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = :blob " +
-            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
-    }else{
-        /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
-            fingerprint + "',4000,'z') " +
-            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
+        if (fingerprintNumber == 1){
+            /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
+             fingerprint + "',4000,'z') " +
+             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
 
-        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = :blob " +
-            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
-    }
+            sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = :blob " +
+                " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
+        }else{
+            /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
+             fingerprint + "',4000,'z') " +
+             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
 
-    logger.info(sql);
-
-    // Save fignerprint bytes
-    oracledb.autoCommit = true;
-    oracledb.getConnection({
-        user            : process.env.ORACLE_USERNAME,
-        password        : process.env.ORACLE_PASSWORD,
-        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
-        + '/' + process.env.ORACLE_SID
-    }, function (err, connection) {
-        if (err){
-            logger.error(err.message);
-            return res.send(err.message);
+            sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = :blob " +
+                " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
         }
 
-        connection.execute(
-            sql,
-            [buf],
-            // The Callback function handles the SQL execution results
-            function (err, result) {
-                if (err) {
-                    logger.error(err.message);
+        logger.info(sql);
+
+        // Save fignerprint bytes
+        oracledb.autoCommit = true;
+        oracledb.getConnection({
+            user            : process.env.ORACLE_USERNAME,
+            password        : process.env.ORACLE_PASSWORD,
+            connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+            + '/' + process.env.ORACLE_SID
+        }, function (err, connection) {
+            if (err){
+                logger.error(err.message);
+                return res.send(err.message);
+            }
+
+            connection.execute(
+                sql,
+                [buf],
+                // The Callback function handles the SQL execution results
+                function (err, result) {
+                    if (err) {
+                        logger.error(err.message);
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.send(err.message);
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        // Error doing select statement
+                        return res.send(err.message);
+                    }
+
+                    logger.info(result);
+
+                    // UPDATE image capture success
                     connection.close(
                         function(err) {
                             if (err) {
@@ -149,24 +167,10 @@ module.exports.postFingeprint = function (req, res) {
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    // Error doing select statement
-                    return res.send(err.message);
+                    return res.status(200).json({ message:"Fingerprints updated succesfully" });
                 }
+            );
+        });
 
-                logger.info(result);
-
-                // UPDATE image capture success
-                connection.close(
-                    function(err) {
-                        if (err) {
-                            // error=1 trying to disconnect of database
-                            logger.error(err.message);
-                            return res.send(err.message);
-                        }
-                        logger.info('Connection to Oracle closed successfully!');
-                    });
-                return res.status(200).json({ message:"Fingerprints updated succesfully" });
-            }
-        );
     });
 };
