@@ -8,6 +8,7 @@
 
 var logger = require('../config/logger').logger;
 var oracledb = require('oracledb');
+var fs = require('fs');
 
 // ENDPOINT: /api/v1/fingerprints METHOD: GET
 module.exports.getFingerprint = function (req, res) {
@@ -18,7 +19,9 @@ module.exports.getFingerprint = function (req, res) {
 
     var personId = req.query.personId;
 
-    var sql = "SELECT HUELLA.\"NPERSONAS\".\"IDPERSONA\" AS personId, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA1\") AS huella1, utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA2\") AS huella2 " +
+    var sql = "SELECT HUELLA.\"NPERSONAS\".\"IDPERSONA\" AS personId, " +
+        "utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA1\") AS huella1," +
+        " utl_raw.cast_to_varchar2(HUELLA.\"NPERSONAS\".\"HUELLA2\") AS huella2 " +
     " FROM HUELLA.\"NPERSONAS\"  WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
 
     logger.info(sql);
@@ -87,24 +90,31 @@ module.exports.postFingeprint = function (req, res) {
         logger.error('Empty values: personId and both fingerprints values required.');
         return res.send('Empty values: personId and both fingerprints values required.');
     }
-
     var personId            = req.body.personId;
-    var fingerprint         = Buffer(req.body.fingerprint, 'base64');
+    var fingerprint         = req.body.fingerprint;
     var fingerprintNumber   = req.body.fingerprintNumber;
 
-    logger.info(typeof  fingerprint);
+    var buf = new Buffer(fingerprint);
 
-    return;
+    logger.info(typeof  fingerprint);
+    logger.info(req.file);
+    logger.info(req.body);
 
     var sql = "";
 
     if (fingerprintNumber == 1){
-        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
+        /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
             fingerprint + "',4000,'z') " +
+            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
+
+        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = :blob " +
             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
     }else{
-        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
+        /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
             fingerprint + "',4000,'z') " +
+            " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
+
+        sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = :blob " +
             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
     }
 
@@ -125,6 +135,7 @@ module.exports.postFingeprint = function (req, res) {
 
         connection.execute(
             sql,
+            [buf],
             // The Callback function handles the SQL execution results
             function (err, result) {
                 if (err) {

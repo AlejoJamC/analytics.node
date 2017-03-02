@@ -30,13 +30,14 @@ passport.use(new BasicStrategy(
             }
 
             // Login credentidas
-
             var sql = "SELECT \"PUSUARIOS\".* " +
                 " FROM \"PUSUARIOS\" " +
                 " WHERE " +
-                " \"PUSUARIOS\".\"USUARIO_USER\" ='" + user + "' " +
+                " \"PUSUARIOS\".\"USUARIO_USER\" ='" + username + "' " +
                 " AND " +
                 " \"PUSUARIOS\".\"USUARIO_PASS\"='" + password + "'";
+
+            //logger.info(sql);
 
             connection.execute(
                 // The statement to execute

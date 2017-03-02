@@ -21,6 +21,7 @@ var express             = require('express'),
     errorhandler        = require('errorhandler'),
     methodOverride      = require('method-override'),
     moment              = require('moment'),
+    multer              = require('multer'),
     path                = require('path'),
     passport            = require('passport'),
     session             = require('express-session'),
@@ -88,10 +89,23 @@ router.use(function (req, res, next) {
     next();
 });
 
+var storage = multer.diskStorage({
+    destination: 'uploads/',
+    filename: function (req, file, cb) {
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err);
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
+    }
+});
+var upload = multer({ storage: storage });
+
 // ENDPOINT: /api/v1/fingerprints
 var preEndpoint = '/' + apiPrefix + '/' + apiVersion;
 router.route('/fingerprints')
-    .get(authRoutes.isAuthenticated, fingerprintRoutes.getFingerprint)
+    .get(authRoutes.isAuthenticated, fingerprintRoutes.getFingerprint);
+router.route('/fingerprints', upload.single('inputpicture'))
     .post(authRoutes.isAuthenticated, fingerprintRoutes.postFingeprint);
 
 // Setup the router in the express app
