@@ -208,11 +208,9 @@ dashRoutes.post('/dashboard/images/capture',  function (req, res) {
 
         // Save the image path in the database
         var personId = req.body.personid;
-
-        var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
-            imagepath + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
-
-        //logger.info(sql);
+        // read the file
+        var buf = fs.readFileSync(imagepath);
+        var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = :blob WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;
 
         // Save image route
         oracledb.autoCommit = true;
@@ -227,9 +225,9 @@ dashRoutes.post('/dashboard/images/capture',  function (req, res) {
                 // error=0 trying to connect with database
                 return res.redirect('/dashboard/images?error=0');
             }
-
             connection.execute(
                 sql,
+                [buf],
                 // The Callback function handles the SQL execution results
                 function (err, result) {
                     if (err) {
@@ -274,15 +272,18 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
         return res.redirect('/login?error=12');
     }
 
-    //logger.info(req.file);
+    logger.info(req.file);
     //logger.info(req.body);
 
     var personId = req.body.personid;
 
-    var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
-        req.file.path + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
+    // read the file
+    var buf = fs.readFileSync(req.file.path);
 
-    //logger.info(sql);
+    /*var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = " +
+     buf + " WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;*/
+
+    var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = :blob WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;
 
     // Save image route
     oracledb.autoCommit = true;
@@ -300,6 +301,7 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
 
         connection.execute(
             sql,
+            [buf],
             // The Callback function handles the SQL execution results
             function (err, result) {
                 if (err) {
@@ -315,6 +317,11 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
                         });
                     // Error doing select statement
                     return res.redirect('/dashboard/images?error=12');
+                }
+
+                if (result.rowsAffected != 1) {
+                    logger.info('Error updating the image');
+                    return res.redirect('/dashboard/images?error=2');
                 }
 
                 logger.info(result);
