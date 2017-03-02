@@ -105,7 +105,7 @@ var upload = multer({ storage: storage });
 var preEndpoint = '/' + apiPrefix + '/' + apiVersion;
 router.route('/fingerprints')
     .get(authRoutes.isAuthenticated, fingerprintRoutes.getFingerprint);
-router.route('/fingerprints', upload.single('inputpicture'))
+router.route('/fingerprints')
     .post(authRoutes.isAuthenticated, fingerprintRoutes.postFingeprint);
 
 // Setup the router in the express app
