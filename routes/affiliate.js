@@ -87,9 +87,17 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
             return res.redirect(currentURL + '?error=0');
         }
 
-        var sql = "SELECT \"NPERSONAS\".* " +
+       /*var sql = "SELECT \"NPERSONAS\".* " +
         "FROM \"NPERSONAS\" " +
-        "WHERE \"NPERSONAS\".\"IDPERSONA\"=" + idAfiliado;
+        "WHERE \"NPERSONAS\".\"IDPERSONA\"=" + idAfiliado;*/
+
+           var sql = "SELECT a.IDPERSONA, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO," +
+            " p.PRIMERNOMBRE, p.SEGUNDONOMBRE, p.IDDOCUMENTO, p.NODOCUMENTO," +
+            " p.FECHA_NACIMIENTO, GENERO, IDZONA, IDETNIA, IDMUNICIPIO, IDDEPARTAMENTO, DIRECCION, DIRCOMPLEMENTARIA, CORREO," +
+            " p.TELEFONOFIJO, p.TELEFONOMOVIL, p.huella1, p.huella2, p.foto" +
+            " FROM NAFILIADOS a,NPERSONAS p" +
+            " WHERE p.IDPERSONA = a.IDPERSONA" +
+            " AND a.IDPERSONA ="  +idAfiliado;
 
         connection.execute(
             // The statement to execute
@@ -163,14 +171,39 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
                 afiliadoResult.IDDOCUMENTO = result.rows[0][5];
                 afiliadoResult.NODOCUMENTO = result.rows[0][6];
                 afiliadoResult.FECHA_NACIMIENTO = moment(result.rows[0][7]).format('DD/MM/YYYY');
-                afiliadoResult.TELEFONOFIJO = result.rows[0][8];
-                afiliadoResult.TELEFONOMOVIL = result.rows[0][9];
-                afiliadoResult.HUELLA1 = result.rows[0][10];
-                afiliadoResult.HUELLA2 = result.rows[0][11];
-                afiliadoResult.FOTO = result.rows[0][12];
+                afiliadoResult.GENERO = result.rows[0][8];
+                afiliadoResult.ZONA = result.rows[0][9];
+                afiliadoResult.ETNIA = result.rows[0][10];
+                afiliadoResult.MUNICIPIO = result.rows[0][11];
+                afiliadoResult.DEPARTAMENTO = result.rows[0][12];
+                afiliadoResult.DIRECCION = result.rows[0][13];
+                afiliadoResult.DETALLEDIRECCION = result.rows[0][14];
+                afiliadoResult.CORREO = result.rows[0][15];
+                afiliadoResult.TELEFONOFIJO = result.rows[0][16];
+                afiliadoResult.TELEFONOMOVIL = result.rows[0][17];
+                afiliadoResult.HUELLA1 = result.rows[0][18];
+                afiliadoResult.HUELLA2 = result.rows[0][19];
+                afiliadoResult.FOTO = result.rows[0][20];
 
-                //logger.info(JSON.stringify(afiliadoResult));
-                //logger.info(afiliadoResult);
+               /* logger.info(JSON.stringify(afiliadoResult));
+                logger.info(afiliadoResult);*/
+
+                //afiliadoResult = result.rows;
+                 logger.info(JSON.stringify(afiliadoResult));
+                 //logger.info("Llego afiliado"+afiliadoResult);
+
+/*
+                logger.info("Id Persona:" + result.rows[0][0]);
+                logger.info("Primer apellido:" + result.rows[0][1]);
+                logger.info("Segundo apellido:" + result.rows[0][2]);
+                logger.info("Primer Nombre:" + result.rows[0][3]);
+                logger.info("Segundo Nombre:" + result.rows[0][4]);
+                logger.info("Id docuemnto:" + result.rows[0][5]);
+                logger.info("N .Documento:" + result.rows[0][6]);
+                logger.info("Fecha de nacimiento:" + result.rows[0][7]);
+                logger.info("Telefono Fijo:" + result.rows[0][8]);
+                logger.info("Telefono Movil:" +result.rows[0][9]);*/
+
 
                 connection.close(
                     function(err) {
@@ -306,6 +339,10 @@ affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
 
                 afiliadoResult = result.rows;
 
+
+
+
+
                 connection.close(
                     function(err) {
                         if (err) {
@@ -317,6 +354,7 @@ affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
                     });
 
                 res.json({response : afiliadoResult});
+
             }
         );
     });
@@ -343,8 +381,50 @@ affiliateRouter.get('/affiliates/edit', function (req, res) {
     });
 });
 
+affiliateRouter.get('/editarafiliado', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/affiliateDetailsEdit', {
+        title   : 'Editar Afiliado | Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
 /* GET Create New Affiliate page. */
 affiliateRouter.get('/affiliates/new', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/addAffiliate', {
+        title   : 'Agregar Afiliado | Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+affiliateRouter.get('/addAffiliates', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
