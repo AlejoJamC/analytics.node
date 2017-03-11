@@ -86,6 +86,7 @@ module.exports.getFingerprint = function (req, res) {
 
 // ENDPOINT: /api/v1/fingerprints METHOD: POST
 module.exports.postFingeprint = function (req, res) {
+    logger.info('Entro al metodo post');
     // if( typeof req.body.personId === 'undefined' || req.body.personId === ''
     //     || typeof req.body.fingerprint === 'undefined' || req.body.fingerprint === ''
     //     || typeof req.body.fingerprintNumber === 'undefined' || req.body.fingerprintNumber === ''){
@@ -105,17 +106,9 @@ module.exports.postFingeprint = function (req, res) {
         var sql = "";
 
         if (fingerprintNumber == 1){
-            /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = utl_raw.cast_to_raw('" +
-             fingerprint + "',4000,'z') " +
-             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
-
             sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA1\" = :blob " +
                 " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
         }else{
-            /*sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = utl_raw.cast_to_raw('" +
-             fingerprint + "',4000,'z') " +
-             " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;*/
-
             sql = "UPDATE HUELLA.\"NPERSONAS\" SET HUELLA.\"NPERSONAS\".\"HUELLA2\" = :blob " +
                 " WHERE HUELLA.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
         }
@@ -130,25 +123,30 @@ module.exports.postFingeprint = function (req, res) {
             connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
             + '/' + process.env.ORACLE_SID
         }, function (err, connection) {
+            logger.info('entro al postback');
             if (err){
+                logger.info('00');
                 logger.error(err.message);
                 return res.send(err.message);
             }
-
             connection.execute(
                 sql,
                 [buf],
                 // The Callback function handles the SQL execution results
                 function (err, result) {
+                    logger.info('entro al execute');
                     if (err) {
+                        logger.info('11');
                         logger.error(err.message);
                         connection.close(
                             function(err) {
                                 if (err) {
                                     // error=1 trying to disconnect of database
+                                    logger.info('22');
                                     logger.error(err.message);
                                     return res.send(err.message);
                                 }
+                                logger.info('33');
                                 logger.info('Connection to Oracle closed successfully!');
                             });
                         // Error doing select statement
@@ -165,9 +163,10 @@ module.exports.postFingeprint = function (req, res) {
                                 logger.error(err.message);
                                 return res.send(err.message);
                             }
+                            logger.info('44');
                             logger.info('Connection to Oracle closed successfully!');
-                        });
-                    return res.status(200).json({ message:"Fingerprints updated succesfully" });
+                    });
+                    res.status(200).json({ code: 200, data: result, message:"Huella #" + fingerprintNumber + " guardada exitosamente." });
                 }
             );
         });
