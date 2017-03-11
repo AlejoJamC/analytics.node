@@ -351,5 +351,26 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
     });
 });
 
+/* GET Fingerprint applet page. */
+dashRoutes.get('/applet', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/applet', {
+        title   : 'Applet | Identico',
+        level   : '',
+        layout  : 'dash',
+        error   : error
+    });
+});
 
 module.exports = dashRoutes;
