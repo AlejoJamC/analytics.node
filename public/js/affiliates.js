@@ -41,36 +41,41 @@ function CargarDatos() {
 }
 
 function CargarReferidosPorAfiliad(idAfiliado) {
-    $.ajax({
-        method: "GET",
-        url: "/affiliates/referred/" + idAfiliado
-    })
-        .done(function (data) {
-            console.log(data.response);
-            var iterador = data.response;
-            var trHTML = '';
-            $.each(iterador, function (i, abreviData) {
-                console.log(abreviData);
-                trHTML += '<tr class="odd gradeX">' +
-                    '<td>' + abreviData[22] + '</td>' +
-                    '<td>' + abreviData[23] + '</td>' +
-                    '<td>' + abreviData[24] + '</td>' +
-                    '<td>' + abreviData[25] + '</td>' +
-                    '<td>' + abreviData[27] + '</td>' +
-                    '<td>' +
-                    '<div style="text-align:center" >' +
-                    '<a href="/referred/'+ abreviData[21].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
-                    '<i class="fa fa-share"></i> Ver </a>' +
-                    '</div>' +
-                    '</td>' +
-                    '</tr>';
+    if(idAfiliado !== 'undefined'){
+        $.ajax({
+            method: "GET",
+            url: "/affiliates/referred/" + idAfiliado
+        })
+            .done(function (data) {
+                var iterador = data;
+                $('#txtbeneficiarios').text(data.length);
+                if(data.length > 0){
+                    var trHTML = '';
+                    $.each(iterador, function (i, abreviData) {
+                        trHTML += '<tr class="odd gradeX">' +
+                            '<td>' + ((abreviData[22] === null) ?  '' : abreviData[22]) + '</td>' +
+                            '<td>' + ((abreviData[23] === null) ?  '' : abreviData[23]) + '</td>' +
+                            '<td>' + ((abreviData[24] === null) ?  '' : abreviData[24]) + '</td>' +
+                            '<td>' + ((abreviData[25] === null) ?  '' : abreviData[25]) + '</td>' +
+                            '<td>' + ((abreviData[26] === null) ?  '' : abreviData[27]) + '</td>' +
+                            '<td>' +
+                            '<div style="text-align:center" >' +
+                            '<a href="/referred/'+ abreviData[21].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                            '<i class="fa fa-share"></i> Ver </a>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    });
+
+                    $('#resultados').empty().append(trHTML);
+                }else{
+                    $('#resultados').empty();
+                }
+
+                if (App.isAngularJsApp() === false) {
+                    TableDatatablesManaged.init();
+                }
             });
-
-            $('#resultados').empty().append(trHTML);
-
-            if (App.isAngularJsApp() === false) {
-                TableDatatablesManaged.init();
-            }
-        });
+    }
 }
 
