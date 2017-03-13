@@ -10,7 +10,7 @@
  * Module dependencies
  */
 
-var logger = require('../config/Logger').logger;
+var logger = require('../config/logger').logger;
 var moment = require('moment');
 var express = require('express');
 var router = express.Router();
@@ -38,21 +38,21 @@ function SetupWebRouter(app) {
     /**
      *  Declare all routes
      */
-    var loginRoutes = require('./login');
-    var dashRoutes  = require('./dashboard');
-    var affiliateRoutes  = require('./affiliate');
-    var fingerprintRoutes = require('./fingerprint');
-    var referredRoutes  = require('./referred');
-    var rolesRoutes  = require('./roles');
-    var parametersRoutes  = require('./parameters');
+    var affiliateRoutes     = require('./affiliate');
+    var dashRoutes          = require('./dashboard');
+    var fingerprintRoutes   = require('./fingerprint');
+    var loginRoutes         = require('./login');
+    var parametersRoutes    = require('./parameters');
+    var referredRoutes      = require('./referred');
+    var rolesRoutes         = require('./roles');
 
-    app.use('/', loginRoutes);
-    app.use('/', dashRoutes);
     app.use('/', affiliateRoutes);
+    app.use('/', dashRoutes);
     app.use('/', fingerprintRoutes);
+    app.use('/', loginRoutes);
+    app.use('/', parametersRoutes);
     app.use('/', referredRoutes);
     app.use('/', rolesRoutes);
-    app.use('/', parametersRoutes);
 
 }
 
