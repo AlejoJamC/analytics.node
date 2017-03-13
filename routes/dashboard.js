@@ -75,7 +75,7 @@ dashRoutes.get('/search/ajax', function (req, res) {
             " WHERE N.IDPERSONA=A.IDPERSONA(+) AND N.IDPERSONA=T.IDREFERIDO(+) " +
             "AND N.NODOCUMENTO=" + personDoc;
 
-        logger.info(sql);
+        //logger.info(sql);
 
         connection.execute(
             // The statement to execute
@@ -94,7 +94,6 @@ dashRoutes.get('/search/ajax', function (req, res) {
                                 return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
                             }
                             logger.info('Connection to Oracle closed successfully!');
-                            logger.info("1");
                         });
                     // Error doing select statement
                     return res.send({ err : 'Error doing select statement.'});
@@ -124,7 +123,6 @@ dashRoutes.get('/search/ajax', function (req, res) {
                                 return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
                             }
                             logger.info('Connection to Oracle closed successfully!');
-                            logger.info("2");
                         });
                     return res.send({ data : 'Empty values returned.', code : 2});
                 } else {
@@ -156,15 +154,11 @@ dashRoutes.get('/search/ajax', function (req, res) {
                         logger.info("3");
 
                     });
-                logger.info(data);
-
                 return res.send(data);
-
             }
         );
     });
 });
-
 
 /* GET Index page | Dashboard. */
 dashRoutes.get('/dashboard', function (req, res) {
