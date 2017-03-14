@@ -56,7 +56,7 @@ affiliateRouter.get('/affiliates', function (req, res) {
 
 /* GET Affiliates by Id page. */
 affiliateRouter.get('/affiliates/:id', function (req, res, next) {
-    if(req.params.id === 'referred'){
+    if(req.params.id === 'referred' || req.params.id === 'images'){
         next();
     }
     var error = '';
@@ -75,10 +75,10 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
             afiliado : null
         });
     }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
+    // // Session
+    // if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+    //     return res.redirect('/login');
+    // }
 
     var idAfiliado = req.params.id;
     var currentURL = '/affiliates/' + idAfiliado;
@@ -223,7 +223,7 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
     });
 });
 
-/* GET Referred by Id Affiliate page. */
+/* GET Referred by affiliate Id  page. */
 affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
     var error = '';
     // Basic error validator
@@ -362,6 +362,306 @@ affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
         });
 });
 
+/* GET Affiliate image by affiliate Id page. */
+affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    //logger.info((typeof req.query.error !== 'undefined'));
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+        logger.error(error);
+        return res.json({error: error});
+    }
+    // // Session
+    // if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+    //     return res.redirect('/login');
+    // }
+
+    var idAfiliado = req.params.id;
+
+    // Consulto el los datos del afiliado
+    oracledb.fetchAsString = [ oracledb.CLOB ];
+
+    var doquery = function(conn, cb) {
+        oracledb.getConnection({
+            user: process.env.ORACLE_USERNAME,
+            password: process.env.ORACLE_PASSWORD,
+            connectString: process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+            + '/' + process.env.ORACLE_SID
+        }, function (err, connection) {
+            if (err) {
+                logger.error(err.message);
+                // error=0 trying to connect with database
+                return res.json({error: 'Error=0 trying to connect with database'});
+            }
+
+            var sql = "SELECT HUELLA.NPERSONAS.FOTO " +
+                " FROM HUELLA.NPERSONAS " +
+                "WHERE HUELLA.NPERSONAS.IDPERSONA =" + idAfiliado;
+
+            //logger.info(sql);
+
+            connection.execute(
+                // The statement to execute
+                sql,
+                [],
+
+                // The Callback function handles the SQL execution results
+                function (err, result) {
+                    if (err) {
+                        logger.error(err.message);
+                        connection.close(
+                            function (err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.json({error: 'Error=1 trying to disconnect of database'});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        // Error doing select statement
+                        return res.json({error: 'Error doing select statement'});
+                    }
+
+                    // Login success
+                    // Create the session
+                    if (typeof result.metaData === 'undefined' && typeof result.rows === 'undefined') {
+                        logger.info('Validation error, empty values returned.');
+                        connection.close(
+                            function (err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.json({error: 'Error=1 trying to disconnect of database'});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.json({error: 'Error doing select statement'});
+                    } else if (typeof result.rows[0] === 'undefined') {
+                        logger.info('Validation error, empty values returned.');
+                        connection.close(
+                            function (err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.json({error: 'Error=1 trying to disconnect of database'});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.json({error: 'Error doing select statement'});
+                    }
+
+                    logger.info(result.rows[0]);
+
+                    var buff = new Buffer( result.rows[0], 'binary' );
+                    var imgbase64 =  buff.toString('base64');
+
+                    return res.json({img: imgbase64 });
+                }
+            );
+        });
+    };
+
+    var dorelease = function(conn) {
+        conn.close(function (err) {
+            if (err) {
+                // error=1 trying to disconnect of database
+                logger.error(err.message);
+                return res.json({error: 'Error=1 trying to disconnect of database'});
+            }
+            logger.info('Connection to Oracle closed successfully!');
+        });
+    };
+
+    async.waterfall([
+            doquery
+        ],
+        function (err, conn) {
+            if (err) { logger.error("Error disconnecting " + err); }
+            if (conn)
+                dorelease(conn);
+        });
+});
+
+/* GET Affiliates images input / capture page. */
+affiliateRouter.get('/affiliates/images/:id', function (req, res) {
+    var error = '';
+    var idaffiliate =  req.params.id;
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+
+    res.render('dash/affiliateImages', {
+        title   : 'Cargar Imagen Afiliado | Identico',
+        level   : '../../',
+        layout  : 'dash',
+        affiliate: idaffiliate,
+        error   : error
+    });
+});
+
+/* POST Affiliate images handler page | Dashboard. */
+affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
+
+    if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
+        logger.info('Login credentials: Empty values.');
+        // error=12 No person Id using image capture.
+        return res.redirect('/dashboard/images?error=12');
+    }
+
+    var binary_data = req.body.finalimage;
+
+    // Random uuid to asign the new image
+    var randomImageName = uuid.v4();
+    var imagepath = 'uploads/' + randomImageName +'.jpg';
+    // Create the file inside uploads folder
+    var fileresult = fs.writeFile(imagepath, binary_data, {encoding: 'base64'}, function (err) {
+        if(err){
+            logger.info(err);
+            logger.info('Error creating capture image');
+            return res.redirect('/login?error=15');
+        }
+
+        // Save the image path in the database
+        var personId = req.body.personid;
+        // read the file
+        var buf = fs.readFileSync(imagepath);
+        var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = :blob WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;
+
+        // Save image route
+        oracledb.autoCommit = true;
+        oracledb.getConnection({
+            user            : process.env.ORACLE_USERNAME,
+            password        : process.env.ORACLE_PASSWORD,
+            connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+            + '/' + process.env.ORACLE_SID
+        }, function (err, connection) {
+            if (err){
+                logger.error(err.message);
+                // error=0 trying to connect with database
+                return res.redirect('/dashboard/images?error=0');
+            }
+            connection.execute(
+                sql,
+                [buf],
+                // The Callback function handles the SQL execution results
+                function (err, result) {
+                    if (err) {
+                        logger.error(err.message);
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.redirect('/dashboard/images?error=1');
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        // Error doing select statement
+                        return res.redirect('/dashboard/images?error=12');
+                    }
+
+                    logger.info(result);
+
+                    // UPDATE image capture success
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect('/dashboard/images?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    res.redirect('/dashboard/images?flag=success');
+                }
+            );
+        });
+    });
+});
+
+/* POST Affiliate images handler page | Dashboard. */
+affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'), function (req, res) {
+    if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
+        logger.info('Login credentials: Empty values.');
+        // error=12 No person Id using image capture.
+        return res.redirect('/login?error=12');
+    }
+
+    var personId = req.body.personid;
+
+    // read the file
+    var buf = fs.readFileSync(req.file.path);
+
+    /*var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = " +
+     buf + " WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;*/
+
+    var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = :blob WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;
+
+    // Save image route
+    oracledb.autoCommit = true;
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.redirect('/dashboard/images?error=0');
+        }
+
+        connection.execute(
+            sql,
+            [buf],
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.redirect('/dashboard/images?error=1');
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.redirect('/dashboard/images?error=12');
+                }
+
+                if (result.rowsAffected != 1) {
+                    logger.info('Error updating the image');
+                    return res.redirect('/dashboard/images?error=2');
+                }
+
+                logger.info(result);
+
+                // UPDATE image capture success
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.redirect('/dashboard/images?error=1');
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                res.redirect('/dashboard/images?flag=success');
+            }
+        );
+    });
+});
+
 affiliateRouter.get('/affiliates/edit', function (req, res) {
     var error = '';
     // Basic error validator
@@ -444,182 +744,6 @@ affiliateRouter.get('/addAffiliates', function (req, res) {
         level   : '../',
         layout  : 'dash',
         error   : error
-    });
-});
-
-/* GET Images input / capture page. */
-affiliateRouter.get('/affiliates/images', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/affiliateImages', {
-        title   : 'Cargar Imagen Afiliado | Identico',
-        level   : '../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-/* POST Images handler page | Dashboard. */
-affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
-
-    if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
-        logger.info('Login credentials: Empty values.');
-        // error=12 No person Id using image capture.
-        return res.redirect('/affiliates?error=12');
-    }
-
-    //logger.info(req.body);
-
-    //var encoded_image = req.body.finalimage;
-    var binary_data = req.body.finalimage;
-
-    // Random uuid to asign the new image
-    var randomImageName = uuid.v4();
-    var imagepath = 'uploads/' + randomImageName +'.jpg';
-    // Create the file inside uploads folder
-    var fileresult = fs.writeFile(imagepath, binary_data, {encoding: 'base64'}, function (err) {
-        if(err){
-            logger.info(err);
-            logger.info('Error creating capture image');
-            return res.redirect('/login?error=15');
-        }
-
-        // Save the image path in the database
-        var personId = req.body.personid;
-
-        var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
-            imagepath + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
-
-        //logger.info(sql);
-
-        // Save image route
-        oracledb.autoCommit = true;
-        oracledb.getConnection({
-            user            : process.env.ORACLE_USERNAME,
-            password        : process.env.ORACLE_PASSWORD,
-            connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
-            + '/' + process.env.ORACLE_SID
-        }, function (err, connection) {
-            if (err){
-                logger.error(err.message);
-                // error=0 trying to connect with database
-                return res.redirect('/affiliates/images?error=0');
-            }
-
-            connection.execute(
-                sql,
-                // The Callback function handles the SQL execution results
-                function (err, result) {
-                    if (err) {
-                        logger.error(err.message);
-                        connection.close(
-                            function(err) {
-                                if (err) {
-                                    // error=1 trying to disconnect of database
-                                    logger.error(err.message);
-                                    return res.redirect('/affiliates/images?error=1');
-                                }
-                                logger.info('Connection to Oracle closed successfully!');
-                            });
-                        // Error doing select statement
-                        return res.redirect('/affiliates/images?error=12');
-                    }
-
-                    logger.info(result);
-
-                    // UPDATE image capture success
-                    connection.close(
-                        function(err) {
-                            if (err) {
-                                // error=1 trying to disconnect of database
-                                logger.error(err.message);
-                                return res.redirect('/affiliates/images?error=1');
-                            }
-                            logger.info('Connection to Oracle closed successfully!');
-                        });
-                    res.redirect('/affiliates?flag=success');
-                }
-            );
-        });
-    });
-});
-
-/* POST Images handler page | affiliates. */
-affiliateRouter.post('/affiliates/images/input', upload.single('inputpicture'), function (req, res) {
-    if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
-        logger.info('Login credentials: Empty values.');
-        // error=12 No person Id using image capture.
-        return res.redirect('/affiliates?error=12');
-    }
-
-    //logger.info(req.file);
-    //logger.info(req.body);
-
-    var personId = req.body.personid;
-
-    var sql = "UPDATE USUARIOS.\"NPERSONAS\" SET USUARIOS.\"NPERSONAS\".\"FOTO\" = '" +
-        req.file.path + "' WHERE USUARIOS.\"NPERSONAS\".\"IDPERSONA\" =" + personId;
-
-    //logger.info(sql);
-
-    // Save image route
-    oracledb.autoCommit = true;
-    oracledb.getConnection({
-        user            : process.env.ORACLE_USERNAME,
-        password        : process.env.ORACLE_PASSWORD,
-        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
-        + '/' + process.env.ORACLE_SID
-    }, function (err, connection) {
-        if (err){
-            logger.error(err.message);
-            // error=0 trying to connect with database
-            return res.redirect('/affiliates/images?error=0');
-        }
-
-        connection.execute(
-            sql,
-            // The Callback function handles the SQL execution results
-            function (err, result) {
-                if (err) {
-                    logger.error(err.message);
-                    connection.close(
-                        function(err) {
-                            if (err) {
-                                // error=1 trying to disconnect of database
-                                logger.error(err.message);
-                                return res.redirect('/affiliates/images?error=1');
-                            }
-                            logger.info('Connection to Oracle closed successfully!');
-                        });
-                    // Error doing select statement
-                    return res.redirect('/affiliates/images?error=12');
-                }
-
-                logger.info(result);
-
-                // UPDATE image capture success
-                connection.close(
-                    function(err) {
-                        if (err) {
-                            // error=1 trying to disconnect of database
-                            logger.error(err.message);
-                            return res.redirect('/affiliates/images?error=1');
-                        }
-                        logger.info('Connection to Oracle closed successfully!');
-                    });
-                res.redirect('/affiliates?flag=success');
-            }
-        );
     });
 });
 

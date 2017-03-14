@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="portlet-body">
-                <form action="/dashboard/images/capture" method="post" role="form" class="form-horizontal">
-                    <input type="hidden" id="personid" name="personid" value="1">
+                <form action="/affiliates/images/capture" method="post" role="form" class="form-horizontal">
+                    <input type="hidden" id="personid" name="personid" value="{{affiliate}}">
                     <input id="finalimage" type="hidden" name="finalimage" value=""/>
                     <div class="mt-element-card mt-element-overlay">
                         <div class="row">
@@ -95,8 +95,8 @@
             </div>
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form action="/dashboard/images/input" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
-                    <input type="hidden" id="personid" name="personid" value="1">
+                <form action="/affiliates/images/input" enctype="multipart/form-data" method="post" role="form" class="form-horizontal">
+                    <input type="hidden" id="personid" name="personid" value="{{affiliate}}">
                     <div class="form-body">
                         <div class="form-group last">
                             <label class="control-label col-md-3"></label>
