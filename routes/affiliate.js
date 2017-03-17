@@ -75,10 +75,10 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
             afiliado : null
         });
     }
-    // // Session
-    // if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-    //     return res.redirect('/login');
-    // }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
 
     var idAfiliado = req.params.id;
     var currentURL = '/affiliates/' + idAfiliado;
@@ -373,10 +373,10 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
         logger.error(error);
         return res.json({error: error});
     }
-    // // Session
-    // if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-    //     return res.redirect('/login');
-    // }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
 
     var idAfiliado = req.params.id;
 
@@ -452,7 +452,7 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
                         return res.json({error: 'Error doing select statement'});
                     }
 
-                    logger.info(result.rows[0]);
+                    //logger.info(result.rows[0]);
 
                     var buff = new Buffer( result.rows[0], 'binary' );
                     var imgbase64 =  buff.toString('base64');
