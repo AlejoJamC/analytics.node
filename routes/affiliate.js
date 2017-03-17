@@ -498,22 +498,31 @@ affiliateRouter.get('/affiliates/images/:id', function (req, res) {
         return res.redirect('/login');
     }
 
+    // Valido si retorna la bandera success
+    var flag = '';
+    if(typeof req.query.flag !== 'undefined'){
+        if(req.query.flag === 'success'){
+            flag = 'success';
+        }
+    }
+
     res.render('dash/affiliateImages', {
         title   : 'Cargar Imagen Afiliado | Identico',
         level   : '../../',
         layout  : 'dash',
         affiliate: idaffiliate,
-        error   : error
+        error   : error,
+        flag    : flag
     });
 });
 
-/* POST Affiliate images handler page | Dashboard. */
+/* POST Affiliate images handler page | affiliates. */
 affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
 
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
         // error=12 No person Id using image capture.
-        return res.redirect('/dashboard/images?error=12');
+        return res.redirect('/affiliates/images/' + personId + '?error=12');
     }
 
     var binary_data = req.body.finalimage;
@@ -546,7 +555,7 @@ affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
             if (err){
                 logger.error(err.message);
                 // error=0 trying to connect with database
-                return res.redirect('/dashboard/images?error=0');
+                return res.redirect('/affiliates/images/' + personId + '?error=0');
             }
             connection.execute(
                 sql,
@@ -560,15 +569,15 @@ affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
                                 if (err) {
                                     // error=1 trying to disconnect of database
                                     logger.error(err.message);
-                                    return res.redirect('/dashboard/images?error=1');
+                                    return res.redirect('/affiliates/images/' + personId + '?error=1');
                                 }
                                 logger.info('Connection to Oracle closed successfully!');
                             });
                         // Error doing select statement
-                        return res.redirect('/dashboard/images?error=12');
+                        return res.redirect('/affiliates/images/' + personId + '?error=12');
                     }
 
-                    logger.info(result);
+                    //logger.info(result);
 
                     // UPDATE image capture success
                     connection.close(
@@ -576,18 +585,18 @@ affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                return res.redirect('/dashboard/images?error=1');
+                                return res.redirect('/affiliates/images/' + personId + '?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
-                    res.redirect('/dashboard/images?flag=success');
+                    res.redirect('/affiliates/images/' + personId + '?flag=success');
                 }
             );
         });
     });
 });
 
-/* POST Affiliate images handler page | Dashboard. */
+/* POST Affiliate images handler page | affiliates. */
 affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'), function (req, res) {
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
@@ -616,7 +625,7 @@ affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'),
         if (err){
             logger.error(err.message);
             // error=0 trying to connect with database
-            return res.redirect('/dashboard/images?error=0');
+            return res.redirect('/affiliates/images/' + personId + '?error=0');
         }
 
         connection.execute(
@@ -631,20 +640,20 @@ affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'),
                             if (err) {
                                 // error=1 trying to disconnect of database
                                 logger.error(err.message);
-                                return res.redirect('/dashboard/images?error=1');
+                                return res.redirect('/affiliates/images/' + personId + '?error=1');
                             }
                             logger.info('Connection to Oracle closed successfully!');
                         });
                     // Error doing select statement
-                    return res.redirect('/dashboard/images?error=12');
+                    return res.redirect('/affiliates/images/' + personId + '?error=12');
                 }
 
                 if (result.rowsAffected != 1) {
                     logger.info('Error updating the image');
-                    return res.redirect('/dashboard/images?error=2');
+                    return res.redirect('/affiliates/images/' + personId + '?error=2');
                 }
 
-                logger.info(result);
+                //logger.info(result);
 
                 // UPDATE image capture success
                 connection.close(
@@ -652,11 +661,11 @@ affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'),
                         if (err) {
                             // error=1 trying to disconnect of database
                             logger.error(err.message);
-                            return res.redirect('/dashboard/images?error=1');
+                            return res.redirect('/affiliates/images/' + personId + '?error=1');
                         }
                         logger.info('Connection to Oracle closed successfully!');
                     });
-                res.redirect('/dashboard/images?flag=success');
+                res.redirect('/affiliates/images/' + personId + '?flag=success');
             }
         );
     });
