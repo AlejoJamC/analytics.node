@@ -1,57 +1,16 @@
 {{#contentFor 'pageStyles'}}
     <link href="{{level}}assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+    <link href="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
 {{/contentFor}}
 
-<h1 class="page-title"> cargar imagen del
-    <small>custom bootstrap user card elements to be used on any container or layout</small>
-</h1>
-<div class="page-bar">
-    <ul class="page-breadcrumb">
-        <li>
-            <i class="icon-home"></i>
-            <a href="index.html">Home</a>
-            <i class="fa fa-angle-right"></i>
-        </li>
-        <li>
-            <span>Elements</span>
-        </li>
-    </ul>
-    <div class="page-toolbar">
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true"> Actions
-                <i class="fa fa-angle-down"></i>
-            </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li>
-                    <a href="#">
-                        <i class="icon-bell"></i> Action</a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="icon-shield"></i> Another action</a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="icon-user"></i> Something else here</a>
-                </li>
-                <li class="divider"> </li>
-                <li>
-                    <a href="#">
-                        <i class="icon-bag"></i> Separated link</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-<!-- END PAGE HEADER-->
 <!-- BEGIN : USER CARDS -->
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light portlet-fit ">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class=" icon-layers font-green"></i>
-                    <span class="caption-subject font-green bold uppercase">Profile</span>
+                    <i class=" icon-camera font-green"></i>
+                    <span class="caption-subject font-green bold uppercase">Capturar imagen.</span>
                 </div>
             </div>
             <div class="portlet-body">
@@ -89,8 +48,8 @@
         <div class="portlet light form-fit ">
             <div class="portlet-title">
                 <div class="caption">
-                    <i class="icon-settings font-green"></i>
-                    <span class="caption-subject font-green sbold uppercase">Advanced File Input</span>
+                    <i class="icon-camera font-green"></i>
+                    <span class="caption-subject font-green sbold uppercase">Cargar imagen.</span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -114,7 +73,7 @@
                                     </div>
                                 </div>
                                 <div class="clearfix margin-top-10">
-                                    <span class="label label-danger">NOTA!</span> Image preview only works in IE10+, FF3.6+, Safari6.0+, Chrome6.0+ and Opera11.1+. In older browsers the filename is shown instead. </div>
+                                    <span class="label label-danger">NOTA!</span> La vista previa de las imagenes solo funciona en IE10+, FF3.6+, Safari6.0+, Chrome6.0+ and Opera11.1+.</div>
                             </div>
                         </div>
                     </div>
@@ -138,6 +97,10 @@
 {{#contentFor 'pageScripts'}}
     <script src="{{level}}js/webcam.js" type="text/javascript"></script>
     <script src="{{level}}assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+    <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
     <script language="JavaScript">
         Webcam.attach( '#webcamera' );
 
@@ -156,6 +119,22 @@
                 var raw_image_data = data_uri.replace(/^data\:image\/jpeg\;base64\,/, '');
                 document.getElementById('finalimage').value = raw_image_data;
             } );
+        }
+
+        var tempvalue = '{{flag}}';
+        if( tempvalue === 'success' ) {
+            swal({
+                        title:"Imagen guardada EXITOSAMENTE",
+                        type:"success",
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "Volver al afiliado",
+                        closeOnConfirm: true
+                    },
+                    function(isConfirm){
+                        if (isConfirm) {
+                            window.location.href = "/affiliates/" + {{affiliate}};
+                        }
+                    });
         }
     </script>
 {{/contentFor}}
