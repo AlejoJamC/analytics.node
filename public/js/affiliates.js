@@ -60,7 +60,7 @@ function CargarReferidosPorAfiliad(idAfiliado) {
                             '<td>' + ((abreviData[26] === null) ?  '' : abreviData[27]) + '</td>' +
                             '<td>' +
                             '<div style="text-align:center" >' +
-                            '<a href="/referred/'+ abreviData[21].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                            '<a href="/referred/'+ abreviData[21].toString().toLowerCase() + '?afiliado=' + idAfiliado + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                             '<i class="fa fa-share"></i> Ver </a>' +
                             '</div>' +
                             '</td>' +
