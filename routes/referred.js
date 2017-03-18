@@ -83,6 +83,21 @@ referredRouter.get('/referred/:id', function (req, res){
     // Error
     if(typeof req.query.error !== 'undefined'){
         error = req.query.error;
+        logger.error(error);
+        return res.render('dash/referredDetails', {
+            title   : 'Detalle de Referido | Identico',
+            level   : '../',
+            layout  : 'dash',
+            error   : error,
+            idAfiliado : null,
+            idUserSession : req.session.userId,
+            afiliado : null
+        });
+    }
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
     }
     // Session
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
