@@ -58,7 +58,7 @@ function NuevoModal() {
 
 function GuardarModal() {
     swal({
-            title:"Abreviatura Actualizada",
+            title:"Desea Actualizar Abreviatura",
             message: "",
             type:"success",
             confirmButtonClass: "btn-success",
