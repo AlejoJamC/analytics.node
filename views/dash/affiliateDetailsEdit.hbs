@@ -30,7 +30,7 @@
     <div class="tabbable tabbable-full-width">
         <ul class="nav nav ">
             <li class="active">
-                <a href="#tab_1_1" data-toggle="tab"> <h3 class="margin-bottom-5">Calderon Calderon Cristian Rene</h3> </a>
+                <a href="javascript:;" data-toggle="tab"> <h3 class="margin-bottom-5">{{ afiliado.PRIMERNOMBRE }} {{ afiliado.SEGUNDONOMBRE }} {{ afiliado.PRIMERAPELLIDO }} {{ afiliado.SEGUNDOAPELLIDO }}</h3> </a>
             </li>
         </ul>
         <div class="tab-content">
@@ -39,8 +39,8 @@
                     <div class="col-md-2">
                         <ul class="list-unstyled profile-nav">
                             <li>
-                                <img src="{{level}}assets/pages/media/profile/profile_user.jpg" class="img-responsive pic-bordered" alt="" />
-                                <a href="/affiliates/images" class="profile-edit"> editar </a>
+                                <img id="affiliateProfile" src="{{level}}img/user-empty.png" class="img-responsive pic-bordered" alt="" />
+                                <a href="/affiliates/images/{{afiliado.IDPERSONA}}" class="profile-edit"> editar </a>
                             </li>
                             <!--end col-md-8-->
                             <div class="col-md-12">
@@ -57,17 +57,8 @@
                                                 <span class="sale-info"> Edad
                                                     <i class="fa fa-img-up"></i>
                                                 </span>
-                                                <span class="sale-num"> 23 </span>
+                                                <span class="sale-num"> {{ afiliado.EDAD }} </span>
                                             </li>
-                                            <li>
-                                                <span class="sale-info"> Beneficiarios
-                                                    <i class="fa fa-img-down"></i>
-                                                </span>
-                                                <span class="sale-num"> 6 </span>
-                                            </li>
-                                            <li>
-                                            </li>
-
                                         </ul>
                                     </div>
                                 </div>
@@ -124,7 +115,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Primer Apellido:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="Calderon">
+                                                                        <input type="text" class="form-control" placeholder="Calderon" value="{{ afiliado.PRIMERAPELLIDO }}">
 
                                                                     </div>
                                                                 </div>
@@ -134,8 +125,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Primer Nombre:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="Cristian">
-
+                                                                        <input type="text" class="form-control" placeholder="Cristian" value="{{ afiliado.PRIMERNOMBRE }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -144,8 +134,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Segundo Apellido:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="Calderon">
-
+                                                                        <input type="text" class="form-control" placeholder="Calderon" value="{{ afiliado.SEGUNDOAPELLIDO }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -154,8 +143,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Segundo Nombre::</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="Rene">
-
+                                                                        <input type="text" class="form-control" placeholder="Rene" value="{{ afiliado.SEGUNDONOMBRE }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -181,8 +169,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">No Documento:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="1.095.804.898">
-
+                                                                        <input type="text" class="form-control" placeholder="1.095.804.898" value="{{ afiliado.NODOCUMENTO }}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -198,7 +185,6 @@
                                                                             <option value="">M</option>
                                                                             <option value="">F</option>
                                                                         </select>
-                                                                        <!--  <span class="help-block"> Select your gender. </span>-->
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -207,9 +193,8 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Fecha Nacimiento:</label>
                                                                     <div class="col-md-9">
-                                                                        <input class="form-control form-control-inline input-medium date-picker" placeholder="06/25/1190" />
+                                                                        <input class="form-control form-control-inline input-medium date-picker" placeholder="06/25/1190" value="{{ afiliado.FECHA_NACIMIENTO }}"/>
                                                                        </div>
-
                                                                 </div>
                                                             </div>
                                                             <!--/span-->
@@ -252,8 +237,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Dirección</label>
                                                                     <div class="col-md-9">
-
-                                                                        <input type="text" class="form-control" placeholder="Cra 27 # 49-45"> </div>
+                                                                        <input type="text" class="form-control" placeholder="Cra 27 # 49-45" value="{{ afiliado.DIRECCION }}"> </div>
                                                                 </div>
 
                                                             </div>
@@ -279,8 +263,7 @@
                                                                     <div class="form-group">
                                                                         <label class="control-label col-md-3">Detalle Dir</label>
                                                                         <div class="col-md-9">
-
-                                                                            <input type="text" class="form-control" placeholder="Cra 27 # 49-45 Laureles"> </div>
+                                                                            <input type="text" class="form-control" placeholder="Cra 27 # 49-45 Laureles" value="{{ afiliado.DETALLEDIRECCION }}"> </div>
                                                                     </div>
 
                                                             </div>
@@ -305,7 +288,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Tel. Fijo:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="6897848"> </div>
+                                                                        <input type="text" class="form-control" placeholder="6897848" value="{{ afiliado.TELEFONOFIJO }}"> </div>
                                                                 </div>
                                                             </div>
                                                             <!--/span-->
@@ -313,7 +296,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Tel. Movil:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="3254895878"> </div>
+                                                                        <input type="text" class="form-control" placeholder="3254895878" value="{{ afiliado.TELEFONOMOVIL }}"> </div>
                                                                 </div>
                                                             </div>
                                                             <!--/span-->
@@ -324,7 +307,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Correo:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="creca@gmail.com"> </div>
+                                                                        <input type="text" class="form-control" placeholder="creca@gmail.com" value="{{ afiliado.CORREO }}"> </div>
                                                                 </div>
                                                             </div>
                                                             <!--/span-->
@@ -332,7 +315,7 @@
                                                                 <div class="form-group">
                                                                     <label class="control-label col-md-3">Observación:</label>
                                                                     <div class="col-md-9">
-                                                                        <input type="text" class="form-control" placeholder="Na"> </div>
+                                                                        <input type="text" class="form-control" placeholder="Na" value="{{ afiliado.OBSERVACION }}"> </div>
                                                                 </div>
                                                             </div>
                                                             <!--/span-->
