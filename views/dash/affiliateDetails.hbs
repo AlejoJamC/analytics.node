@@ -9,6 +9,7 @@
     <!-- END PAGE LEVEL STYLES -->
     <link href="{{ level }}assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
     <link href="{{ level }}assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.css" rel="stylesheet" type="text/css" />
 {{/contentFor}}
 
 <div class="profile">
@@ -391,8 +392,27 @@
     <script src="{{level}}js/datatables-identico.js" type="text/javascript"></script>
     <script src="{{level}}assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
     <script src="{{level}}js/table-datatables-managed-identico.js" type="text/javascript"></script>
+    <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
+    <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}js/affiliates.js" type="text/javascript"></script>
     <script>
-        CargarReferidosPorAfiliad({{idAfiliado}});
+        var validator = '{{idAfiliado}}';
+        if(validator === 'undefined' || validator === ''){
+            swal({
+                        title: "Error obteniendo los datos del Afiliado.",
+                        type: "error",
+                        confirmButtonClass: "btn-error",
+                        confirmButtonText: "Ok",
+                        closeOnConfirm: true
+                    },
+                    function(isConfirm){
+                        window.location.href = "/";
+                    });
+        } else {
+            CargarReferidosPorAfiliad({{idAfiliado}});
+            CargarImagenAfiliado({{idAfiliado}});
+        }
     </script>
 {{/contentFor}}
