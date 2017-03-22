@@ -48,16 +48,21 @@ affiliateRouter.get('/affiliates', function (req, res) {
     // If ............
     res.render('dash/affiliateDetails', {
         title   : 'Detalle de Afiliado | Identico',
-        level   : '',
+        level   : '../',
         layout  : 'dash',
-        error   : error
+        error   : error,
+        idAfiliado : null,
+        idUserSession : req.session.userId,
+        afiliado : null
     });
 });
 
 /* GET Affiliates by Id page. */
 affiliateRouter.get('/affiliates/:id', function (req, res, next) {
-    if(req.params.id === 'referred' || req.params.id === 'images'){
+    if(req.params.id === 'referred' || req.params.id === 'images'
+        || req.params.id === 'new' || req.params.id === 'edit'){
         next();
+        return;
     }
     var error = '';
     // Basic error validator
@@ -223,7 +228,7 @@ affiliateRouter.get('/affiliates/:id', function (req, res, next) {
     });
 });
 
-/* GET Referred by affiliate Id  page. */
+/* GET Referred by affiliate Id page. */
 affiliateRouter.get('/affiliates/referred/:id', function (req, res) {
     var error = '';
     // Basic error validator
@@ -400,7 +405,7 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
                 " FROM HUELLA.NPERSONAS " +
                 "WHERE HUELLA.NPERSONAS.IDPERSONA =" + idAfiliado;
 
-            //logger.info(sql);
+            logger.info(sql);
 
             connection.execute(
                 // The statement to execute
@@ -452,10 +457,12 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
                         return res.json({error: 'Error doing select statement'});
                     }
 
-                    //logger.info(result.rows[0]);
+                    logger.info(result.rows[0]);
 
-                    var buff = new Buffer( result.rows[0], 'binary' );
+                    var buff = new Buffer(result.rows[0]);
+                    logger.info(buff);
                     var imgbase64 =  buff.toString('base64');
+                    logger.info(imgbase64);
 
                     return res.json({img: imgbase64 });
                 }
@@ -515,6 +522,52 @@ affiliateRouter.get('/affiliates/images/:id', function (req, res) {
         flag    : flag
     });
 });
+
+/* GET Create New Affiliate page. */
+affiliateRouter.get('/affiliates/new', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    return res.render('dash/addAffiliate', {
+        title   : 'Agregar Afiliado | Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+/* GET Update values from an Affiliate page. */
+affiliateRouter.get('/affiliates/edit/:id', function (req, res) {
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+    // User Rol
+    // If ............
+    res.render('dash/affiliateDetailsEdit', {
+        title   : 'Editar Afiliado | Identico',
+        level   : '../',
+        layout  : 'dash',
+        error   : error
+    });
+});
+
+// ******* POST *********
 
 /* POST Affiliate images handler page | affiliates. */
 affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
@@ -668,91 +721,6 @@ affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'),
                 res.redirect('/affiliates/images/' + personId + '?flag=success');
             }
         );
-    });
-});
-
-affiliateRouter.get('/affiliates/edit', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/affiliateDetailsEdit', {
-        title   : 'Editar Afiliado | Identico',
-        level   : '../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-affiliateRouter.get('/editarafiliado', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/affiliateDetailsEdit', {
-        title   : 'Editar Afiliado | Identico',
-        level   : '../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-/* GET Create New Affiliate page. */
-affiliateRouter.get('/affiliates/new', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/addAffiliate', {
-        title   : 'Agregar Afiliado | Identico',
-        level   : '../',
-        layout  : 'dash',
-        error   : error
-    });
-});
-
-affiliateRouter.get('/addAffiliates', function (req, res) {
-    var error = '';
-    // Basic error validator
-    // Error
-    if(typeof req.query.error !== 'undefined'){
-        error = req.query.error;
-    }
-    // Session
-    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
-        return res.redirect('/login');
-    }
-    // User Rol
-    // If ............
-    res.render('dash/addAffiliate', {
-        title   : 'Agregar Afiliado | Identico',
-        level   : '../',
-        layout  : 'dash',
-        error   : error
     });
 });
 
