@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/etnias/ajax"
+        url: "/settings/etnias/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' +
 
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/etnias/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/etnias/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/etnias/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/etnias/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -50,7 +50,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/etnias";
+                window.location.href = "/settings/etnias";
             }
         });
 }
@@ -71,7 +71,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/etnias";
+                window.location.href = "/settings/etnias";
             }
         });
 }
@@ -90,7 +90,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/etnias";
+                window.location.href = "/settings/etnias";
             }
         });
 }
@@ -100,7 +100,7 @@ function CrearDatos() {
     var value = $.trim($("#etnia").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/etnias/crear/ajax",
+        url: "/settings/etnias/crear/ajax",
         data : {"idetnia" : id, "etnia" : value}
     })
         .done(function (data) {
@@ -128,7 +128,7 @@ function ActualizarDatos() {
 
     $.ajax({
         method: "POST",
-        url: "/parametros/etnias/actualizar/ajax",
+        url: "/settings/etnias/actualizar/ajax",
         data : {"idetnia" : id, "etnia" : value}
     })
         .done(function (data) {

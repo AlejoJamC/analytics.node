@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/departamentos/ajax"
+        url: "/settings/departamentos/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' + data.rows[i][2] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/departamentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/departamentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/departamentos/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/departamentos/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -50,7 +50,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/departamentos";
+                window.location.href = "/settings/departamentos";
             }
         });
 }
@@ -71,7 +71,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/departamentos";
+                window.location.href = "/settings/departamentos";
             }
         });
 }
@@ -90,7 +90,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/departamentos";
+                window.location.href = "/settings/departamentos";
             }
         });
 }
@@ -101,7 +101,7 @@ function CrearDatos() {
     var vidpais = $.trim($("#idpais").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/departamentos/crear/ajax",
+        url: "/settings/departamentos/crear/ajax",
         data : {"iddepartamento" : id, "departamento" : value, "idpais" :vidpais}
     })
         .done(function (data) {
@@ -129,7 +129,7 @@ function ActualizarDatos() {
     var vidpais = $.trim($("#idpais").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/departamentos/actualizar/ajax",
+        url: "/settings/departamentos/actualizar/ajax",
         data : {"iddepartamento" : id, "departamento" : value, "idpais" :vidpais}
     })
         .done(function (data) {

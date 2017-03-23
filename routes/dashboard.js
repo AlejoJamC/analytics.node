@@ -327,7 +327,7 @@ dashRoutes.post('/dashboard/images/input', upload.single('inputpicture'), functi
                     return res.redirect('/dashboard/images?error=2');
                 }
 
-                logger.info(result);
+                //logger.info(result);
 
                 // UPDATE image capture success
                 connection.close(

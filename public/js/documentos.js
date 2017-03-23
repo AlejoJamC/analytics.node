@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/documentos/ajax"
+        url: "/settings/documentos/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' +
 
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/documentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/documentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/documentos/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/documentos/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -50,7 +50,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/documentos";
+                window.location.href = "/settings/documentos";
             }
         });
 }
@@ -71,7 +71,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/documentos";
+                window.location.href = "/settings/documentos";
             }
         });
 }
@@ -90,7 +90,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/documentos";
+                window.location.href = "/settings/documentos";
             }
         });
 }
@@ -100,7 +100,7 @@ function CrearDatos() {
     var value = $.trim($("#docu").val());
        $.ajax({
         method: "POST",
-        url: "/parametros/documentos/crear/ajax",
+        url: "/settings/documentos/crear/ajax",
         data : {"iddocumento" : id, "documento" : value}
     })
         .done(function (data) {
@@ -128,7 +128,7 @@ function ActualizarDatos() {
 
     $.ajax({
         method: "POST",
-        url: "/parametros/documentos/actualizar/ajax",
+        url: "/settings/documentos/actualizar/ajax",
         data : {"iddocumento" : id, "documento" : value}
     })
         .done(function (data) {

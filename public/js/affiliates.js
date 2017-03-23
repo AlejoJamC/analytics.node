@@ -3,7 +3,7 @@ function CargarDatos() {
     var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
         method: "GET",
-        url: "/parametros/afiliados/ajax"
+        url: "/settings/afiliados/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -20,11 +20,11 @@ function CargarDatos() {
 
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/afiliados/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/afiliados/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/afiliados/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/afiliados/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
-                        '<a href="/parametros/afiliados/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                        '<a href="/settings/afiliados/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                         '<i class="fa fa-share"></i> Ver </a>' +
                         '</div>' +
                         '</td>' +

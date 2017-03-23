@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/municipios/ajax"
+        url: "/settings/municipios/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -18,9 +18,9 @@ function CargarDatos() {
 
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/municipios/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/municipios/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/municipios/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/municipios/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -52,7 +52,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/municipios";
+                window.location.href = "/settings/municipios";
             }
         });
 }
@@ -73,7 +73,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/municipios";
+                window.location.href = "/settings/municipios";
             }
         });
 }
@@ -92,7 +92,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/municipios";
+                window.location.href = "/settings/municipios";
             }
         });
 }
@@ -103,7 +103,7 @@ function CrearDatos() {
     var vmunicipio = $.trim($("#muni").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/municipios/crear/ajax",
+        url: "/settings/municipios/crear/ajax",
         data : {"idmunicipio" : id, "iddepartamento" : value, "municipio" :vmunicipio}
     })
         .done(function (data) {
@@ -131,7 +131,7 @@ function ActualizarDatos() {
     var vmunicipio = $.trim($("#muni").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/municipios/actualizar/ajax",
+        url: "/settings/municipios/actualizar/ajax",
         data : {"idmunicipio" : id, "iddepartamento" : value, "municipio" :vmunicipio}
     })
         .done(function (data) {

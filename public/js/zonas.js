@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/zonas/ajax"
+        url: "/settings/zonas/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -15,9 +15,9 @@ function CargarDatos() {
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/zonas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/zonas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/zonas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/zonas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -49,7 +49,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/zonas";
+                window.location.href = "/settings/zonas";
             }
         });
 }
@@ -70,7 +70,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/zonas";
+                window.location.href = "/settings/zonas";
             }
         });
 }
@@ -89,7 +89,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/zonas";
+                window.location.href = "/settings/zonas";
             }
         });
 }
@@ -99,7 +99,7 @@ function CrearDatos() {
     var value = $.trim($("#zona").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/zonas/crear/ajax",
+        url: "/settings/zonas/crear/ajax",
         data : {"idzona" : id, "zona" : value}
     })
         .done(function (data) {
@@ -126,7 +126,7 @@ function ActualizarDatos() {
     var value = $.trim($("#zona").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/zonas/actualizar/ajax",
+        url: "/settings/zonas/actualizar/ajax",
         data : {"idzona" : id, "zona" : value}
     })
         .done(function (data) {

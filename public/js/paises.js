@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/paises/ajax"
+        url: "/settings/paises/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -15,9 +15,9 @@ function CargarDatos() {
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/paises/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/paises/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/paises/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/paises/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
@@ -49,7 +49,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/paises";
+                window.location.href = "/settings/paises";
             }
         });
 }
@@ -70,7 +70,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/paises";
+                window.location.href = "/settings/paises";
             }
         });
 }
@@ -89,7 +89,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/paises";
+                window.location.href = "/settings/paises";
             }
         });
 }
@@ -99,7 +99,7 @@ function CrearDatos() {
     var value = $.trim($("#pais").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/paises/crear/ajax",
+        url: "/settings/paises/crear/ajax",
         data : {"idpais" : id, "pais" : value}
     })
         .done(function (data) {
@@ -126,7 +126,7 @@ function ActualizarDatos() {
     var value = $.trim($("#pais").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/paises/actualizar/ajax",
+        url: "/settings/paises/actualizar/ajax",
         data : {"idpais" : id, "pais" : value}
     })
         .done(function (data) {

@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/parametros/abreviaturas/ajax"
+        url: "/settings/abreviaturas/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' +
 
                         '<div style="text-align:center" >' +
-                        '<a href="/parametros/abreviaturas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/abreviaturas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/parametros/abreviaturas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/abreviaturas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '<div style="text-align:center" >' +
                         '</div>' +
@@ -51,7 +51,7 @@ function NuevoModal() {
             if (isConfirm) {
                 CrearDatos();
             }else{
-                window.location.href = "/parametros/abreviaturas";
+                window.location.href = "/settings/abreviaturas";
             }
         });
 }
@@ -72,7 +72,7 @@ function GuardarModal() {
             if (isConfirm) {
                 ActualizarDatos();
             }else{
-                window.location.href = "/parametros/abreviaturas";
+                window.location.href = "/settings/abreviaturas";
             }
         });
 }
@@ -91,7 +91,7 @@ function CancelarModal() {
         },
         function(isConfirm){
             if (isConfirm) {
-                window.location.href = "/parametros/abreviaturas";
+                window.location.href = "/settings/abreviaturas";
             }
         });
 }
@@ -101,7 +101,7 @@ function CrearDatos() {
     var value = $.trim($("#abre").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/abreviaturas/crear/ajax",
+        url: "/settings/abreviaturas/crear/ajax",
         data : {"idabreviatura" : id, "abreviatura" : value}
     })
         .done(function (data) {
@@ -128,7 +128,7 @@ function ActualizarDatos() {
     var value = $.trim($("#abre").val());
     $.ajax({
         method: "POST",
-        url: "/parametros/abreviaturas/actualizar/ajax",
+        url: "/settings/abreviaturas/actualizar/ajax",
         data : {"idabreviatura" : id, "abreviatura" : value}
     })
         .done(function (data) {
