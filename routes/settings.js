@@ -401,10 +401,8 @@ parametersRoutes.get('/settings/personas/ajax', function (req, res) {
 });
 
 
-
-
-/* GET abreviaturas page. */
-parametersRoutes.get('/settings/abreviaturas', function (req, res) {
+/* GET abbreviations page. */
+parametersRoutes.get('/settings/abbreviations', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -423,7 +421,142 @@ parametersRoutes.get('/settings/abreviaturas', function (req, res) {
     });
 });
 
-parametersRoutes.get('/settings/abreviaturas/editar/:id', function (req, res) {
+/* GET update abbreviations page. */
+parametersRoutes.get('/settings/abbreviations/:id', function (req, res, next) {
+    if(req.params.id === 'new' || req.params.id === 'ajax' || req.params.id === 'check'){
+        next();
+        return;
+    }
+    var error = '';
+    // Basic error validator
+    // Error
+    if(typeof req.query.error !== 'undefined'){
+        error = req.query.error;
+        logger.error(error);
+        return res.render('dash/affiliateDetails', {
+            title   : 'Detalle de Afiliado | Identico',
+            level   : '../',
+            layout  : 'dash',
+            error   : error,
+            rol     : null,
+            idrol   : req.params.id
+        });
+    }
+    // Session
+    if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
+        return res.redirect('/login');
+    }
+
+    // Rol by id
+    var verficiarId = req.params.id;
+
+    oracledb.getConnection({
+        user            : process.env.ORACLE_USERNAME,
+        password        : process.env.ORACLE_PASSWORD,
+        connectString   : process.env.ORACLE_HOST + ':' + process.env.ORACLE_PORT
+        + '/' + process.env.ORACLE_SID
+    }, function (err, connection) {
+        if (err){
+            logger.error(err.message);
+            // error=0 trying to connect with database
+            return res.send({ err : 'Error trying to connect with database.' , errCode : 0});
+        }
+
+        var sql = "SELECT HUELLA.PROLES.ROL_CODE, HUELLA.PROLES.ROL_DESC " +
+            " FROM HUELLA.PROLES " +
+            " WHERE HUELLA.PROLES.ROL_CODE ='" + verficiarId + "'";
+
+        connection.execute(
+            // The statement to execute
+            sql,
+            [ ],
+
+            // The Callback function handles the SQL execution results
+            function (err, result) {
+                if (err) {
+                    logger.error(err.message);
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    // Error doing select statement
+                    return res.send({ err : 'Error doing select statement.'});
+                }
+
+                // Query success
+                // Create the session
+                if(typeof result.metaData === 'undefined' && typeof result.rows === 'undefined'){
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ code: 1, data : 'Empty values returned. [1]'});
+                } else if(typeof result.rows[0] === 'undefined') {
+                    logger.info('Validation error, empty values returned.');
+                    connection.close(
+                        function(err) {
+                            if (err) {
+                                // error=1 trying to disconnect of database
+                                logger.error(err.message);
+                                return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                            }
+                            logger.info('Connection to Oracle closed successfully!');
+                        });
+                    return res.send({ code: 2,  data : 'Empty values returned. [2]'});
+                } else {
+                    if(result.rows[0] == ''){
+                        logger.info('Error trying to validate user credentials');
+                        connection.close(
+                            function(err) {
+                                if (err) {
+                                    // error=1 trying to disconnect of database
+                                    logger.error(err.message);
+                                    return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                                }
+                                logger.info('Connection to Oracle closed successfully!');
+                            });
+                        return res.send({ code: 3, data : 'Empty values returned. [3]'});
+                    }
+                }
+
+                var data = {};
+                data.id = result.rows[0][0];
+                data.descripcion = result.rows[0][1];
+
+                connection.close(
+                    function(err) {
+                        if (err) {
+                            // error=1 trying to disconnect of database
+                            logger.error(err.message);
+                            return res.send({ err : 'trying to disconnect of database.' , errCode : 1});
+                        }
+                        logger.info('Connection to Oracle closed successfully!');
+                    });
+                return res.render('dash/tableRolesEdit', {
+                    title   : 'Editar Parametros| Identico',
+                    level   : '../../',
+                    layout  : 'dash',
+                    error   : error,
+                    rol     : data,
+                    idrol   : verficiarId
+                });
+            }
+        );
+    });
+});
+
+parametersRoutes.get('/settings/abbreviations/editar/:id', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -442,8 +575,8 @@ parametersRoutes.get('/settings/abreviaturas/editar/:id', function (req, res) {
     // Consulto los datos de la abreviatura
     var idAbreviatura = req.params.id;
     idAbreviatura = idAbreviatura.toUpperCase();
-    var urlRedirect = '/settings/abreviaturas';
-    var sql = "SELECT  \"PABREVIATURAS\".\"IDABREVIATURA\",  " +
+    var urlRedirect = '/settings/abbreviations';
+    var sql = "SELECT  \"Pabbreviations\".\"IDABREVIATURA\",  " +
         "\"PABREVIATURAS\".\"ABREVIATURA\" " +
         "FROM   \"PABREVIATURAS\"   " +
         "WHERE  \"PABREVIATURAS\".\"IDABREVIATURA\" ='" + idAbreviatura + "'";
@@ -545,7 +678,7 @@ parametersRoutes.get('/settings/abreviaturas/editar/:id', function (req, res) {
     });
 });
 
-parametersRoutes.get('/settings/abreviaturas/nuevo', function (req, res) {
+parametersRoutes.get('/settings/abbreviations/nuevo', function (req, res) {
     var error = '';
     // Basic error validator
     // Error
@@ -564,7 +697,7 @@ parametersRoutes.get('/settings/abreviaturas/nuevo', function (req, res) {
     });
 });
 
-parametersRoutes.post('/settings/abreviaturas/crear/ajax', function (req, res) {
+parametersRoutes.post('/settings/abbreviations/crear/ajax', function (req, res) {
     if(typeof req.body.idabreviatura === 'undefined' || req.body.idabreviatura === '' ||
         typeof req.body.abreviatura === 'undefined' || req.body.abreviatura === ''){
         return res.send({ data : 'Empty values returned. [1]'});
@@ -644,7 +777,7 @@ parametersRoutes.post('/settings/abreviaturas/crear/ajax', function (req, res) {
 
 });
 
-parametersRoutes.post('/settings/abreviaturas/actualizar/ajax', function (req, res) {
+parametersRoutes.post('/settings/abbreviations/actualizar/ajax', function (req, res) {
     if(typeof req.body.idabreviatura === 'undefined' || req.body.idabreviatura === '' ||
         typeof req.body.abreviatura === 'undefined' || req.body.abreviatura === ''){
         return res.send({ data : 'Empty values returned. [1]'});
@@ -724,7 +857,7 @@ parametersRoutes.post('/settings/abreviaturas/actualizar/ajax', function (req, r
     });
 });
 
-parametersRoutes.get('/settings/abreviaturas/ajax', function (req, res) {
+parametersRoutes.get('/settings/abbreviations/ajax', function (req, res) {
     oracledb.getConnection({
         user            : process.env.ORACLE_USERNAME,
         password        : process.env.ORACLE_PASSWORD,
@@ -826,7 +959,6 @@ parametersRoutes.get('/settings/abreviaturas/ajax', function (req, res) {
 
 
 });
-
 
 
 /* GET departamentos page. */
@@ -1692,7 +1824,6 @@ parametersRoutes.get('/settings/documentos/ajax', function (req, res) {
 
 
 });
-
 
 
 /* GET Etnias page. */
@@ -2563,7 +2694,6 @@ parametersRoutes.get('/settings/municipios/ajax', function (req, res) {
 });
 
 
-
 /* GET paises page. */
 parametersRoutes.get('/settings/paises', function (req, res) {
     var error = '';
@@ -2995,9 +3125,6 @@ parametersRoutes.get('/settings/paises/ajax', function (req, res) {
 
 
 });
-
-
-
 
 
 /* GET zonas page. */
@@ -3433,12 +3560,7 @@ parametersRoutes.get('/settings/zonas/ajax', function (req, res) {
 });
 
 
-
-
-
-
 /* GET usuarios page. */
-
 parametersRoutes.get('/settings/usuarios', function (req, res) {
     var error = '';
     // Basic error validator
@@ -3459,9 +3581,6 @@ parametersRoutes.get('/settings/usuarios', function (req, res) {
         error   : error
     });
 });
-
-
-
 
 
 /* GET roles list page. */
@@ -3853,7 +3972,7 @@ parametersRoutes.get('/settings/roles/check/:id/ajax', function (req, res) {
     });
 });
 
-/* GET create new rol by ajax. */
+/* POST create new rol by ajax. */
 parametersRoutes.post('/settings/roles/ajax', function (req, res) {
     var idrol = req.body.id;
     var rol = req.body.rol;
@@ -3916,6 +4035,7 @@ parametersRoutes.post('/settings/roles/ajax', function (req, res) {
     });
 });
 
+/* PUT update arol by ajax. */
 parametersRoutes.put('/settings/roles/:id/ajax', function (req, res) {
     var idrol = req.params.id;
     var rol = req.body.rol;
@@ -3975,6 +4095,7 @@ parametersRoutes.put('/settings/roles/:id/ajax', function (req, res) {
     });
 });
 
+/* DELETE a rol by id using ajax. */
 parametersRoutes.delete('/settings/roles/:id/ajax', function (req, res) {
     var idrol = req.params.id;
 
@@ -4032,5 +4153,6 @@ parametersRoutes.delete('/settings/roles/:id/ajax', function (req, res) {
         );
     });
 });
+
 
 module.exports = parametersRoutes;

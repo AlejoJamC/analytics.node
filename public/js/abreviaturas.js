@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/settings/abreviaturas/ajax"
+        url: "/settings/abbreviations/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -14,11 +14,10 @@ function CargarDatos() {
                         '<td>' + data.rows[i][0] + '</td>' +
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
-
                         '<div style="text-align:center" >' +
-                        '<a href="/settings/abreviaturas/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/abbreviations/' + data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/settings/abreviaturas/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a onclick="EliminarRolModal(' + data.rows[i][0].toLowerCase() + ')" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '<div style="text-align:center" >' +
                         '</div>' +
@@ -37,9 +36,9 @@ function CargarDatos() {
 
 function NuevoModal() {
     swal({
-            title:"Crear una nueva abreviatura",
+            title: "Crear una nueva abreviatura",
             message: "",
-            type:"success",
+            type: "success",
             confirmButtonClass: "btn-success",
             confirmButtonText: "Crear",
             closeOnConfirm: true,
@@ -47,20 +46,20 @@ function NuevoModal() {
             cancelButtonClass: "btn-warning",
             cancelButtonText: "Cancelar"
         },
-        function(isConfirm){
+        function (isConfirm) {
             if (isConfirm) {
                 CrearDatos();
-            }else{
-                window.location.href = "/settings/abreviaturas";
+            } else {
+                window.location.href = "/settings/abbreviations";
             }
         });
 }
 
 function GuardarModal() {
     swal({
-            title:"Desea Actualizar Abreviatura",
+            title: "Desea Actualizar Abreviatura",
             message: "",
-            type:"success",
+            type: "success",
             confirmButtonClass: "btn-success",
             confirmButtonText: "Actualizar",
             closeOnConfirm: true,
@@ -68,20 +67,20 @@ function GuardarModal() {
             cancelButtonClass: "btn-warning",
             cancelButtonText: "Cancelar"
         },
-        function(isConfirm){
+        function (isConfirm) {
             if (isConfirm) {
                 ActualizarDatos();
-            }else{
-                window.location.href = "/settings/abreviaturas";
+            } else {
+                window.location.href = "/settings/abbreviations";
             }
         });
 }
 
 function CancelarModal() {
     swal({
-            title:"Sin Modificaciones",
+            title: "Sin Modificaciones",
             message: "",
-            type:"warning",
+            type: "warning",
             confirmButtonClass: "btn-success",
             confirmButtonText: "OK",
             closeOnConfirm: true,
@@ -89,9 +88,9 @@ function CancelarModal() {
             cancelButtonClass: "btn-warning",
             cancelButtonText: "Cerrar"
         },
-        function(isConfirm){
+        function (isConfirm) {
             if (isConfirm) {
-                window.location.href = "/settings/abreviaturas";
+                window.location.href = "/settings/abbreviations";
             }
         });
 }
@@ -101,13 +100,13 @@ function CrearDatos() {
     var value = $.trim($("#abre").val());
     $.ajax({
         method: "POST",
-        url: "/settings/abreviaturas/crear/ajax",
-        data : {"idabreviatura" : id, "abreviatura" : value}
+        url: "/settings/abbreviations/crear/ajax",
+        data: {"idabreviatura": id, "abreviatura": value}
     })
         .done(function (data) {
             swal({
-                    title:"Abreviatura creada correctemente!",
-                    type:"success",
+                    title: "Abreviatura creada correctemente!",
+                    type: "success",
                     confirmButtonClass: "btn-success",
                     confirmButtonText: "OK",
                     closeOnConfirm: true
@@ -128,13 +127,13 @@ function ActualizarDatos() {
     var value = $.trim($("#abre").val());
     $.ajax({
         method: "POST",
-        url: "/settings/abreviaturas/actualizar/ajax",
-        data : {"idabreviatura" : id, "abreviatura" : value}
+        url: "/settings/abbreviations/actualizar/ajax",
+        data: {"idabreviatura": id, "abreviatura": value}
     })
         .done(function (data) {
             swal({
-                    title:"Abreviatura actualizada correctemente!",
-                    type:"success",
+                    title: "Abreviatura actualizada correctemente!",
+                    type: "success",
                     confirmButtonClass: "btn-success",
                     confirmButtonText: "OK",
                     closeOnConfirm: true
