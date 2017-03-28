@@ -55,7 +55,7 @@ function GuardarModalNuevo() {
     // Validar si el id existe.
     $.ajax({
         method: "GET",
-        url: "/settings/roles/check/" + $idrol + "/ajax"
+        url: "/settings/abbreviations/check/" + $idrol + "/ajax"
     })
         .done(function (data) {
             console.log(data);
@@ -64,7 +64,7 @@ function GuardarModalNuevo() {
                 // SI no existe el elemento los inserto en la BD.
                 $.ajax({
                     method: "POST",
-                    url: "/settings/roles/ajax",
+                    url: "/settings/abbreviations/ajax",
                     data: {
                         "id": $idrol,
                         "rol": $rol
@@ -84,9 +84,9 @@ function GuardarModalNuevo() {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = "/settings/roles";
+                                    window.location.href = "/settings/abbreviations";
                                 } else {
-                                    window.location.href = "/settings/roles/new";
+                                    window.location.href = "/settings/abbreviations/new";
                                 }
                             });
                     });
@@ -104,7 +104,7 @@ function GuardarModalNuevo() {
                 }, function () {
                     $.ajax({
                         method: "PUT",
-                        url: "/settings/roles/" + $idrol + "/ajax",
+                        url: "/settings/abbreviations/" + $idrol + "/ajax",
                         data: {
                             "rol": $rol
                         }
@@ -124,9 +124,9 @@ function GuardarModalNuevo() {
                                     },
                                     function (isConfirm) {
                                         if (isConfirm) {
-                                            window.location.href = "/settings/roles";
+                                            window.location.href = "/settings/abbreviations";
                                         } else {
-                                            window.location.href = "/settings/roles/new";
+                                            window.location.href = "/settings/abbreviations/new";
                                         }
                                     });
                             }, 1000);
@@ -164,11 +164,11 @@ function CancelarModalNuevo() {
             },
             function (isConfirm) {
                 if (isConfirm) {
-                    window.location.href = "/settings/roles";
+                    window.location.href = "/settings/abbreviations";
                 }
             });
     } else {
-        window.location.href = "/settings/roles";
+        window.location.href = "/settings/abbreviations";
     }
 }
 
@@ -194,7 +194,7 @@ function ActualizarModalEditar() {
 
     $.ajax({
         method: "PUT",
-        url: "/settings/roles/" + $idrol + "/ajax",
+        url: "/settings/abbreviations/" + $idrol + "/ajax",
         data: {
             "rol": $rol
         }
@@ -213,7 +213,7 @@ function ActualizarModalEditar() {
                 },
                 function (isConfirm) {
                     if (isConfirm) {
-                        window.location.href = "/settings/roles";
+                        window.location.href = "/settings/abbreviations";
                     }
                 });
         });
@@ -234,7 +234,7 @@ function CancelarModalEditar() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                window.location.href = "/settings/roles";
+                window.location.href = "/settings/abbreviations";
             }
         });
 }
@@ -269,7 +269,7 @@ function EliminarModal(id) {
         if (isConfirm) {
             $.ajax({
                 method: "DELETE",
-                url: "/settings/roles/" + id + "/ajax"
+                url: "/settings/abbreviations/" + id + "/ajax"
             })
                 .done(function (data) {
                     setTimeout(function () {
@@ -283,7 +283,7 @@ function EliminarModal(id) {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = "/settings/roles";
+                                    window.location.href = "/settings/abbreviations";
                                 }
                             });
                     }, 1000);

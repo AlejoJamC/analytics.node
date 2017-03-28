@@ -25,7 +25,7 @@
 <div class="portlet light portlet-fit ">
     <div class="portlet-title">
         <div class="caption">
-            <span class="caption-subject bold font-green uppercase"><h2>Gestion de Parametros - Etnias / Editar</h2></span>
+            <span class="caption-subject bold font-green uppercase"><h2>Gestion de Parametros - Abreviaturas / Editar</h2></span>
         </div>
     </div>
     <div class="portlet-body">
@@ -34,51 +34,39 @@
                 <li class="mt-item">
                     <div class="mt-content-container bg-white border-grey-steel">
                         <div class="mt-title">
-                            <h3 class="mt-content-title">Detalle Etnia</h3><br>
+                            <h3 class="mt-content-title">Detalle Abreviatura</h3><br>
                         </div>
                         <div class="mt-content border-grey-steel">
                             <div class="tabbable-custom nav-justified">
                                 <ul class="nav nav-tabs nav-justified"></ul>
-                                <form action="#" class="form-horizontal" onsubmit="return ActualizarModalEditar()">
+                                <form action="#" class="form-horizontal" onsubmit="return GuardarModalNuevo()">
                                     <div class="form-body">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3">Id Etnia:</label>
+                                                    <label class="control-label col-md-3">ID Abreviatura:</label>
                                                     <div class="col-md-9">
-                                                        <input id="txtidrol" type="text" class="form-control"
-                                                               placeholder="1"
-                                                               required maxlength="2" value="{{ etnias.id}}" disabled>
+                                                        <input id="txtid" type="text" class="form-control"
+                                                               placeholder="AC" required maxlength="5">
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!--/span-->
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3">Etnia:</label>
+                                                    <label class="control-label col-md-3">Detalle
+                                                        Abreviatura:</label>
                                                     <div class="col-md-9">
-                                                        <input id="txtrol" type="text" class="form-control"
-                                                               placeholder="Rol ejemplo" required maxlength="100"
-                                                               value="{{ etnias.value}}">
+                                                        <input id="txtvalue" type="text" class="form-control"
+                                                               placeholder="Avenida Calle" required maxlength="100">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-actions">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-offset-3 col-md-9">
-                                                        <a class="btn green" onclick="GuardarModal()">Guardar</a>
-
-                                                        <a class="btn default"
-                                                           onclick="CancelarModal()">Cancelar</a>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"></div>
-                                        </div>
+                                    <div class="form-actions text-center">
+                                        <button type="submit" class="btn green">Guardar</button>
+                                        <a class="btn default" onclick="CancelarModalNuevo()">Cancelar</a>
                                     </div>
                                 </form>
                             </div>
@@ -104,8 +92,8 @@
                                    id="sample_1">
                                 <thead>
                                 <tr>
-                                    <th> ID Etnia</th>
-                                    <th> Etnias</th>
+                                    <th> ID Abreviatura</th>
+                                    <th> Detalle Abreviatura</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -133,7 +121,7 @@
     <script src="{{level}}assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js"
             type="text/javascript"></script>
     <script src="{{level}}js/table-datatables-managed-identico.js" type="text/javascript"></script>
-    <script src="{{level}}js/etnias.js" type="text/javascript"></script>
+    <script src="{{level}}js/abreviaturas.js" type="text/javascript"></script>
 
     <script src="{{level}}assets/pages/scripts/ui-sweetalert.min.js" type="text/javascript"></script>
     <script src="{{level}}assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>

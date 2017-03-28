@@ -407,7 +407,6 @@ parametersRoutes.get('/settings/personas/ajax', function (req, res) {
 
 
 
-/* GET abbreviations page. */
 parametersRoutes.get('/settings/abbreviations', function (req, res) {
     var error = '';
     // Basic error validator
@@ -427,7 +426,6 @@ parametersRoutes.get('/settings/abbreviations', function (req, res) {
     });
 });
 
-/* GET update abbreviations page. */
 parametersRoutes.get('/settings/abbreviations/:id', function (req, res, next) {
     if(req.params.id === 'new' || req.params.id === 'ajax' || req.params.id === 'check'){
         next();
@@ -444,8 +442,8 @@ parametersRoutes.get('/settings/abbreviations/:id', function (req, res, next) {
             level   : '../',
             layout  : 'dash',
             error   : error,
-            rol     : null,
-            idrol   : req.params.id
+            abreviaturas : null,
+            idabreviatura : req.params.id
         });
     }
     // Session
@@ -538,7 +536,7 @@ parametersRoutes.get('/settings/abbreviations/:id', function (req, res, next) {
 
                 var data = {};
                 data.id = result.rows[0][0];
-                data.descripcion = result.rows[0][1];
+                data.value = result.rows[0][1];
 
                 connection.close(
                     function(err) {
@@ -549,13 +547,13 @@ parametersRoutes.get('/settings/abbreviations/:id', function (req, res, next) {
                         }
                         logger.info('Connection to Oracle closed successfully!');
                     });
-                return res.render('dash/tableRolesEdit', {
+                return res.render('dash/tableAbreviaturasEdit', {
                     title   : 'Editar Parametros| Identico',
                     level   : '../../',
                     layout  : 'dash',
                     error   : error,
-                    rol     : data,
-                    idrol   : verficiarId
+                    abreviaturas : data,
+                    idabreviatura : verficiarId
                 });
             }
         );
@@ -573,7 +571,7 @@ parametersRoutes.get('/settings/abbreviations/new', function (req, res) {
     if(typeof req.session.userId === 'undefined' || typeof req.session.userId === ''){
         return res.redirect('/login');
     }
-    res.render('dash/tableAbreviaturasSave', {
+    res.render('dash/tableAbreviaturasNew', {
         title   : 'Crear Parametro| Identico',
         level   : '../../',
         layout  : 'dash',
@@ -680,11 +678,8 @@ parametersRoutes.get('/settings/abbreviations/ajax', function (req, res) {
             }
         );
     });
-
-
 });
 
-/* GET check if exists by ajax. */
 parametersRoutes.get('/settings/abbreviations/check/:id/ajax', function (req, res) {
     var verficiarId = req.params.id;
     oracledb.getConnection({
@@ -1045,7 +1040,6 @@ parametersRoutes.delete('/settings/abbreviations/:id/ajax', function (req, res) 
             }
         );
     });
-
 });
 
 
@@ -6103,6 +6097,16 @@ parametersRoutes.get('/settings/paises/ajax', function (req, res) {
 
 
 
+
+
+
+
+
+
+
+
+
+
 /* GET roles list page. */
 parametersRoutes.get('/settings/roles', function (req, res) {
     var error = '';
@@ -6673,6 +6677,11 @@ parametersRoutes.delete('/settings/roles/:id/ajax', function (req, res) {
         );
     });
 });
+
+
+
+
+
 
 
 
