@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/settings/paises/ajax"
+        url: "/settings/countries/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -15,9 +15,9 @@ function CargarDatos() {
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/settings/paises/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/countries/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/settings/paises/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a onclick="EliminarModal(' + data.rows[i][0].toLowerCase() + ')" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +

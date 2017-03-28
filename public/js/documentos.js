@@ -2,7 +2,7 @@
 function CargarDatos() {
     $.ajax({
         method: "GET",
-        url: "/settings/documentos/ajax"
+        url: "/settings/documents/ajax"
     })
         .done(function (data) {
             var iterador = data;
@@ -16,9 +16,9 @@ function CargarDatos() {
                         '<td>' +
 
                         '<div style="text-align:center" >' +
-                        '<a href="/settings/documentos/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/documents/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/settings/documentos/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a onclick="EliminarModal(' + data.rows[i][0].toLowerCase() + ')" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +

@@ -1,4 +1,4 @@
-// Llamados al endpoint de carga de datos iniciales+
+// Llamados al endpoint de carga de datos iniciales
 function CargarDatos() {
     $.ajax({
         method: "GET",
