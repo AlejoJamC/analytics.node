@@ -46,8 +46,10 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ID Municipio:</label>
                                                     <div class="col-md-9">
-                                                        <input id="idmuni" type="text" class="form-control"
-                                                               placeholder="00555" value="{{data.[0].[0]}}">
+                                                        <input id="txtidrol" type="text" class="form-control"
+                                                               placeholder="1"
+                                                               required maxlength="3" value="{{ municipio.id}}"
+                                                               disabled>
                                                     </div>
                                                 </div>
                                             </div>
@@ -56,8 +58,10 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ID Departamento:</label>
                                                     <div class="col-md-9">
-                                                        <input id="iddepart" type="text" class="form-control"
-                                                               placeholder="588888" value="{{data.[0].[1]}}">
+                                                        <input id="txtidrol" type="text" class="form-control"
+                                                               placeholder="1"
+                                                               required maxlength="2"
+                                                               value="{{ municipio.iddepartamento}}" disabled>
                                                     </div>
                                                 </div>
                                             </div>
@@ -65,27 +69,17 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">Municipio:</label>
                                                     <div class="col-md-9">
-                                                        <input id="muni" type="text" class="form-control"
-                                                               placeholder="NEIVA" value="{{data.[0].[2]}}">
+                                                        <input id="txtrol" type="text" class="form-control"
+                                                               placeholder="Rol ejemplo" required maxlength="300"
+                                                               value="{{ municipio.value}}">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-actions">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-offset-3 col-md-9">
-                                                        <a class="btn green" onclick="GuardarModal()">Guardar</a>
-
-                                                        <a class="btn default"
-                                                           onclick="CancelarModal()">Cancelar</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"></div>
-                                        </div>
+                                    <div class="form-actions text-center">
+                                        <button type="submit" class="btn green">Actualizar</button>
+                                        <a class="btn default" onclick="CancelarModalEditar()">Cancelar</a>
                                     </div>
                                 </form>
                             </div>

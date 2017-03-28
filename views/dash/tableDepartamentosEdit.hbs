@@ -49,7 +49,7 @@
                                                     <div class="col-md-9">
                                                         <input id="txtidrol" type="text" class="form-control"
                                                                placeholder="01"
-                                                               required maxlength="2" value="{{ state.id}}"
+                                                               required maxlength="2" value="{{ state.id }}"
                                                                disabled>
                                                     </div>
                                                 </div>
@@ -60,7 +60,8 @@
                                                     <label class="control-label col-md-3">ID Departamento:</label>
                                                     <div class="col-md-9">
                                                         <input id="depar" type="text" class="form-control"
-                                                               placeholder="01" value="{{data.[0].[1]}}">
+                                                               required maxlength="200"
+                                                               placeholder="01" value="{{ state.departamento }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -69,25 +70,16 @@
                                                     <label class="control-label col-md-3">ID Pais:</label>
                                                     <div class="col-md-9">
                                                         <input id="idpais" type="text" class="form-control"
-                                                               placeholder="169" value="{{data.[0].[2]}}">
+                                                               required maxlength="3"
+                                                               placeholder="169" value="{{ state.idpais }}">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-actions">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-offset-3 col-md-9">
-                                                        <a class="btn green" onclick="GuardarModal()">Guardar</a>
-                                                        <a class="btn default"
-                                                           onclick="CancelarModal()">Cancelar</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"></div>
-                                        </div>
+                                    <div class="form-actions text-center">
+                                        <button type="submit" class="btn green">Actualizar</button>
+                                        <a class="btn default" onclick="CancelarModalEditar()">Cancelar</a>
                                     </div>
                                 </form>
                             </div>

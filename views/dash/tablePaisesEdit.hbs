@@ -46,8 +46,10 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ID Pais:</label>
                                                     <div class="col-md-9">
-                                                        <input id="idpais" type="text" class="form-control"
-                                                               placeholder="169" value="{{data.[0].[0]}}">
+                                                        <input id="txtid" type="text" class="form-control"
+                                                               placeholder="1"
+                                                               required maxlength="3" value="{{ pais.id}}"
+                                                               disabled>
                                                     </div>
                                                 </div>
                                             </div>
@@ -56,26 +58,17 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">Pais:</label>
                                                     <div class="col-md-9">
-                                                        <input id="pais" type="text" class="form-control"
-                                                               placeholder="169" value="{{data.[0].[1]}}">
+                                                        <input id="txtrol" type="text" class="form-control"
+                                                               placeholder="Rol ejemplo" required maxlength="200"
+                                                               value="{{ pais.value}}">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-actions">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-offset-3 col-md-9">
-                                                        <a class="btn green" onclick="GuardarModal()">Guardar</a>
-                                                        <a class="btn default"
-                                                           onclick="CancelarModal()">Cancelar</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6"></div>
-                                        </div>
+                                    <div class="form-actions text-center">
+                                        <button type="submit" class="btn green">Actualizar</button>
+                                        <a class="btn default" onclick="CancelarModalEditar()">Cancelar</a>
                                     </div>
                                 </form>
                             </div>
