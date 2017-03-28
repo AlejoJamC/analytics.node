@@ -79,3 +79,19 @@ function CargarReferidosPorAfiliad(idAfiliado) {
     }
 }
 
+function CargarImagenAfiliado(idAfiliado) {
+    if(idAfiliado !== 'undefined'){
+        $.ajax({
+            method: "GET",
+            url: "/affiliates/images/ajax/" + idAfiliado
+        })
+            .done(function (data) {
+                console.log(data.img);
+                if(data[0] !== null){
+                    console.log('diferente');
+                    console.log(data.img);
+                    $('#affiliateProfile').attr("src", data.img);
+                }
+            });
+    }
+}

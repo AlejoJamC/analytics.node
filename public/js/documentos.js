@@ -14,7 +14,6 @@ function CargarDatos() {
                         '<td>' + data.rows[i][0] + '</td>' +
                         '<td>' + data.rows[i][1] + '</td>' +
                         '<td>' +
-
                         '<div style="text-align:center" >' +
                         '<a href="/settings/documents/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
@@ -34,123 +33,260 @@ function CargarDatos() {
         });
 }
 
-function NuevoModal() {
-    swal({
-            title:"Crear una nuevo docuemento",
-            message: "",
-            type:"success",
-            confirmButtonClass: "btn-success",
-            confirmButtonText: "Crear",
-            closeOnConfirm: true,
-            showCancelButton: true,
-            cancelButtonClass: "btn-warning",
-            cancelButtonText: "Cancelar"
-        },
-        function(isConfirm){
-            if (isConfirm) {
-                CrearDatos();
-            }else{
-                window.location.href = "/settings/documentos";
-            }
-        });
-}
+function GuardarModalNuevo() {
+    var evitarSubmit = false;
+    var $idrol = $('#txtidrol').val();
+    var $rol = $('#txtrol').val();
 
-function GuardarModal() {
-    swal({
-            title:"Actualizar Documento...",
+    // Validar si envio vacio
+    if ($idrol === '' || $rol === '') {
+        swal({
+            title: "Datos Incompletos",
             message: "",
-            type:"warning",
-            confirmButtonClass: "btn-success",
-            confirmButtonText: "Actualizar",
-            closeOnConfirm: true,
-            showCancelButton: true,
-            cancelButtonClass: "btn-warning",
-            cancelButtonText: "Cancelar"
-        },
-        function(isConfirm){
-            if (isConfirm) {
-                ActualizarDatos();
-            }else{
-                window.location.href = "/settings/documentos";
-            }
+            type: "warning",
+            confirmButtonText: "Ok",
+            confirmButtonClass: "btn-warning",
+            closeOnConfirm: true
         });
-}
+        return evitarSubmit;
+    }
 
-function CancelarModal() {
-    swal({
-            title:"Sin Modificaciones",
-            message: "",
-            type:"warning",
-            confirmButtonClass: "btn-success",
-            confirmButtonText: "OK",
-            closeOnConfirm: true,
-            showCancelButton: true,
-            cancelButtonClass: "btn-warning",
-            cancelButtonText: "Cerrar"
-        },
-        function(isConfirm){
-            if (isConfirm) {
-                window.location.href = "/settings/documentos";
-            }
-        });
-}
-
-function CrearDatos() {
-    var id = $.trim($("#iddocu").val());
-    var value = $.trim($("#docu").val());
-       $.ajax({
-        method: "POST",
-        url: "/settings/documentos/crear/ajax",
-        data : {"iddocumento" : id, "documento" : value}
+    // Validar si el id existe.
+    $.ajax({
+        method: "GET",
+        url: "/settings/roles/check/" + $idrol + "/ajax"
     })
         .done(function (data) {
-            swal({
-                    title:"Documento creado correctemente!",
-                    type:"success",
-                    confirmButtonClass: "btn-success",
-                    confirmButtonText: "OK",
-                    closeOnConfirm: true
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        location.reload();
+            console.log(data);
+            // Varifico si viene el codigo de retorno o un elemento
+            if (typeof data.code !== 'undefined') {
+                // SI no existe el elemento los inserto en la BD.
+                $.ajax({
+                    method: "POST",
+                    url: "/settings/roles/ajax",
+                    data: {
+                        "id": $idrol,
+                        "rol": $rol
                     }
+                })
+                    .done(function (data) {
+                        swal({
+                                title: data.message,
+                                message: "",
+                                type: "success",
+                                confirmButtonText: "Salir",
+                                confirmButtonClass: "btn-warning",
+                                showCancelButton: true,
+                                cancelButtonClass: "btn-success",
+                                cancelButtonText: "Agregar otro rol",
+                                closeOnConfirm: true
+                            },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "/settings/roles";
+                                } else {
+                                    window.location.href = "/settings/roles/new";
+                                }
+                            });
+                    });
+                return evitarSubmit;
+            } else if (typeof data.rows !== 'undefined') {
+                swal({
+                    title: "El Id ya existe!",
+                    text: "Desea actualizar el valor actual de: " + data.rows[0][1] + " por " + $rol,
+                    type: "info",
+                    confirmButtonText: "Actualizar",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    cancelButtonText: "Cancelar",
+                    showLoaderOnConfirm: true
+                }, function () {
+                    $.ajax({
+                        method: "PUT",
+                        url: "/settings/roles/" + $idrol + "/ajax",
+                        data: {
+                            "rol": $rol
+                        }
+                    })
+                        .done(function (data) {
+                            setTimeout(function () {
+                                swal({
+                                        title: data.message,
+                                        message: "",
+                                        type: "success",
+                                        confirmButtonText: "Salir",
+                                        confirmButtonClass: "btn-warning",
+                                        showCancelButton: true,
+                                        cancelButtonClass: "btn-success",
+                                        cancelButtonText: "Agregar otro rol",
+                                        closeOnConfirm: true
+                                    },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href = "/settings/roles";
+                                        } else {
+                                            window.location.href = "/settings/roles/new";
+                                        }
+                                    });
+                            }, 1000);
+                        });
                 });
-        })
-        .fail(function (err) {
-            swal("Error creando el documento", "error");
+                return evitarSubmit;
+            } else {
+                swal({
+                    title: "Error guardando el rol",
+                    message: "Comuniquese con su administrador.",
+                    type: "error",
+                    confirmButtonText: "Ok",
+                    confirmButtonClass: "btn-error",
+                    closeOnConfirm: true
+                });
+            }
         });
+    return evitarSubmit;
 }
 
-function ActualizarDatos() {
-    var id = $.trim($("#iddocu").val());
-    var value = $.trim($("#docu").val());
+function CancelarModalNuevo() {
+    var $idrol = $('#txtidrol').val();
+    var $rol = $('#txtrol').val();
+    if ($idrol !== '' || $rol !== '') {
+        swal({
+                title: "Desea salir sin guardar cambios?",
+                message: "",
+                type: "warning",
+                closeOnConfirm: true,
+                confirmButtonText: "Salir",
+                confirmButtonClass: "btn-warning",
+                showCancelButton: true,
+                cancelButtonText: "Continuar",
+                cancelButtonClass: "btn-success"
+            },
+            function (isConfirm) {
+                if (isConfirm) {
+                    window.location.href = "/settings/roles";
+                }
+            });
+    } else {
+        window.location.href = "/settings/roles";
+    }
+}
+
+function ActualizarModalEditar() {
+    var evitarSubmit = false;
+    var $idrol = $('#txtidrol').val();
+    var $rol = $('#txtrol').val();
+
+    // Validar si envio vacio
+    if ($idrol === '' || $rol === '') {
+        swal({
+            title: "Datos Incompletos",
+            message: "",
+            type: "warning",
+            confirmButtonText: "Ok",
+            confirmButtonClass: "btn-warning",
+            closeOnConfirm: true
+        });
+        return evitarSubmit;
+    }
+
+    // Envio actualizar
 
     $.ajax({
-        method: "POST",
-        url: "/settings/documentos/actualizar/ajax",
-        data : {"iddocumento" : id, "documento" : value}
+        method: "PUT",
+        url: "/settings/roles/" + $idrol + "/ajax",
+        data: {
+            "rol": $rol
+        }
     })
         .done(function (data) {
             swal({
-                    title:"Docuemento actualizado correctemente!",
-                    type:"success",
-                    confirmButtonClass: "btn-success",
-                    confirmButtonText: "OK",
+                    title: data.message,
+                    message: "",
+                    type: "success",
+                    confirmButtonText: "Salir",
+                    confirmButtonClass: "btn-warning",
+                    showCancelButton: true,
+                    cancelButtonClass: "btn-success",
+                    cancelButtonText: "Continuar",
                     closeOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
-                        location.reload();
+                        window.location.href = "/settings/roles";
                     }
                 });
-        })
-        .fail(function (err) {
-            swal("Error actualizando el documento", "error");
+        });
+    return evitarSubmit;
+}
+
+function CancelarModalEditar() {
+    swal({
+            title: "Desea salir sin guardar cambios?",
+            message: "",
+            type: "warning",
+            closeOnConfirm: true,
+            confirmButtonText: "Salir",
+            confirmButtonClass: "btn-warning",
+            showCancelButton: true,
+            cancelButtonText: "Continuar",
+            cancelButtonClass: "btn-success"
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                window.location.href = "/settings/roles";
+            }
         });
 }
 
+function EliminarModal(id) {
+    // Validar si envio vacio
+    if (id === '' || typeof id === 'undefined' || id === null) {
+        swal({
+            title: "Datos Incompletos",
+            message: "",
+            type: "warning",
+            confirmButtonText: "Ok",
+            confirmButtonClass: "btn-warning",
+            closeOnConfirm: true
+        });
+        return;
+    }
 
+    // Envio eliminar
 
-
-
+    swal({
+        title: "Se va eliminar el rol id: " + id,
+        text: "Desea continuar con esta operacion?",
+        type: "info",
+        confirmButtonText: "Eliminar",
+        confirmButtonClass: "btn-warning",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        cancelButtonText: "Cancelar",
+        showLoaderOnConfirm: true
+    }, function (isConfirm) {
+        if (isConfirm) {
+            $.ajax({
+                method: "DELETE",
+                url: "/settings/roles/" + id + "/ajax"
+            })
+                .done(function (data) {
+                    setTimeout(function () {
+                        swal({
+                                title: data.message,
+                                message: "",
+                                type: "success",
+                                confirmButtonText: "Salir",
+                                confirmButtonClass: "btn-warning",
+                                closeOnConfirm: true
+                            },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "/settings/roles";
+                                }
+                            });
+                    }, 1000);
+                });
+        }
+    });
+}
