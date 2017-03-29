@@ -39,6 +39,9 @@ function GuardarModalNuevo() {
     var $id = $('#txtid').val();
     var $value = $('#txtvalue').val();
     var $idpais = $('#txtidpais').val();
+    $id = $id.trim();
+    $idpais = $idpais.trim();
+    $value = $value.trim();
 
     // Validar si envio vacio
     if ($id === '' || $idpais === '') {
@@ -153,7 +156,11 @@ function GuardarModalNuevo() {
 function CancelarModalNuevo() {
     var $id = $('#txtid').val();
     var $value = $('#txtvalue').val();
-    var $idpais = $('#txtidpais').val();e
+    var $idpais = $('#txtidpais').val();
+    $id = $id.trim();
+    $idpais = $idpais.trim();
+    $value = $value.trim();
+
     if ($id !== '' || $value !== '' || $idpais !== '') {
         swal({
                 title: "Desea salir sin guardar cambios?",
@@ -181,6 +188,9 @@ function ActualizarModalEditar() {
     var $id = $('#txtid').val();
     var $value = $('#txtvalue').val();
     var $idpais = $('#txtidpais').val();
+    $id = $id.trim();
+    $idpais = $idpais.trim();
+    $value = $value.trim();
 
     // Validar si envio vacio
     if ($id === '' || $value === '' || $idpais === '') {

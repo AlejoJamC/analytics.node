@@ -38,7 +38,11 @@ function GuardarModalNuevo() {
     var evitarSubmit = false;
     var $idrol = $('#txtid').val();
     var $rol = $('#txtvalue').val();
+    $idrol = $idrol.trim();
+    $rol = $rol.trim();
+
     var $iddepartamento = $('#txtiddepartamento').val();
+    $iddepartamento = $iddepartamento.trim();
 
     // Validar si envio vacio
     if ($idrol === '' || $rol === '' || $iddepartamento === '') {
@@ -153,7 +157,12 @@ function GuardarModalNuevo() {
 function CancelarModalNuevo() {
     var $idrol = $('#txtid').val();
     var $rol = $('#txtvalue').val();
+    $idrol = $idrol.trim();
+    $rol = $rol.trim();
+
     var $iddepartamento = $('#txtiddepartamento').val();
+    $iddepartamento = $iddepartamento.trim();
+
     if ($idrol !== '' || $rol !== '' || $iddepartamento !== '') {
         swal({
                 title: "Desea salir sin guardar cambios?",
@@ -180,7 +189,11 @@ function ActualizarModalEditar() {
     var evitarSubmit = false;
     var $idrol = $('#txtid').val();
     var $rol = $('#txtvalue').val();
+    $idrol = $idrol.trim();
+    $rol = $rol.trim();
+
     var $iddepartamento = $('#txtiddepartamento').val();
+    $iddepartamento = $iddepartamento.trim();
 
     // Validar si envio vacio
     if ($idrol === '' || $rol === '' || $iddepartamento === '') {
