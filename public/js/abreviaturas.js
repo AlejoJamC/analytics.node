@@ -79,7 +79,7 @@ function GuardarModalNuevo() {
                                 confirmButtonClass: "btn-warning",
                                 showCancelButton: true,
                                 cancelButtonClass: "btn-success",
-                                cancelButtonText: "Agregar otro rol",
+                                cancelButtonText: "Agregar otra abreviatura",
                                 closeOnConfirm: true
                             },
                             function (isConfirm) {
@@ -119,7 +119,7 @@ function GuardarModalNuevo() {
                                         confirmButtonClass: "btn-warning",
                                         showCancelButton: true,
                                         cancelButtonClass: "btn-success",
-                                        cancelButtonText: "Agregar otro rol",
+                                        cancelButtonText: "Agregar otra abreviatura",
                                         closeOnConfirm: true
                                     },
                                     function (isConfirm) {
@@ -135,7 +135,7 @@ function GuardarModalNuevo() {
                 return evitarSubmit;
             } else {
                 swal({
-                    title: "Error guardando el rol",
+                    title: "Error guardando la abreviatura",
                     message: "Comuniquese con su administrador.",
                     type: "error",
                     confirmButtonText: "Ok",
@@ -256,7 +256,7 @@ function EliminarModal(id) {
     // Envio eliminar
 
     swal({
-        title: "Se va eliminar el rol id: " + id,
+        title: "Se va eliminar la abreviatura id: " + id,
         text: "Desea continuar con esta operacion?",
         type: "info",
         confirmButtonText: "Eliminar",
