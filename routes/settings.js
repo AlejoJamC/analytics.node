@@ -852,7 +852,7 @@ parametersRoutes.put('/settings/abbreviations/:id/ajax', function (req, res) {
 
         var sql = "UPDATE HUELLA.PABREVIATURAS SET HUELLA.PABREVIATURAS.ABREVIATURA = '" + rol + "' WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + idrol + "'";
 
-        logger.info(sql);
+        //logger.info(sql);
 
         connection.execute(
             // The statement to execute
@@ -1016,7 +1016,7 @@ parametersRoutes.get('/settings/states/:id', function (req, res, next) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "SELECT HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDPAIS " +
+        var sql = "SELECT HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.DEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDPAIS " +
             " FROM HUELLA.PDEPARTAMENTOS " +
             " WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO ='" + verficiarId.toUpperCase() + "'";
 
@@ -1586,7 +1586,7 @@ parametersRoutes.get('/settings/documents/:id', function (req, res, next) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "SELECT HUELLA.PDOCUMENTOS.IDDOCUMENTO, HUELLA.PDOCUMENTOS.IDDOCUMENTO " +
+        var sql = "SELECT HUELLA.PDOCUMENTOS.IDDOCUMENTO, HUELLA.PDOCUMENTOS.DOCUMENTO " +
             " FROM HUELLA.PDOCUMENTOS " +
             " WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO ='" + verficiarId.toUpperCase() + "'";
 
