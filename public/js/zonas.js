@@ -17,7 +17,7 @@ function CargarDatos() {
                         '<div style="text-align:center" >' +
                         '<a href="/settings/zones/'+ data.rows[i][0].toString().toLowerCase().trim() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a onclick="EliminarModal(' + data.rows[i][0].toString().toLowerCase().trim() + ')" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a onclick="EliminarModal(\'' + data.rows[i][0].toString().toLowerCase().trim() + '\')" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
                         '</div>' +
                         '</td>' +
