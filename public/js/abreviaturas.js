@@ -36,11 +36,11 @@ function CargarDatos() {
 
 function GuardarModalNuevo() {
     var evitarSubmit = false;
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
+    var $id = $('#txtid').val();
+    var $value = $('#txtvalue').val();
 
     // Validar si envio vacio
-    if ($idrol === '' || $rol === '') {
+    if ($id === '' || $value === '') {
         swal({
             title: "Datos Incompletos",
             message: "",
@@ -55,7 +55,7 @@ function GuardarModalNuevo() {
     // Validar si el id existe.
     $.ajax({
         method: "GET",
-        url: "/settings/abbreviations/check/" + $idrol + "/ajax"
+        url: "/settings/abbreviations/check/" + $id + "/ajax"
     })
         .done(function (data) {
             console.log(data);
@@ -66,8 +66,8 @@ function GuardarModalNuevo() {
                     method: "POST",
                     url: "/settings/abbreviations/ajax",
                     data: {
-                        "id": $idrol,
-                        "rol": $rol
+                        "id": $id,
+                        "value": $value
                     }
                 })
                     .done(function (data) {
@@ -94,7 +94,7 @@ function GuardarModalNuevo() {
             } else if (typeof data.rows !== 'undefined') {
                 swal({
                     title: "El Id ya existe!",
-                    text: "Desea actualizar el valor actual de: " + data.rows[0][1] + " por " + $rol,
+                    text: "Desea actualizar el valor actual de: " + data.rows[0][1] + " por " + $value,
                     type: "info",
                     confirmButtonText: "Actualizar",
                     showCancelButton: true,
@@ -104,9 +104,9 @@ function GuardarModalNuevo() {
                 }, function () {
                     $.ajax({
                         method: "PUT",
-                        url: "/settings/abbreviations/" + $idrol + "/ajax",
+                        url: "/settings/abbreviations/" + $id + "/ajax",
                         data: {
-                            "rol": $rol
+                            "value": $value
                         }
                     })
                         .done(function (data) {
@@ -148,9 +148,9 @@ function GuardarModalNuevo() {
 }
 
 function CancelarModalNuevo() {
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
-    if ($idrol !== '' || $rol !== '') {
+    var $id = $('#txtid').val();
+    var $value = $('#txtvalue').val();
+    if ($id !== '' || $value !== '') {
         swal({
                 title: "Desea salir sin guardar cambios?",
                 message: "",
@@ -174,11 +174,11 @@ function CancelarModalNuevo() {
 
 function ActualizarModalEditar() {
     var evitarSubmit = false;
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
+    var $id = $('#txid').val();
+    var $value = $('#txtvalue').val();
 
     // Validar si envio vacio
-    if ($idrol === '' || $rol === '') {
+    if ($id === '' || $value === '') {
         swal({
             title: "Datos Incompletos",
             message: "",
@@ -194,9 +194,9 @@ function ActualizarModalEditar() {
 
     $.ajax({
         method: "PUT",
-        url: "/settings/abbreviations/" + $idrol + "/ajax",
+        url: "/settings/abbreviations/" + $id + "/ajax",
         data: {
-            "rol": $rol
+            "value": $value
         }
     })
         .done(function (data) {

@@ -36,11 +36,12 @@ function CargarDatos() {
 
 function GuardarModalNuevo() {
     var evitarSubmit = false;
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
+    var $idrol = $('#txtid').val();
+    var $rol = $('#txtvalue').val();
+    var $iddepartamento = $('#txtiddepartamento').val();
 
     // Validar si envio vacio
-    if ($idrol === '' || $rol === '') {
+    if ($idrol === '' || $rol === '' || $iddepartamento === '') {
         swal({
             title: "Datos Incompletos",
             message: "",
@@ -55,7 +56,7 @@ function GuardarModalNuevo() {
     // Validar si el id existe.
     $.ajax({
         method: "GET",
-        url: "/settings/roles/check/" + $idrol + "/ajax"
+        url: "/settings/cities/check/" + $idrol + "/ajax"
     })
         .done(function (data) {
             console.log(data);
@@ -64,10 +65,11 @@ function GuardarModalNuevo() {
                 // SI no existe el elemento los inserto en la BD.
                 $.ajax({
                     method: "POST",
-                    url: "/settings/roles/ajax",
+                    url: "/settings/cities/ajax",
                     data: {
                         "id": $idrol,
-                        "rol": $rol
+                        "value": $rol,
+                        "iddepartamento" : $iddepartamento
                     }
                 })
                     .done(function (data) {
@@ -84,9 +86,9 @@ function GuardarModalNuevo() {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = "/settings/roles";
+                                    window.location.href = "/settings/cities";
                                 } else {
-                                    window.location.href = "/settings/roles/new";
+                                    window.location.href = "/settings/cities/new";
                                 }
                             });
                     });
@@ -104,9 +106,9 @@ function GuardarModalNuevo() {
                 }, function () {
                     $.ajax({
                         method: "PUT",
-                        url: "/settings/roles/" + $idrol + "/ajax",
+                        url: "/settings/cities/" + $idrol + "/ajax",
                         data: {
-                            "rol": $rol
+                            "value": $rol
                         }
                     })
                         .done(function (data) {
@@ -124,9 +126,9 @@ function GuardarModalNuevo() {
                                     },
                                     function (isConfirm) {
                                         if (isConfirm) {
-                                            window.location.href = "/settings/roles";
+                                            window.location.href = "/settings/cities";
                                         } else {
-                                            window.location.href = "/settings/roles/new";
+                                            window.location.href = "/settings/cities/new";
                                         }
                                     });
                             }, 1000);
@@ -148,9 +150,10 @@ function GuardarModalNuevo() {
 }
 
 function CancelarModalNuevo() {
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
-    if ($idrol !== '' || $rol !== '') {
+    var $idrol = $('#txtid').val();
+    var $rol = $('#txtvalue').val();
+    var $iddepartamento = $('#txtiddepartamento').val();
+    if ($idrol !== '' || $rol !== '' || $iddepartamento !== '') {
         swal({
                 title: "Desea salir sin guardar cambios?",
                 message: "",
@@ -164,21 +167,22 @@ function CancelarModalNuevo() {
             },
             function (isConfirm) {
                 if (isConfirm) {
-                    window.location.href = "/settings/roles";
+                    window.location.href = "/settings/cities";
                 }
             });
     } else {
-        window.location.href = "/settings/roles";
+        window.location.href = "/settings/cities";
     }
 }
 
 function ActualizarModalEditar() {
     var evitarSubmit = false;
-    var $idrol = $('#txtidrol').val();
-    var $rol = $('#txtrol').val();
+    var $idrol = $('#txtid').val();
+    var $rol = $('#txtvalue').val();
+    var $iddepartamento = $('#txtiddepartamento').val();
 
     // Validar si envio vacio
-    if ($idrol === '' || $rol === '') {
+    if ($idrol === '' || $rol === '' || $iddepartamento === '') {
         swal({
             title: "Datos Incompletos",
             message: "",
@@ -194,9 +198,10 @@ function ActualizarModalEditar() {
 
     $.ajax({
         method: "PUT",
-        url: "/settings/roles/" + $idrol + "/ajax",
+        url: "/settings/cities/" + $idrol + "/ajax",
         data: {
-            "rol": $rol
+            "value": $rol,
+            "iddepartamento" : $iddepartamento
         }
     })
         .done(function (data) {
@@ -213,7 +218,7 @@ function ActualizarModalEditar() {
                 },
                 function (isConfirm) {
                     if (isConfirm) {
-                        window.location.href = "/settings/roles";
+                        window.location.href = "/settings/cities";
                     }
                 });
         });
@@ -234,7 +239,7 @@ function CancelarModalEditar() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                window.location.href = "/settings/roles";
+                window.location.href = "/settings/cities";
             }
         });
 }
@@ -269,7 +274,7 @@ function EliminarModal(id) {
         if (isConfirm) {
             $.ajax({
                 method: "DELETE",
-                url: "/settings/roles/" + id + "/ajax"
+                url: "/settings/cities/" + id + "/ajax"
             })
                 .done(function (data) {
                     setTimeout(function () {
@@ -283,7 +288,7 @@ function EliminarModal(id) {
                             },
                             function (isConfirm) {
                                 if (isConfirm) {
-                                    window.location.href = "/settings/roles";
+                                    window.location.href = "/settings/cities";
                                 }
                             });
                     }, 1000);
