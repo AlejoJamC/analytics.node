@@ -586,12 +586,10 @@ parametersRoutes.get('/settings/abbreviations/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "SELECT \"PABREVIATURAS\".\"IDABREVIATURA\", " +
-            "\"PABREVIATURAS\".\"ABREVIATURA\"  " +
-            "FROM " +
-            "\"PABREVIATURAS\" " +
-            "ORDER BY " +
-            "\"PABREVIATURAS\".\"ABREVIATURA\" ASC";
+        var sql = "SELECT " +
+            " HUELLA.PABREVIATURAS.IDABREVIATURA,  " +
+            " HUELLA.PABREVIATURAS.ABREVIATURA  " +
+            " FROM  HUELLA.PABREVIATURAS ORDER BY IDABREVIATURA ASC";
 
         connection.execute(
             // The statement to execute
@@ -690,7 +688,7 @@ parametersRoutes.get('/settings/abbreviations/check/:id/ajax', function (req, re
 
         var sql = "SELECT HUELLA.PABREVIATURAS.IDABREVIATURA, HUELLA.PABREVIATURAS.ABREVIATURA " +
             " FROM HUELLA.PABREVIATURAS " +
-            " WHERE HUELLA.PABREVIATURAS.IDABREVIATURA ='" + verficiarId + "'";
+            " WHERE HUELLA.PABREVIATURAS.IDABREVIATURA ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -852,7 +850,9 @@ parametersRoutes.put('/settings/abbreviations/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "UPDATE HUELLA.PABREVIATURAS SET HUELLA.PABREVIATURAS.IDABREVIATURA = '" + rol + "' WHERE HUELLA.PABREVIATURAS.ABREVIATURA = '" + idrol + "'";
+        var sql = "UPDATE HUELLA.PABREVIATURAS SET HUELLA.PABREVIATURAS.ABREVIATURA = '" + rol + "' WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + idrol + "'";
+
+        logger.info(sql);
 
         connection.execute(
             // The statement to execute
@@ -1018,7 +1018,7 @@ parametersRoutes.get('/settings/states/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDPAIS " +
             " FROM HUELLA.PDEPARTAMENTOS " +
-            " WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO ='" + verficiarId + "'";
+            " WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -1152,7 +1152,7 @@ parametersRoutes.get('/settings/states/ajax', function (req, res) {
             " HUELLA.PDEPARTAMENTOS.DEPARTAMENTO," +
             " HUELLA.PDEPARTAMENTOS.IDPAIS" +
             " FROM" +
-            " HUELLA.PDEPARTAMENTOS";
+            " HUELLA.PDEPARTAMENTOS ORDER BY IDDEPARTAMENTO ASC";
 
         connection.execute(
             // The statement to execute
@@ -1253,7 +1253,7 @@ parametersRoutes.get('/settings/states/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO, HUELLA.PDEPARTAMENTOS.DEPARTAMENTO, HUELLA.PDEPARTAMENTOS.IDPAIS " +
             " FROM HUELLA.PDEPARTAMENTOS " +
-            " WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO ='" + verficiarId + "'";
+            " WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -1588,7 +1588,7 @@ parametersRoutes.get('/settings/documents/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PDOCUMENTOS.IDDOCUMENTO, HUELLA.PDOCUMENTOS.IDDOCUMENTO " +
             " FROM HUELLA.PDOCUMENTOS " +
-            " WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO ='" + verficiarId + "'";
+            " WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -1720,7 +1720,7 @@ parametersRoutes.get('/settings/documents/ajax', function (req, res) {
             " HUELLA.PDOCUMENTOS.IDDOCUMENTO, " +
             " HUELLA.PDOCUMENTOS.DOCUMENTO " +
             " FROM " +
-            " HUELLA.PDOCUMENTOS";
+            " HUELLA.PDOCUMENTOS ORDER BY IDDOCUMENTO ASC";
 
         connection.execute(
             // The statement to execute
@@ -1821,7 +1821,7 @@ parametersRoutes.get('/settings/documents/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PDOCUMENTOS.IDDOCUMENTO, HUELLA.PDOCUMENTOS.DOCUMENTO " +
             " FROM HUELLA.PDOCUMENTOS " +
-            " WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO ='" + verficiarId + "'";
+            " WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -2152,7 +2152,7 @@ parametersRoutes.get('/settings/ethnicities/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PETNIAS.IDETNIA, HUELLA.PETNIAS.ETNIA " +
             " FROM HUELLA.PETNIAS " +
-            " WHERE HUELLA.PETNIAS.IDETNIA ='" + verficiarId + "'";
+            " WHERE HUELLA.PETNIAS.IDETNIA ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -2383,7 +2383,7 @@ parametersRoutes.get('/settings/ethnicities/check/:id/ajax', function (req, res)
 
         var sql = "SELECT HUELLA.PETNIAS.IDETNIA, HUELLA.PETNIAS.ETNIA " +
             " FROM HUELLA.PETNIAS " +
-            " WHERE HUELLA.PETNIAS.IDETNIA ='" + verficiarId + "'";
+            " WHERE HUELLA.PETNIAS.IDETNIA ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -2714,7 +2714,7 @@ parametersRoutes.get('/settings/cities/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PMUNICIPIOS.IDMUNICIPIO, HUELLA.PMUNICIPIOS.IDDEPARTAMENTO, HUELLA.PMUNICIPIOS.MUNICIPIO " +
             " FROM HUELLA.PMUNICIPIOS " +
-            " WHERE HUELLA.PMUNICIPIOS.IDMUNICIPIO ='" + verficiarId + "'";
+            " WHERE HUELLA.PMUNICIPIOS.IDMUNICIPIO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -2847,7 +2847,7 @@ parametersRoutes.get('/settings/cities/ajax', function (req, res) {
             " HUELLA.PMUNICIPIOS.IDDEPARTAMENTO, " +
             "HUELLA.PMUNICIPIOS.MUNICIPIO " +
             "FROM " +
-            "HUELLA.PMUNICIPIOS";
+            "HUELLA.PMUNICIPIOS ORDER BY IDMUNICIPIO ASC";
 
         connection.execute(
             // The statement to execute
@@ -2948,7 +2948,7 @@ parametersRoutes.get('/settings/cities/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PMUNICIPIOS.IDMUNICIPIO, HUELLA.PMUNICIPIOS.IDDEPARTAMENTO, HUELLA.PMUNICIPIOS.MUNICIPIO " +
             " FROM HUELLA.PMUNICIPIOS " +
-            " WHERE HUELLA.PMUNICIPIOS.IDMUNICIPIO ='" + verficiarId + "'";
+            " WHERE HUELLA.PMUNICIPIOS.IDMUNICIPIO ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -3282,7 +3282,7 @@ parametersRoutes.get('/settings/countries/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PPAISES.IDPAIS, HUELLA.PPAISES.PAIS " +
             " FROM HUELLA.PPAISES " +
-            " WHERE HUELLA.PPAISES.IDPAIS ='" + verficiarId + "'";
+            " WHERE HUELLA.PPAISES.IDPAIS ='" + verficiarId.toUpperCase() + "' ORDER BY IDPAIS ASC";
 
         connection.execute(
             // The statement to execute
@@ -3410,18 +3410,11 @@ parametersRoutes.get('/settings/countries/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        /*   var sql = "SELECT \"PZONAS\".\"IDZONA\", " +
-         "\"PZONAS\".\"ZONA\"  " +
-         "FROM " +
-         "\"PZONAS\" " +
-         "ORDER BY " +
-         "\"PZONAS\".\"ZONA\" ASC";*/
-
         var sql = "SELECT" +
             " HUELLA.PPAISES.IDPAIS, " +
             " HUELLA.PPAISES.PAIS " +
             " FROM " +
-            " HUELLA.PPAISES";
+            " HUELLA.PPAISES ORDER BY IDPAIS ASC";
 
         connection.execute(
             // The statement to execute
@@ -3522,7 +3515,7 @@ parametersRoutes.get('/settings/countries/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PPAISES.IDPAIS, HUELLA.PPAISES.PAIS " +
             " FROM HUELLA.PPAISES " +
-            " WHERE HUELLA.PPAISES.IDPAIS ='" + verficiarId + "'";
+            " WHERE HUELLA.PPAISES.IDPAIS ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -3853,7 +3846,7 @@ parametersRoutes.get('/settings/roles/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PROLES.ROL_CODE, HUELLA.PROLES.ROL_DESC " +
             " FROM HUELLA.PROLES " +
-            " WHERE HUELLA.PROLES.ROL_CODE ='" + verficiarId + "'";
+            " WHERE HUELLA.PROLES.ROL_CODE ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -3981,13 +3974,6 @@ parametersRoutes.get('/settings/roles/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        /*   var sql = "SELECT \"PZONAS\".\"IDZONA\", " +
-         "\"PZONAS\".\"ZONA\"  " +
-         "FROM " +
-         "\"PZONAS\" " +
-         "ORDER BY " +
-         "\"PZONAS\".\"ZONA\" ASC";*/
-
         var sql = "SELECT \"PROLES\".\"ROL_CODE\", " +
             "\"PROLES\".\"ROL_DESC\"  " +
             "FROM " +
@@ -4094,7 +4080,7 @@ parametersRoutes.get('/settings/roles/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PROLES.ROL_CODE, HUELLA.PROLES.ROL_DESC " +
             " FROM HUELLA.PROLES " +
-            " WHERE HUELLA.PROLES.ROL_CODE ='" + verficiarId + "'";
+            " WHERE HUELLA.PROLES.ROL_CODE ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -4425,7 +4411,7 @@ parametersRoutes.get('/settings/zones/:id', function (req, res, next) {
 
         var sql = "SELECT HUELLA.PZONAS.IDZONA, HUELLA.PZONAS.ZONA " +
             " FROM HUELLA.PZONAS " +
-            " WHERE HUELLA.PZONAS.IDZONA ='" + verficiarId + "'";
+            " WHERE HUELLA.PZONAS.IDZONA ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -4556,7 +4542,7 @@ parametersRoutes.get('/settings/zones/ajax', function (req, res) {
         var sql = "SELECT " +
             " HUELLA.PZONAS.IDZONA, " +
             " HUELLA.PZONAS.ZONA " +
-            " FROM HUELLA.PZONAS";
+            " FROM HUELLA.PZONAS ORDER BY IDZONA ASC";
 
         connection.execute(
             // The statement to execute
@@ -4657,7 +4643,7 @@ parametersRoutes.get('/settings/zones/check/:id/ajax', function (req, res) {
 
         var sql = "SELECT HUELLA.PZONAS.IDZONA, HUELLA.PZONAS.ZONA " +
             " FROM HUELLA.PZONAS " +
-            " WHERE HUELLA.PZONAS.IDZONA ='" + verficiarId + "'";
+            " WHERE HUELLA.PZONAS.IDZONA ='" + verficiarId.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
