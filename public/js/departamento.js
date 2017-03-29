@@ -108,7 +108,8 @@ function GuardarModalNuevo() {
                         method: "PUT",
                         url: "/settings/states/" + $id + "/ajax",
                         data: {
-                            "value": $idpais
+                            "value": $value,
+                            "idpais" : $idpais
                         }
                     })
                         .done(function (data) {

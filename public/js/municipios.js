@@ -108,7 +108,8 @@ function GuardarModalNuevo() {
                         method: "PUT",
                         url: "/settings/cities/" + $idrol + "/ajax",
                         data: {
-                            "value": $rol
+                            "value": $rol,
+                            "iddepartamento" : $iddepartamento
                         }
                     })
                         .done(function (data) {
