@@ -788,7 +788,7 @@ parametersRoutes.post('/settings/abbreviations/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "INSERT INTO HUELLA.PABREVIATURAS VALUES ('" + id + "' , '" + value + "')";
+        var sql = "INSERT INTO HUELLA.PABREVIATURAS VALUES ('" + id.toUpperCase() + "' , '" + value + "')";
 
         connection.execute(
             // The statement to execute
@@ -850,7 +850,7 @@ parametersRoutes.put('/settings/abbreviations/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "UPDATE HUELLA.PABREVIATURAS SET HUELLA.PABREVIATURAS.ABREVIATURA = '" + rol + "' WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + idrol + "'";
+        var sql = "UPDATE HUELLA.PABREVIATURAS SET HUELLA.PABREVIATURAS.ABREVIATURA = '" + rol + "' WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + idrol.toUpperCase() + "'";
 
         //logger.info(sql);
 
@@ -910,7 +910,7 @@ parametersRoutes.delete('/settings/abbreviations/:id/ajax', function (req, res) 
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "DELETE FROM HUELLA.PROLES WHERE HUELLA.PROLES.ROL_CODE = '" + idrol + "'";
+        var sql = "DELETE FROM HUELLA.PABREVIATURAS WHERE HUELLA.PABREVIATURAS.IDABREVIATURA = '" + idrol.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -1922,7 +1922,7 @@ parametersRoutes.post('/settings/documents/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "INSERT INTO HUELLA.PDOCUMENTOS VALUES ('" + idrol + "' , '" + rol + "')";
+        var sql = "INSERT INTO HUELLA.PDOCUMENTOS VALUES ('" + idrol.toUpperCase() + "' , '" + rol + "')";
 
         connection.execute(
             // The statement to execute
@@ -1985,7 +1985,7 @@ parametersRoutes.put('/settings/documents/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "UPDATE HUELLA.PDOCUMENTOS SET HUELLA.PDOCUMENTOS.DOCUMENTO = '" + rol + "' WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO = '" + idrol + "'";
+        var sql = "UPDATE HUELLA.PDOCUMENTOS SET HUELLA.PDOCUMENTOS.DOCUMENTO = '" + rol + "' WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO = '" + idrol.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -2044,7 +2044,7 @@ parametersRoutes.delete('/settings/documents/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "DELETE FROM HUELLA.PDOCUMENTOS WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO = '" + idrol + "'";
+        var sql = "DELETE FROM HUELLA.PDOCUMENTOS WHERE HUELLA.PDOCUMENTOS.IDDOCUMENTO = '" + idrol.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -4744,7 +4744,7 @@ parametersRoutes.post('/settings/zones/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "INSERT INTO HUELLA.PZONAS VALUES ('" + idrol + "' , '" + rol + "')";
+        var sql = "INSERT INTO HUELLA.PZONAS VALUES ('" + idrol.toUpperCase() + "' , '" + rol + "')";
 
         connection.execute(
             // The statement to execute
@@ -4807,7 +4807,7 @@ parametersRoutes.put('/settings/zones/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "UPDATE HUELLA.PZONAS SET HUELLA.PZONAS.ZONA = '" + rol + "' WHERE HUELLA.PZONAS.IDZONA = '" + idrol + "'";
+        var sql = "UPDATE HUELLA.PZONAS SET HUELLA.PZONAS.ZONA = '" + rol + "' WHERE HUELLA.PZONAS.IDZONA = '" + idrol.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -4866,7 +4866,7 @@ parametersRoutes.delete('/settings/zones/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "DELETE FROM HUELLA.PZONAS WHERE HUELLA.PZONAS.IDZONA = '" + idrol + "'";
+        var sql = "DELETE FROM HUELLA.PZONAS WHERE HUELLA.PZONAS.IDZONA = '" + idrol.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
