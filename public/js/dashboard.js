@@ -52,7 +52,6 @@ function ConsultarCedula() {
             var personId = data.rows[0][0];
 
 
-            console.log(tipoPersona);
             switch (tipoPersona){
                 case "NO AFILIADO NI REFERIDO":
                     swal({
@@ -171,9 +170,7 @@ function ConsultarCedulaAfiliado() {
             var nombreUsuario = data.rows[0][3] + " " + data.rows[0][1];
             var personId = data.rows[0][0];
 
-            console.log("Esta aca " + tipoPersona)
 
-            console.log(tipoPersona);
             switch (tipoPersona){
                 case "NO AFILIADO NI REFERIDO":
                     swal({

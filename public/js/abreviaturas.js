@@ -58,7 +58,6 @@ function GuardarModalNuevo() {
         url: "/settings/abbreviations/check/" + $id + "/ajax"
     })
         .done(function (data) {
-            console.log(data);
             // Varifico si viene el codigo de retorno o un elemento
             if (typeof data.code !== 'undefined') {
                 // SI no existe el elemento los inserto en la BD.
