@@ -39,9 +39,10 @@ function GuardarModalNuevo() {
     var $id = $('#txtid').val();
     var $value = $('#txtvalue').val();
     var $idpais = $('#txtidpais').val();
+
     $id = $id.trim();
-    $idpais = $idpais.trim();
     $value = $value.trim();
+    $idpais = $idpais.trim();
 
     // Validar si envio vacio
     if ($id === '' || $idpais === '') {
