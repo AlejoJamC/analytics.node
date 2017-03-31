@@ -1355,7 +1355,7 @@ parametersRoutes.post('/settings/states/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "INSERT INTO HUELLA.PDEPARTAMENTOS VALUES ('" + idrol + "' , '" + rol + "' , '" + idpais + "')";
+        var sql = "INSERT INTO HUELLA.PDEPARTAMENTOS VALUES ('" + idrol.toUpperCase() + "' , '" + rol + "' , '" + idpais + "')";
 
         connection.execute(
             // The statement to execute
@@ -1421,7 +1421,7 @@ parametersRoutes.put('/settings/states/:id/ajax', function (req, res) {
 
         var sql = "UPDATE HUELLA.PDEPARTAMENTOS SET HUELLA.PDEPARTAMENTOS.DEPARTAMENTO = '" + value +
             "', HUELLA.PDEPARTAMENTOS.IDPAIS = '" + idpais +
-            "' WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO = '" + id + "'";
+            "' WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO = '" + id.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
@@ -1444,9 +1444,6 @@ parametersRoutes.put('/settings/states/:id/ajax', function (req, res) {
                     // Error doing select statement
                     return res.send({err: 'Error doing select statement.'});
                 }
-
-                // Insert success
-                //logger.info(result);
 
                 connection.close(
                     function (err) {
@@ -1480,7 +1477,7 @@ parametersRoutes.delete('/settings/states/:id/ajax', function (req, res) {
             return res.send({err: 'Error trying to connect with database.', errCode: 0});
         }
 
-        var sql = "DELETE FROM HUELLA.PDEPARTAMENTOS WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO = '" + id + "'";
+        var sql = "DELETE FROM HUELLA.PDEPARTAMENTOS WHERE HUELLA.PDEPARTAMENTOS.IDDEPARTAMENTO = '" + id.toUpperCase() + "'";
 
         connection.execute(
             // The statement to execute
