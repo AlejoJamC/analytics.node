@@ -385,10 +385,8 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
 
     var idAfiliado = req.params.id;
 
-    // Consulto el los datos del afiliado
-    oracledb.fetchAsString = [ oracledb.CLOB ];
-
     var doquery = function(conn, cb) {
+        // Consulto el los datos del afiliado
         oracledb.getConnection({
             user: process.env.ORACLE_USERNAME,
             password: process.env.ORACLE_PASSWORD,
@@ -401,16 +399,14 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
                 return res.json({error: 'Error=0 trying to connect with database'});
             }
 
-            var sql = "SELECT HUELLA.NPERSONAS.FOTO " +
-                " FROM HUELLA.NPERSONAS " +
-                "WHERE HUELLA.NPERSONAS.IDPERSONA =" + idAfiliado;
+            var sql = "SELECT FOTO, IDPERSONA  FROM  HUELLA.NPERSONAS WHERE HUELLA.NPERSONAS.IDPERSONA = :idbv AND " +
+                " HUELLA.NPERSONAS.FOTO IS NOT NULL";
 
-            //logger.info(sql);
-
+            oracledb.fetchAsBuffer = [ oracledb.BLOB ];
             connection.execute(
                 // The statement to execute
                 sql,
-                [],
+                [idAfiliado],
 
                 // The Callback function handles the SQL execution results
                 function (err, result) {
@@ -457,14 +453,9 @@ affiliateRouter.get('/affiliates/images/ajax/:id', function (req, res) {
                         return res.json({error: 'Error doing select statement'});
                     }
 
-                    //logger.info(result.rows[0]);
-
-                    var buff = new Buffer(result.rows[0]);
-                    logger.info(buff);
-                    var imgbase64 =  buff.toString('base64');
-                    logger.info(imgbase64);
-
-                    return res.json({img: imgbase64 });
+                    var blob = result.rows[0][0];
+                    var imgbase64 =  blob.toString('base64');
+                    return res.json({ img: imgbase64 });
                 }
             );
         });
@@ -792,7 +783,7 @@ affiliateRouter.post('/affiliates/images/capture',  function (req, res) {
 });
 
 /* POST Affiliate images handler page | affiliates. */
-affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'), function (req, res) {
+affiliateRouter.post('/affiliates/images/input', upload.single('inputpicture'), function (req, res) {
     if( typeof req.body.personid === 'undefined' || req.body.personid === ''){
         logger.info('Login credentials: Empty values.');
         // error=12 No person Id using image capture.
@@ -803,9 +794,6 @@ affiliateRouter.post(' /affiliates/images/input', upload.single('inputpicture'),
 
     // read the file
     var buf = fs.readFileSync(req.file.path);
-
-    /*var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = " +
-     buf + " WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;*/
 
     var sql = "UPDATE HUELLA.NPERSONAS SET HUELLA.NPERSONAS.FOTO = :blob WHERE HUELLA.NPERSONAS.IDPERSONA =" + personId;
 
