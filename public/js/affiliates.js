@@ -1,4 +1,4 @@
-// Llamados al endpoint de carga de datos iniciales+
+// Llamados al endpoint de carga de datos iniciales
 function CargarDatos() {
     var amountRows = $('select[name=sample_1_length]').val();
     $.ajax({
@@ -20,11 +20,11 @@ function CargarDatos() {
 
                         '<td>' +
                         '<div style="text-align:center" >' +
-                        '<a href="/settings/afiliados/editar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
+                        '<a href="/settings/afiliados/editar/' + data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle btn-sm purple">' +
                         '<i class="fa fa-edit"></i> Editar </a>' +
-                        '<a href="/settings/afiliados/eliminar/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
+                        '<a href="/settings/afiliados/eliminar/' + data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle dark btn-sm black">' +
                         '<i class="fa fa-trash-o"></i> Eliminar </a>' +
-                        '<a href="/settings/afiliados/'+ data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                        '<a href="/settings/afiliados/' + data.rows[i][0].toString().toLowerCase() + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                         '<i class="fa fa-share"></i> Ver </a>' +
                         '</div>' +
                         '</td>' +
@@ -41,7 +41,7 @@ function CargarDatos() {
 }
 
 function CargarReferidosPorAfiliad(idAfiliado) {
-    if(idAfiliado !== 'undefined'){
+    if (idAfiliado !== 'undefined') {
         $.ajax({
             method: "GET",
             url: "/affiliates/referred/" + idAfiliado
@@ -49,18 +49,18 @@ function CargarReferidosPorAfiliad(idAfiliado) {
             .done(function (data) {
                 var iterador = data;
                 $('#txtbeneficiarios').text(data.length);
-                if(data.length > 0){
+                if (data.length > 0) {
                     var trHTML = '';
                     $.each(iterador, function (i, abreviData) {
                         trHTML += '<tr class="odd gradeX">' +
-                            '<td>' + ((abreviData[22] === null) ?  '' : abreviData[22]) + '</td>' +
-                            '<td>' + ((abreviData[23] === null) ?  '' : abreviData[23]) + '</td>' +
-                            '<td>' + ((abreviData[24] === null) ?  '' : abreviData[24]) + '</td>' +
-                            '<td>' + ((abreviData[25] === null) ?  '' : abreviData[25]) + '</td>' +
-                            '<td>' + ((abreviData[26] === null) ?  '' : abreviData[27]) + '</td>' +
+                            '<td>' + ((abreviData[22] === null) ? '' : abreviData[22]) + '</td>' +
+                            '<td>' + ((abreviData[23] === null) ? '' : abreviData[23]) + '</td>' +
+                            '<td>' + ((abreviData[24] === null) ? '' : abreviData[24]) + '</td>' +
+                            '<td>' + ((abreviData[25] === null) ? '' : abreviData[25]) + '</td>' +
+                            '<td>' + ((abreviData[26] === null) ? '' : abreviData[27]) + '</td>' +
                             '<td>' +
                             '<div style="text-align:center" >' +
-                            '<a href="/referred/'+ abreviData[21].toString().toLowerCase() + '?afiliado=' + idAfiliado + '" class="btn btn-outline btn-circle red btn-sm blue">' +
+                            '<a href="/referred/' + abreviData[21].toString().toLowerCase() + '?afiliado=' + idAfiliado + '" class="btn btn-outline btn-circle red btn-sm blue">' +
                             '<i class="fa fa-share"></i> Ver </a>' +
                             '</div>' +
                             '</td>' +
@@ -68,7 +68,7 @@ function CargarReferidosPorAfiliad(idAfiliado) {
                     });
 
                     $('#resultados').empty().append(trHTML);
-                }else{
+                } else {
                     $('#resultados').empty();
                 }
 
@@ -80,18 +80,19 @@ function CargarReferidosPorAfiliad(idAfiliado) {
 }
 
 function CargarImagenAfiliado(idAfiliado) {
-    if(idAfiliado !== 'undefined'){
+    if (idAfiliado !== 'undefined') {
         $.ajax({
             method: "GET",
             url: "/affiliates/images/ajax/" + idAfiliado
         })
             .done(function (data) {
-                console.log(data.img);
-                if(data[0] !== null){
-                    console.log('diferente');
-                    console.log(data.img);
-                    $('#affiliateProfile').attr("src", data.img);
+                if (data[0] !== null) {
+                    var base64String = data.img;
+                    var srcInit = "data:image/png;base64,";
+                    $('#affiliateProfile').attr("src", srcInit + base64String);
                 }
             });
     }
+}
+
 }
