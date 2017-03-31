@@ -42,7 +42,7 @@
                 <div class="caption">
                     <i class=" icon-layers font-red"></i>
                     <span class="caption-subject font-red bold uppercase"> Agregar Afiliado -
-                         <span class="step-title"> Paso 1 de 4 </span>
+                         <span class="step-title"> Paso 1 de 5 </span>
                        </span>
                 </div>
             </div>
@@ -52,6 +52,7 @@
                     <div class="form-wizard">
                         <div class="form-body">
                             <ul class="nav nav-pills nav-justified steps">
+
                                 <li>
                                     <a href="#tab1" data-toggle="tab" class="step">
                                         <span class="number"> 1 </span>
@@ -66,6 +67,7 @@
                                             <i class="fa fa-check"></i> Dirreción Y Contacto </span>
                                     </a>
                                 </li>
+
                                 <li>
                                     <a href="#tab3" data-toggle="tab" class="step active">
                                         <span class="number"> 3 </span>
@@ -73,6 +75,7 @@
                                             <i class="fa fa-check"></i> Identificación </span>
                                     </a>
                                 </li>
+
                                 <li>
                                     <a href="#tab4" data-toggle="tab" class="step">
                                         <span class="number"> 4 </span>
@@ -180,10 +183,10 @@
                                                     <div class="radio-list">
                                                         <label>
                                                             <input type="radio" name="gender" value="M"
-                                                                   data-title="Hombre"/> Hombre </label>
+                                                                   data-title="Masculino"/> Masculino </label>
                                                         <label>
                                                             <input type="radio" name="gender" value="F"
-                                                                   data-title="Mujer"/> Mujer </label>
+                                                                   data-title="Femenino"/> Femenino </label>
                                                     </div>
                                                     <div id="form_gender_error"></div>
                                                 </div>
@@ -261,6 +264,42 @@
                                             </div>
                                         </div>
                                         <!--/span-->
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Departamento
+                                                    <span class="required"> * </span>
+
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <select name="city" class="form-control">
+                                                        <span class="required"> * </span>
+                                                        <option></option>
+                                                        <option>Santander</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!--/span-->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Detalle Dir</label>
+                                                <div class="col-md-9">
+
+                                                    <input type="text" class="form-control" name="detalledir"></div>
+                                            </div>
+
+                                        </div>
+                                        <!--/span-->
+
+
+
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">Municipio
@@ -279,36 +318,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--/span-->
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
 
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Detalle Dir</label>
-                                                <div class="col-md-9">
-
-                                                    <input type="text" class="form-control" name="detalledir"></div>
-                                            </div>
-
-                                        </div>
-                                        <!--/span-->
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">Departamento
-                                                    <span class="required"> * </span>
-
-                                                </label>
-                                                <div class="col-md-9">
-                                                    <select name="city" class="form-control">
-                                                        <span class="required"> * </span>
-                                                        <option></option>
-                                                        <option>Santander</option>
-
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <!--/span-->
                                     </div>
                                     <div class="row">
@@ -361,12 +371,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="portlet light portlet-fit ">
-                                                <div class="portlet-title">
-                                                    <div class="caption">
-                                                        <i class=" icon-layers font-green"></i>
-                                                        <span class="caption-subject font-green bold uppercase">Profile</span>
-                                                    </div>
-                                                </div>
+
                                                 <div class="portlet-body">
                                                     <form action="/dashboard/images/capture" method="post" role="form"
                                                           class="form-horizontal">
@@ -401,11 +406,44 @@
                                                             </div>
                                                         </div>
                                                     </form>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <h3 class="block">Proporcione Huella</h3>
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="portlet light portlet-fit ">
+
+                                                <div class="portlet-body">
+                                                    <div  class="row">
+                                                        <table  align="center" border="1">
+                                                            <tr><td>
+
+                                                                <applet code="EnrollFingerprint.Enrollment.class" archive="{{level}}applets/fingerprint.jar,
+                                                              {{level}}appletslib/dpotapi.jar,{{level}}applets/lib/dpotjni.jar,{{level}}applets/lib/dpfpenrollment.jar,
+                                                              {{level}}applets/lib/dpfpverification.jar,{{level}}appletslib/json-simple-1.1.1.jar,{{level}}applets/lib/ojdbc7.jar,{{level}}applets/lib/okhttp-3.5.0.jar,
+                                                              {{level}}applets/lib/okio-1.11.0.jar " width="650" height="350"></applet>
+
+                                                            </td></tr></table>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                 </div>
+
+
+
                                 <div class="tab-pane" id="tab4">
                                     <h3 class="block">Confirmación datos afiliado</h3>
                                     <h4 class="form-section">Detalle Afiliado</h4>
